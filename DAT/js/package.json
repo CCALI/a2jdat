@@ -1,0 +1,144 @@
+{
+  "name": "caja",
+  "version": "0.0.1",
+  "description": "Authoring and viewer App GUI.",
+  "main": "author/app",
+  "scripts": {
+    "test": "grunt jshint && testee --reporter Spec --browsers firefox viewer/test/index.html author/test/index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CCALI/CAJA"
+  },
+  "devDependencies": {
+    "bit-tabs": "0.2.0",
+    "blueimp-file-upload": "^9.10.1",
+    "bootstrap": "3.3.5",
+    "bootstrap-tokenfield": "^0.12.0",
+    "can": "^2.3.0",
+    "chai": "^3.0.0",
+    "connect": "3.2.0",
+    "cuid": "^1.3.8",
+    "documentjs": "~0.4.1",
+    "express": "^4.13.0",
+    "funcunit": "^3.0.0",
+    "grunt": "https://registry.npmjs.org/grunt/-/grunt-0.4.5.tgz",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-less": "^1.0.1",
+    "jquery": "~2.1.4",
+    "jquery-ui": "git://github.com/jquery/jquery-ui.git#1.11.4",
+    "jquerypp": "^2.0.1",
+    "localforage": "^1.3.0",
+    "lodash": "^4.0.0",
+    "moment": "^2.10.3",
+    "numeral": "^1.5.3",
+    "path-browserify": "0.0.0",
+    "serve-index": "1.4.0",
+    "serve-static": "1.6.4",
+    "sinon": "^1.17.2",
+    "steal": "^0.16.39",
+    "steal-mocha": "0.0.3",
+    "steal-tools": "^0.16.8",
+    "testee": "^0.2.0",
+    "typeahead.js": "git://github.com/twitter/typeahead.js.git#v0.11.1"
+  },
+  "system": {
+    "transpiler": "babel",
+    "npmAlgorithm": "flat",
+    "ext": {
+      "text": "text"
+    },
+    "npmIgnore": [
+      "testee",
+      "documentjs",
+      "grunt-contrib-less"
+    ],
+    "configDependencies": [
+      "author/utils/load-fixtures",
+      "author/utils/set-global-for-lodash"
+    ],
+    "map": {
+      "chai": "chai/chai",
+      "assert": "tests/assert",
+      "cuid": "cuid/dist/browser-cuid",
+      "jquery-ui/widget": "jquery-ui/ui/widget",
+      "localforage": "localforage/dist/localforage.nopromises",
+      "typeahead": "typeahead.js/dist/typeahead.jquery",
+      "bloodhound": "typeahead.js/dist/bloodhound"
+    },
+    "meta": {
+      "author/src/A2J_Tabs": {
+        "format": "global",
+        "deps": [
+          "jquery-ui/ui/sortable"
+        ]
+      },
+      "author/src/TextStatistics": {
+        "format": "global"
+      },
+      "author/src/A2J_AuthorApp": {
+        "format": "global",
+        "deps": [
+          "jquery-ui/ui/button",
+          "jquery-ui/ui/autocomplete",
+          "jquery-ui/ui/draggable",
+          "jquery-ui/ui/resizable",
+          "jquery-ui/ui/dialog",
+          "jquery-ui/ui/tooltip"
+        ]
+      },
+      "author/src/A2J_Reports": {
+        "format": "global",
+        "deps": [
+          "author/src/viewer/A2J_Logic"
+        ]
+      },
+      "author/src/viewer/A2J_Types": {
+        "format": "global"
+      },
+      "author/src/viewer/jquery.ui.combobox": {
+        "deps": [
+          "jquery-ui/ui/widget"
+        ]
+      },
+      "author/src/viewer/jquery.ui.traggable": {
+        "deps": [
+          "jquery-ui/ui/mouse",
+          "jquery-ui/ui/widget"
+        ]
+      },
+      "author/src/viewer/A2J_AnswerFile": {
+        "format": "global",
+        "deps": [
+          "author/src/viewer/A2J_Types"
+        ]
+      },
+      "author/src/viewer/A2J_Shared": {
+        "deps": [
+          "jquery-ui/ui/dialog"
+        ]
+      },
+      "blueimp-file-upload/js/jquery.fileupload": {
+        "deps": [
+          "jquery"
+        ]
+      },
+      "typeahead.js/dist/typeahead.jquery": {
+        "format": "global"
+      },
+      "typeahead.js/dist/bloodhound": {
+        "format": "cjs"
+      },
+      "bootstrap/js/modal" : {
+        "format": "global",
+        "deps": [
+          "jquery@2.1.4#dist/jquery"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,2 @@
+[0mGET /api/templates/?fileDataUrl=..%2Fguides%2Fdefault%2F&active=true [32m200 [0m35.444 ms - 558[0m
+[0mPOST /api/assemble [32m200 [0m9966.599 ms - -[0m

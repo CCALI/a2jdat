@@ -1,0 +1,14 @@
+[0mGET /api/templates/?fileDataUrl=..%2Fguides%2F5a5fade12ca37-lease-agreement-to-test-a2j-dat-3%2F&active=true [31m500 [0m31.660 ms - 192[0m
+[0mPOST /api/assemble [32m200 [0m10341.049 ms - -[0m
+[0mGET /api/templates/?fileDataUrl=..%2Fguides%2Fdefault%2F&active=true [32m200 [0m17.317 ms - 558[0m
+[0mPOST /api/assemble [32m200 [0m3066.573 ms - -[0m
+[0mGET /api/templates/?fileDataUrl=..%2Fguides%2Fdefault%2F&active=true [32m200 [0m2.342 ms - 558[0m
+[0mPOST /api/assemble [32m200 [0m710.023 ms - -[0m
+[0mGET /api/templates/?fileDataUrl=..%2Fguides%2Fdefault%2F&active=true [32m200 [0m22.462 ms - 558[0m
+[0mPOST /api/assemble [32m200 [0m2992.745 ms - -[0m
+[0mGET /api/templates/?fileDataUrl=..%2Fguides%2Fdefault%2F&active=true [32m200 [0m2.556 ms - 558[0m
+[0mPOST /api/assemble [32m200 [0m2918.771 ms - -[0m
+[0mGET /api/templates/?fileDataUrl=..%2Fguides%2Fdefault%2F&active=true [32m200 [0m60.843 ms - 558[0m
+[0mPOST /api/assemble [32m200 [0m10998.148 ms - -[0m
+[0mGET /api/templates/?fileDataUrl=..%2Fguides%2Fdefault%2F&active=true [32m200 [0m5.166 ms - 558[0m
+[0mPOST /api/assemble [32m200 [0m28719.545 ms - -[0m

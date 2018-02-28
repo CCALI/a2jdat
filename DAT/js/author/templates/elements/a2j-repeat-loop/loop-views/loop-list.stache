@@ -1,0 +1,41 @@
+{{#if editEnabled}}
+  <ul style="list-style-type: {{listStyleType}};" class="inline-items-list">
+    {{#each listItems}}
+      <li>
+        {{item}}:
+
+        {{#if editActive}}
+          <var-picker
+            {(selected)}="variable"
+            {variables}="variablesList"
+            filter-ocurrence="repeating"
+          />
+        {{else}}
+          <a2j-variable {name}="variable" />
+        {{/if}}
+      </li>
+    {{/each}}
+  </ul>
+{{else}}
+  {{#if repeatEachInOneList}}
+    {{#each listItems}}
+      <ul style="list-style-type: {{listStyleType}}; margin-bottom: 20px;">
+        {{#each loopCollection}}
+          <li>
+            {{item}}: <a2j-variable {name}="../variable" {var-index}="%index" />
+          </li>
+        {{/each}}
+      </ul>
+    {{/each}}
+  {{else}}
+    {{#each loopCollection}}
+      <ul style="list-style-type: {{listStyleType}}; margin-bottom: 20px;">
+        {{#each listItems}}
+          <li>
+            {{item}}: <a2j-variable {name}="variable" {var-index}="../%index" />
+          </li>
+        {{/each}}
+      </ul>
+    {{/each}}
+  {{/if}}
+{{/if}}

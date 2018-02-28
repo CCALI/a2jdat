@@ -1,0 +1,176 @@
+/**
+ * @stylesheet signs-steps Signs & Steps
+ * @parent styles-viewer 4
+ *
+**/
+/**
+ * @stylesheet signs.less Signs
+ * @parent signs-steps 1
+ *
+ * The signs in the A2J Viewer application are 100% HTML/CSS and use no images. By default, the signs will fill their parent container. In the A2J Viewer, JavaScript is being used to calculate the position and size of each sign, as well as the size of the text inside.
+ *
+ * @demo docs/demos/signs/demo.html
+ *
+**/
+
+//http://jsfiddle.net/x1fy6jhh/5/
+
+.sign-wrapper {
+  position: relative;
+}
+
+.step-next, .step-current {
+  .sign-wrapper {
+    width: 30%;
+    position: absolute;
+    left: 66%;
+    bottom: 0;
+    z-index: 10;
+  }
+}
+.sign {
+  position: relative;
+  width: 100%;
+  padding-top: 20%;
+
+  .sign-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px solid grey;
+  }
+  .sign-text {
+    margin: 0;
+    height: 100%;
+    width: 75%;
+    float: right;
+  }
+
+  // The feet of the signs
+  &:after, &:before {
+	left: 5%;
+	bottom: -25%;
+	content: " ";
+	height: 25%;
+	width: 2%;
+	background: #593622;
+	content: '';
+	position: absolute;
+	pointer-events: none;
+  }
+  &:after {
+    right: 5%;
+    left: auto;
+   }
+}
+
+.circle-wrapper {
+  width: 15%;
+  height:auto;
+  display: inline-block;
+  margin: 2%;
+  float: left;
+}
+
+.circle {
+  border-radius: 50%;
+  width: 100%;
+  padding-bottom: 100%;
+  border: 1px solid #000;
+  position: relative;
+
+  .circle-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+
+    &:before {
+      content: '';
+      vertical-align: middle;
+      display: inline-block;
+      width: 0;
+      height: 100%;
+    }
+  }
+}
+
+.step-current {
+  .sign-wrapper {
+    .sign {
+      .circle {
+        font-size: 2vw;
+        line-height: 2vw;
+      }
+    }
+  }
+}
+
+#viewer-app.with-debug-panel {
+  .step-current {
+    .sign-wrapper {
+      .sign {
+        .circle {
+          font-size: 1vw;
+          line-height: 1vw;
+        }
+      }
+    }
+  }
+}
+
+.step-2 {
+  .sign-wrapper {
+    width: 20%;
+    left: 67%;
+    .sign {
+      .circle {
+        font-size: 1.25vw;
+        line-height: 1.25vw;
+      }
+    }
+  }
+}
+
+.step-3 {
+  .sign-wrapper {
+    width: 15%;
+    left: 68.25%;
+    .sign {
+      .circle {
+        font-size: 1vw;
+        line-height: 1vw;
+      }
+    }
+  }
+}
+
+.step-4 {
+  .sign-wrapper {
+    width: 10%;
+    left: 69.25%;
+    .sign {
+      .circle {
+        font-size: .75vw;
+        line-height: .75vw;
+      }
+    }
+  }
+}
+
+.step-5 {
+  .sign-wrapper {
+    width: 8%;
+    left: 69.25%;
+    .sign {
+      .circle {
+        font-size: .5vw;
+        line-height: .5vw;
+      }
+    }
+  }
+}

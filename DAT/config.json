@@ -1,0 +1,18 @@
+
+
+{
+  "SERVER_URL": "http://localhost",
+  "GUIDES_DIR": "C:\\inetpub\\wwwroot\\a2j-viewer\\guides",
+  "GUIDES_URL": "/a2j-viewer/guides",
+  "SQL_HOST": "localhost",
+  "SQL_USERNAME": "root",
+  "SQL_PASSWD": "root",
+  "SQL_DBNAME": "caja",
+  "SQL_PORT": 3306,
+  "DRUPAL_HOST": "localhost",
+  "DRUPAL_USERNAME": "root",
+  "DRUPAL_PASSWD": "root",
+  "DRUPAL_DBNAME": "D7commons",
+  "DRUPAL_PORT": 3306,
+  "WKHTMLTOPDF_PATH": "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf"
+}

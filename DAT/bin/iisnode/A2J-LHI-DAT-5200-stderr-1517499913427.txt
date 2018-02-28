@@ -1,0 +1,3 @@
+WARN: Could not find bloodhound in node_modules. Ignoring.
+WARN: Could not find typeahead in node_modules. Ignoring.
+WARN: can/view/stache/mustache_core.js: Unable to find key or helper "fontProperties".

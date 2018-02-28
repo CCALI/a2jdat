@@ -1,0 +1,27 @@
+DAT instructions
+Follow standalone viewer install instrucitons here if you haven't already:
+https://github.com/CCALI/A2JViewer
+
+Make sure you have npm 3.8.x and Node version 5.x installed
+
+1) clone CAJA repo https://github.com/CCALI/CAJA.git
+2) `cd` to the CAJA directory
+3) `npm install`
+4) `cd js`
+5) `npm install bootstrap`
+6) `cd` back to CAJA directory, `cd ..`
+6) change `src/util/paths.js` line 20/getViewerPath function to:
+
+  ```getViewerPath() {
+    return path.join(__dirname, '..', '..', '../a2j-viewer/viewer');
+  },```
+
+  this assumes stand alone viewer root folder is `a2j-viewer` and at
+  the same web root folder as the CAJA directory.
+
+7) `npm run build`
+8) `npm run build:server`
+9) `npm start`
+
+default Node port is 3000, but can be updated in `bin/www` or overwritten by setting
+`process.env.PORT` to the desired port.

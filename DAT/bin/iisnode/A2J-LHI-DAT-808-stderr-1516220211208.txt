@@ -1,0 +1,10 @@
+WARN: Could not find bloodhound in node_modules. Ignoring.
+WARN: Could not find typeahead in node_modules. Ignoring.
+Error: ENOENT: no such file or directory, open 'C:\inetpub\wwwroot\a2j-viewer\guides\5a5fade12ca37-lease-agreement-to-test-a2j-dat-3\templates.json'
+    at Error (native)
+WARN: can/view/stache/mustache_core.js: Unable to find key or helper "fontProperties".
+WARN: can/view/stache/mustache_core.js: Unable to find key or helper "fontProperties".
+WARN: can/view/stache/mustache_core.js: Unable to find key or helper "fontProperties".
+WARN: can/view/stache/mustache_core.js: Unable to find key or helper "fontProperties".
+WARN: can/view/stache/mustache_core.js: Unable to find key or helper "fontProperties".
+WARN: can/view/stache/mustache_core.js: Unable to find key or helper "fontProperties".

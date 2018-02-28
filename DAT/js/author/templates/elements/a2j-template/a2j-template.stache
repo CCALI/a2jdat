@@ -1,0 +1,140 @@
+<can-import from="caja/author/alert/" />
+<can-import from="caja/author/templates/elements/a2j-variable/" />
+<can-import from="caja/author/templates/elements/a2j-rich-text/" />
+<can-import from="caja/author/templates/elements/a2j-page-break/" />
+<can-import from="caja/author/templates/elements/a2j-repeat-loop/" />
+<can-import from="caja/author/templates/elements/a2j-conditional/" />
+<can-import from="caja/author/templates/elements/a2j-section-title/" />
+<can-import from="caja/author/templates/elements/a2j-template/a2j-template.less!" />
+
+<ul>
+  {{#each rootNode.children}}
+    <li
+      draggable="true"
+      class="node-wrapper{{#if isBeingDragged}} drag-placeholder{{/if}}">
+
+      {{#if deleted}}
+        <app-alert
+          open="true"
+          auto-close="true"
+          dismissible="true"
+          alert-type="default"
+          (closed)="removeNodeFromChildren(id)">
+
+          <p>
+            Element has been deleted -
+            <a href="#" ($click)="restoreNode(id)">Restore</a>
+          </p>
+        </app-alert>
+      {{/if}}
+
+      {{#is tag 'a2j-page-break'}}
+        <a2j-page-break
+          {(notes)}="state.notes"
+
+          {node-id}="id"
+          {clone-node}="@cloneNode"
+          {deleted}="state.deleted"
+          {delete-node}="@deleteNode"
+          {update-node}="@updateNode"
+          {edit-enabled}="editEnabled"
+          {font-properties}="fontProperties"
+          {(edit-active)}="./state.editActive"
+          {toggle-edit-active-node}="@toggleEditActiveNode"
+        />
+      {{/is}}
+
+      {{#is tag 'a2j-section-title'}}
+        <a2j-section-title
+          {(title)}="state.title"
+          {(underline)}="state.underline"
+
+          {node-id}="id"
+          {clone-node}="@cloneNode"
+          {delete-node}="@deleteNode"
+          {update-node}="@updateNode"
+          {edit-enabled}="editEnabled"
+          {font-properties}="fontProperties"
+          {(edit-active)}="./state.editActive"
+          {toggle-edit-active-node}="@toggleEditActiveNode"
+          {section-counter}="../rootNode.state.sectionCounter"
+          {(title-tag)}="state.titleTag"
+        />
+      {{/is}}
+
+      {{#is tag 'a2j-rich-text'}}
+        <a2j-rich-text
+          {(notes)}="state.notes"
+          {(user-content)}="state.userContent"
+
+          {node-id}="id"
+          {answers}="answers"
+          {clone-node}="@cloneNode"
+          {use-answers}="useAnswers"
+          {deleted}="{state.deleted}"
+          {delete-node}="@deleteNode"
+          {update-node}="@updateNode"
+          {edit-enabled}="editEnabled"
+          {font-properties}="fontProperties"
+          {(edit-active)}="./state.editActive"
+          {toggle-edit-active-node}="@toggleEditActiveNode"
+        />
+      {{/is}}
+
+      {{#is tag 'a2j-conditional'}}
+        <a2j-conditional
+          {(children)}="children"
+          {(operator)}="state.operator"
+          {(else-clause)}="state.elseClause"
+          {(left-operand)}="state.leftOperand"
+          {(right-operand)}="state.rightOperand"
+          {variables-list}="guide.variablesList"
+          {(left-operand-type)}="state.leftOperandType"
+          {(right-operand-type)}="state.rightOperandType"
+
+          {node-id}="id"
+          {answers}="answers"
+          {clone-node}="@cloneNode"
+          {use-answers}="useAnswers"
+          {deleted}="{state.deleted}"
+          {delete-node}="@deleteNode"
+          {update-node}="@updateNode"
+          {edit-enabled}="editEnabled"
+          {font-properties}="fontProperties"
+          {(edit-active)}="./state.editActive"
+          {toggle-edit-active-node}="@toggleEditActiveNode"
+        />
+      {{/is}}
+
+      {{#is tag 'a2j-repeat-loop'}}
+        <a2j-repeat-loop
+          {(loop-type)}="state.loopType"
+          {(loop-title)}="state.loopTitle"
+          {(list-items)}="state.listItems"
+          {(table-style)}="state.tableStyle"
+          {(loop-counter)}="state.loopCounter"
+          {(display-type)}="state.displayType"
+          {(table-columns)}="state.tableColumns"
+          {(loop-variable)}="state.loopVariable"
+          {variables-list}="guide.variablesList"
+          {(loop-title-tag)}="state.loopTitleTag"
+          {(loop-rich-text)}="state.loopRichText"
+          {(list-style-type)}="state.listStyleType"
+          {(repeat-each-in-one-list)}="state.repeatEachInOneList"
+
+          {node-id}="id"
+          {answers}="answers"
+          {clone-node}="@cloneNode"
+          {use-answers}="useAnswers"
+          {deleted}="{state.deleted}"
+          {delete-node}="@deleteNode"
+          {update-node}="@updateNode"
+          {edit-enabled}="editEnabled"
+          {font-properties}="fontProperties"
+          {(edit-active)}="./state.editActive"
+          {toggle-edit-active-node}="@toggleEditActiveNode"
+        />
+      {{/is}}
+    </li>
+  {{/each}}
+</ul>

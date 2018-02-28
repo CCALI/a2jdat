@@ -1,0 +1,90 @@
+<can-import from="author/alert/"/>
+<can-import from="author/loading/"/>
+<can-import from="author/templates/list/"/>
+<can-import from="author/templates/assemble/"/>
+<can-import from="author/templates/list/sortbar/"/>
+<can-import from="author/templates/list/toolbar/"/>
+<can-import from="author/templates/templates.less!"/>
+
+{{#if templatesPromise.isResolved}}
+  <templates-toolbar
+    class="clearfix"
+    filter="{activeFilter}"
+    templates="{templates}"
+    search-token="{searchToken}"/>
+{{/if}}
+
+<div class="page">
+  <app-alert
+    auto-close="true"
+    dismissible="true"
+    alert-type="warning"
+    open="{openDeletedAlert}"
+    class="deleted-templates-alert"
+    auto-close-time="{alertAutoCloseTime}">
+
+    {{#each deletedTemplates}}
+      <p>
+        {{title}} - has been deleted -
+        <a href="#" ($click)="restoreTemplate(this)">Restore</a>
+      </p>
+    {{/each}}
+  </app-alert>
+
+  <app-alert
+    auto-close="true"
+    dismissible="true"
+    alert-type="warning"
+    open="{openRestoredAlert}"
+    class="restored-templates-alert"
+    auto-close-time="{alertAutoCloseTime}">
+
+    {{#each restoredTemplates}}
+      <p>
+        {{title}} - has been restored -
+        <a href="#" ($click)="deleteTemplate(this)">Delete</a>
+      </p>
+    {{/each}}
+  </app-alert>
+
+  <div class="container-fluid">
+    {{#if templatesPromise.isPending}}
+      <app-loading/>
+    {{/if}}
+
+    {{#if templatesPromise.isResolved}}
+      {{! if source list is empty, there are no templates at all! }}
+      {{#unless templates.length}}
+        <app-alert open="true" alert-type="warning" class="no-templates-exist">
+          There are no templates at all. Create one!
+        </app-alert>
+      {{/unless}}
+
+      {{#if noSearchResults}}
+        <app-alert open="true" class="no-results" alert-type="warning">
+          No templates match
+        </app-alert>
+      {{/if}}
+
+      {{#if noTemplatesMatchFilter}}
+        <app-alert open="true" class="no-match-filter" alert-type="warning">
+          {{#eq activeFilter 'active'}}No templates match the filters{{/eq}}
+          {{#eq activeFilter 'deleted'}}There are no templates in the trash{{/eq}}
+        </app-alert>
+      {{/if}}
+
+      {{#if showTemplatesList}}
+        <templates-sortbar criteria="{sortCriteria}"/>
+
+        <templates-list
+          templates="{displayList}"
+          class="{{listStateClassName}}"
+          is-draggable="{listIsDraggable}"/>
+      {{/if}}
+    {{/if}}
+  </div>
+
+  <test-assemble-options
+    {guide-id}="appState.guideId"
+    {guide-title}="appState.guide.title" />
+</div>

@@ -1,0 +1,14 @@
+<can-import from="caja/author/templates/elements/element-toolbar/element-toolbar.less!"/>
+
+<div>
+  <span class="glyphicon-move small text-muted drag-handle"></span>
+  <div class="pull-right">
+    <a href="#" ($click)="clone()">
+      <span class="glyphicon-docs small text-muted"></span>Duplicate
+    </a>
+
+    <a href="#" ($click)="delete()">
+      <span class="glyphicon-trash small text-muted"></span>Delete
+    </a>
+  </div>
+</div>

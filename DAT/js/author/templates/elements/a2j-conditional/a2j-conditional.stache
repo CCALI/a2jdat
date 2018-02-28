@@ -1,0 +1,119 @@
+<can-import from="caja/author/templates/elements/varpicker/" />
+<can-import from="caja/author/templates/elements/options-pane/" />
+<can-import from="caja/author/templates/elements/a2j-variable/" />
+<can-import from="caja/author/templates/elements/condition-form/" />
+<can-import from="caja/author/templates/elements/element-container/" />
+<can-import from="caja/author/templates/elements/a2j-conditional/add-element/" />
+<can-import from="caja/author/templates/elements/a2j-conditional/a2j-conditional.less!" />
+
+{{#if editEnabled}}
+  <element-container
+    {node-id}="id"
+    {deleted}="deleted"
+    {(selected)}="editActive"
+    {clone-node}="@cloneNode"
+    {delete-node}="@deleteNode"
+    {toggle-edit-active-node}="@toggleEditActiveNode"
+  >
+    <div class="panel panel-warning">
+      <div class="panel-heading">
+        IF
+        {{#if leftOperand}}
+          <span class="label label-default">
+            {{#is leftOperandType 'variable'}}
+              <a2j-variable {name}="leftOperand" />
+            {{else}}
+              {{leftOperand}}
+            {{/is}}
+          </span>
+
+          {{formatOperator(operator)}}
+
+          {{#if rightOperand}}
+            <span class="label label-default">
+              {{#is rightOperandType 'variable'}}
+                <a2j-variable {name}="rightOperand" />
+              {{else}}
+                {{rightOperand}}
+              {{/is}}
+            </span>
+          {{/if}}
+        {{/if}}
+      </div>
+
+      <div class="panel-body">
+        <a2j-template
+          edit-enabled="true"
+          {(template)}="ifBody"
+          {save-callback}="@updateNodeState"
+        />
+
+        <conditional-add-element
+          {(template)}="ifBody"
+          {node-id}="addToIfNode.id"
+          {(selected)}="addToIfNode.state.editActive"
+          {toggle-edit-active-node}="@toggleEditActiveNode"
+        />
+      </div>
+
+      {{#if elseClause}}
+        <div class="panel-else">ELSE</div>
+
+        <div class="panel-body">
+          <a2j-template
+            edit-enabled="true"
+            {(template)}="elseBody"
+            {save-callback}="@updateNodeState"
+          />
+
+          <conditional-add-element
+            {(template)}="elseBody"
+            {node-id}="addToElseNode.id"
+            {(selected)}="addToElseNode.state.editActive"
+            {toggle-edit-active-node}="@toggleEditActiveNode"
+          />
+        </div>
+      {{/if}}
+
+      <div class="panel-footer">END IF</div>
+    </div>
+  </element-container>
+
+  {{#if editActive}}
+    <element-options-pane
+      {node-id}="nodeId"
+      title="If / Else Conditional"
+      {save-and-close}="@updateNode"
+    >
+      <condition-form
+        {variables-list}="variablesList"
+        {(operator)}="operator"
+        {(left-operand)}="leftOperand"
+        {(right-operand)}="rightOperand"
+        {(right-operand-type)}="rightOperandType"
+      />
+
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" {($checked)}="elseClause"> Else Clause
+        </label>
+      </div>
+    </element-options-pane>
+  {{/if}}
+{{else}}
+  {{#if evalCondition()}}
+    <a2j-template
+      use-answers="true"
+      {answers}="answers"
+      {template}="ifBody"
+      edit-enabled="false"
+    />
+  {{else}}
+    <a2j-template
+      use-answers="true"
+      {answers}="answers"
+      edit-enabled="false"
+      {template}="elseBody"
+    />
+  {{/if}}
+{{/if}}

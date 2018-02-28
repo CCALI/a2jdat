@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <title>{{title}}</title>
+
+    {{! TODO: find a better way to locate the css bundle }}
+    {{! might be something to fix in done-css }}
+    <link rel="stylesheet" href="file://{{request.__cssBundlePath}}">
+  </head>
+  <body class="bootstrap-styles">
+    <can-import from="caja/author/styles.less!" />
+    <can-import from="caja/server" export-as="viewModel" />
+    <can-import from="caja/author/templates/elements/a2j-template-ssr/" />
+
+    <a2j-template-ssr
+      {answers}="request.body.answers"
+      {guide-id}="request.body.guideId"
+      {template-id}="request.body.templateId"
+      {file-data-url}="request.body.fileDataUrl"
+    />
+  </body>
+</html>

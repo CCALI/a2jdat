@@ -1,0 +1,14 @@
+<can-import from="caja/author/templates/elements/element-toolbar/"/>
+<can-import from="caja/author/templates/elements/element-container/element-container.less!"/>
+
+<div class="wrapper{{#if selected}} selected{{/if}}" ($click)="setSelected()">
+  <content />
+</div>
+
+{{#if selected}}
+  <element-toolbar
+    {node-id}="nodeId"
+    {clone-node}="@cloneNode"
+    {delete-node}="@deleteNode"
+  />
+{{/if}}
