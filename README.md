@@ -24,8 +24,10 @@ https://github.com/creationix/nvm
 2.) Install node through nvm
 after installation of nvm, type the following commands in the terminal to install the required node version
 
-`nvm install 6.9.5`
-`nvm use 6.9.5`
+```
+nvm install 6.9.5
+nvm use 6.9.5
+```
 
 check that the install was successful by typing
 
@@ -66,7 +68,8 @@ All other keys must be present but the value is irrelevant.
 Ensure that the value for the key WKHTMLTOPDF_PATH matches the path noted above where WKHTMLTOPDF is installed. Backslashes are special characters in json so each backslash must be typed twice to escape them and work properly.
 
 a sample config.json for windows is below:
-`{
+```
+{
   "SERVER_URL": "http://localhost",
   "GUIDES_DIR": "C:\\inetpub\\wwwroot\\a2j-viewer\\guides",
   "GUIDES_URL": "/a2j-viewer/guides",
@@ -81,10 +84,12 @@ a sample config.json for windows is below:
   "DRUPAL_DBNAME": "D7commons",
   "DRUPAL_PORT": 3306,
   "WKHTMLTOPDF_PATH": "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf"
-}`
+}
+```
 
 a sample config.json for linux is below:
-`{
+```
+{
   "SERVER_URL": "http://localhost",
   "GUIDES_DIR": "/var/www/example.com/a2j-viewer/guides",
   "GUIDES_URL": "/a2j-viewer/guides",
@@ -99,7 +104,8 @@ a sample config.json for linux is below:
   "DRUPAL_DBNAME": "D7commons",
   "DRUPAL_PORT": 3306,
   "WKHTMLTOPDF_PATH": "/usr/bin/local/wkhtmltopdf"
-}`
+}
+```
 
 8.) Configure the server
 
@@ -110,14 +116,18 @@ for IIS/Windows below is an example web.config
 
 for apache add the following directives to your site config
 
-`ProxyPass /api http://localhost:3000/api
+```
+ProxyPass /api http://localhost:3000/api
 ProxyPassReverse /api http://localhost:3000/api
-ProxyBadHeader Ignore`
+ProxyBadHeader Ignore
+```
 
 for nginx add the following directives
-`Location /api {
+```
+Location /api {
     Proxy_pass http://127.0.0.1:3000/
-}`
+}
+```
 
 9.)  Start the node process
 for \*nix
@@ -133,6 +143,7 @@ This section assumes you installed the node dependencies in the previous section
 2.) navigate to the downloaded location in a terminal
 
 3.)  run the following commands in sequence
+```
 cd DAT
 npm install
 cd js
@@ -140,9 +151,9 @@ npm install
 cd ..
 npm run build
 npm run build:server
+```
 
-
-if you encounter an error in this step it can normally be resolved by deleting node_modules in DAT and DAT\\js and repeating the step.
+if you encounter an error in this step it can often be resolved by deleting node_modules in DAT and DAT\\js and repeating the step.
 
 ## More info
 
