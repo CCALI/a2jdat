@@ -8,7 +8,7 @@ module.exports = {
       try {
         config = require('../../../config.json');
       } catch (e) {
-        throw new Error('Unable to load config.json: ' + e.message);
+        throw new Error('Unable to load config.json');
       }
     }
 

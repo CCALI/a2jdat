@@ -12,7 +12,6 @@ var forwardCookies = require('../util/cookies').forwardCookies;
 var getCssBundlePath = require('../util/get-css-bundle-path');
 var conf = require('../util/config');
 
-
 var debug = require('debug')('A2J:assemble');
 var router = feathers.Router();
 
@@ -22,7 +21,7 @@ var render = ssr({
 });
 
 // it won't work on the server without this
-wkhtmltopdf.command = conf.get('WKHTMLTOPDF_PATH');//'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf'; //'/usr/local/bin/wkhtmltopdf';
+wkhtmltopdf.command = conf.get('WKHTMLTOPDF_PATH'); //'C:\\Program Files\\wkhtmltopdf\\binwkhtmltopdf';//'/usr/local/bin/wkhtmltopdf';
 
 // middleware to validate the presence of either `guideId` or
 // `fileDataUrl`, during document assembly one of those two

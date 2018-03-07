@@ -37,7 +37,7 @@
     "moment": "^2.10.3",
     "numeral": "^1.5.3",
     "path-browserify": "0.0.0",
-    "serve-index": "1.4.0",
+    "serve-index": "^1.9.1",
     "serve-static": "1.6.4",
     "sinon": "^1.17.2",
     "steal": "^0.16.39",
@@ -133,7 +133,7 @@
       "typeahead.js/dist/bloodhound": {
         "format": "cjs"
       },
-      "bootstrap/js/modal" : {
+      "bootstrap/js/modal": {
         "format": "global",
         "deps": [
           "jquery@2.1.4#dist/jquery"
