@@ -25,8 +25,8 @@ https://github.com/creationix/nvm
 after installation of nvm, type the following commands in the terminal to install the required node version
 
 ```
-nvm install 6.9.5
-nvm use 6.9.5
+nvm install 8.9.4
+nvm use 8.9.4
 ```
 
 check that the install was successful by typing
@@ -154,6 +154,9 @@ npm run build:server
 ```
 
 if you encounter an error in this step it can often be resolved by deleting node_modules in DAT and DAT\\js and repeating the step.
+
+## Security Note
+This software uses a version of jquery with a known security vulnerability. The features required to exploit this vulnereability are not used in this software and hence it is not an issue.
 
 ## More info
 
