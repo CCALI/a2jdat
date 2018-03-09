@@ -15,7 +15,7 @@
   "devDependencies": {
     "bit-tabs": "0.2.0",
     "blueimp-file-upload": "^9.10.1",
-    "bootstrap": "^3.3.5",
+    "bootstrap": "3.3.5",
     "bootstrap-tokenfield": "^0.12.0",
     "can": "^2.3.0",
     "chai": "^3.0.0",
@@ -37,6 +37,7 @@
     "moment": "^2.10.3",
     "numeral": "^1.5.3",
     "path-browserify": "0.0.0",
+    "serve-index": "^1.9.1",
     "serve-static": "1.6.4",
     "sinon": "^1.17.2",
     "steal": "^0.16.39",
