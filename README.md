@@ -11,7 +11,7 @@ The DAT requires nodejs 6+. Any system supporting nodejs 6+ is supported. It has
 
 While other server environments may work, they have not been tested.  Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/A2JDAT) repo to let us know any steps taken so that we may share with others.
 
-#Insatallation instructions
+## Insatallation instructions
 
 1.)  Install nvm
 The DAT is a simple restful API that requires nodejs to serve endpoints. Though, you are free to install the node version that the DAT targets and manage it manually the recommended method is to use a node version manager which will allow the simultaneous installation of multiple versions of node and mitigates certain administration issues.
@@ -112,7 +112,31 @@ a sample config.json for linux is below:
 The DAT is a simple restful interface with endpoints located at <host>/api/. Requests must be routed through the node /bin/www target. We will setup a reverse proxy to accomplish this.
 
 for IIS/Windows below is an example web.config
-
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <system.webServer>
+        <handlers>
+            <add name="iisnode" path="DAT/bin/www" verb="*" modules="iisnode" />
+        </handlers>
+        <rewrite>
+          <rules>
+            <rule name="myapp">
+              <match url="(api/.*)" />
+              <action type="Rewrite" url="DAT/bin/www/{R:1}" />
+            </rule>
+          </rules>
+        </rewrite>
+        <security>
+            <requestFiltering>
+                <hiddenSegments>
+                    <remove segment="bin" />
+                </hiddenSegments>
+            </requestFiltering>
+        </security>
+    </system.webServer>
+</configuration>
+```
 
 for apache add the following directives to your site config
 
@@ -147,7 +171,7 @@ This section assumes you installed the node dependencies in the previous section
 cd DAT
 npm install
 cd js
-npm install
+npm install bootstrap
 cd ..
 npm run build
 npm run build:server
