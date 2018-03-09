@@ -1,13 +1,13 @@
 # A2JDAT
 
-This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 6+ to run properly. The recommended additional tools for windows are nvm and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
+This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 8+ to run properly. The recommended additional tools for windows are nvm and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
 
 Within this repo and releases you'll find a `.zip` file containing the minified JavaScript source for the DAT and sample configuration files
 
 NOTE: By downloading this application, you are agreeing to the terms included in the user license [LICENSE.md](https://github.com/CCALI/A2JDAT/blob/master/LICENSE.md).
 
 ## Hosting
-The DAT requires nodejs 6+. Any system supporting nodejs 6+ is supported. It has been tested on ubuntu 14 and 16, centos, and Windows Server 2016 on Azure with apache and IIS
+The DAT requires nodejs 8+. Any system supporting nodejs 8+ is supported. It has been tested on ubuntu 14 and 16, centos, and Windows Server 2016 on Azure with apache and IIS
 
 While other server environments may work, they have not been tested.  Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/A2JDAT) repo to let us know any steps taken so that we may share with others.
 
@@ -36,7 +36,7 @@ check that the install was successful by typing
 which should produce the version number of node we installed
 
 3.) Install wkhtmltopdf
-WKHTMLTOPDF is the engine used to transform interview data into PDF from an intermediate HTML file. Download the latest stable version from https://wkhtmltopdf.org/downloads.html  and install it in the VM. Make a note of the install path.
+WKHTMLTOPDF is the engine used to transform interview data into PDF from an intermediate HTML file. Download the latest stable version from https://wkhtmltopdf.org/downloads.html  and install it in the environment. Make a note of the install path.
 
 4.) Install node process manager
 
@@ -50,7 +50,7 @@ The recommended process manager is pm2 (http://pm2.keymetrics.io/). Install it w
 
 `npm install pm2 -g`
 
-5.) Download the latest DAT from repo. It is recommended that you install the latest release from the releases page. These releases are compiled to target node 6.9.5 and 8.9.4. If you are running a different version of node, you will need to download the source and compile by following the instructions **compile from source instructions**.
+5.) Download the latest DAT from repo. It is recommended that you install the latest release from the releases page. These releases are compiled to target node 8.9.4. If you are running a different version of node, you will need to download the source and compile by following the instructions **compile from source instructions**.
 
 6.) Unzip the DAT package into your webroot or preferred directory on your web server.
 
