@@ -11,7 +11,7 @@ The DAT requires nodejs 8+. Any system supporting nodejs 8+ is supported. It has
 
 While other server environments may work, they have not been tested.  Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/A2JDAT) repo to let us know any steps taken so that we may share with others.
 
-## Insatallation instructions
+## Installation instructions
 
 1.)  Install nvm
 The DAT is a simple restful API that requires nodejs to serve endpoints. Though, you are free to install the node version that the DAT targets and manage it manually the recommended method is to use a node version manager which will allow the simultaneous installation of multiple versions of node and mitigates certain administration issues.
