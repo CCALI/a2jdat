@@ -1,4 +1,4 @@
-<can-import from="author/templates/list/toolbar/toolbar.less!" />
+<can-import from="caja/author/templates/list/toolbar/toolbar.less!" />
 
 <nav class="navbar navbar-default">
   <div class="container-fluid">
@@ -30,11 +30,16 @@
         <span class="glyphicon-file-pdf"></span> Test Assemble
       </button>
 
-      <a href="{{routeUrl page='templates' id='new'}}">
-        <button class="btn btn-primary navbar-btn new-template">
-          <span class="glyphicon-plus"></span> New Template
-        </button>
-      </a>
+      <button class="btn btn-primary navbar-btn new-template"
+        ($click)="openNewTemplate(false)">
+        <span class="glyphicon-plus"></span> Create Text Template
+      </button>
+
+      <button
+        ($click)="openNewTemplate(true)"
+        class="btn btn-primary navbar-btn new-template">
+        <span class="glyphicon-plus"></span> Create PDF Template
+      </button>
     </div>
 
     <form class="navbar-form" role="search">

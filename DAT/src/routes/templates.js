@@ -1,13 +1,13 @@
-const Q = require('q');
-const _ = require('lodash');
-const paths = require('../util/paths');
-const files = require('../util/files');
-const user = require('../util/user');
-const debug = require('debug')('A2J:routes/templates');
+const Q = require('q')
+const _ = require('lodash')
+const paths = require('../util/paths')
+const files = require('../util/files')
+const user = require('../util/user')
+const debug = require('debug')('A2J:routes/templates')
 
-const filterTemplatesByActive = function(active, templates) {
-  return (active != null) ? _.filter(templates, { active }) : templates;
-};
+const filterTemplatesByActive = function (active, templates) {
+  return (active != null) ? _.filter(templates, { active }) : templates
+}
 
 /**
  * @module {Module} /routes/templates templates
@@ -30,28 +30,32 @@ module.exports = {
    * @parent templates
    *
    * Read the templates.json file. If it does not exist,
-   * create it with an empty array.
+   * create it with this data structure:
+   *    { 'guideId': 600, 'templateIds': [] }
    *
    * @return {Promise} a Promise that will resolve to the
    * path to templates data.
    */
-  getTemplatesJSON({ username }) {
-    let templatesJSONPath;
+  getTemplatesJSON ({ username, guideId, fileDataUrl }) {
+    let templatesJSONPath
 
     const pathPromise = paths
-      .getTemplatesPath({ username })
+      .getTemplatesPath({ username, guideId, fileDataUrl })
       .then(templatesPath => {
-        templatesJSONPath = templatesPath;
-        return templatesPath;
-      });
+        templatesJSONPath = templatesPath
+        return templatesPath
+      })
 
     return pathPromise
       .then(path => files.readJSON({ path }))
-      .catch(err => {
-        debug(err);
-        debug(`Writing ${templatesJSONPath}`);
-        return files.writeJSON({ path: templatesJSONPath, data: [] });
-      });
+      .catch((err, path) => {
+        debug(err)
+        debug(`Writing ${templatesJSONPath}`)
+        return files.writeJSON({
+          path: templatesJSONPath,
+          data: { 'guideId': guideId, 'templateIds': [] }
+        })
+      })
   },
 
   /**
@@ -69,33 +73,34 @@ module.exports = {
    * GET /api/templates?fileDataUrl="path/to/data/folder"&active=true
    * GET /api/templates?fileDataUrl="path/to/data/folder"&active=false
    */
-  find(params, callback) {
-    const { active, fileDataUrl } = (params.query || {});
+  find (params, callback) {
+    const { active, fileDataUrl } = (params.query || {})
 
     if (!fileDataUrl) {
-      return callback('You must provide fileDataUrl');
+      return callback(new Error('You must provide fileDataUrl'))
     }
 
     const templateIndexPromise = paths
       .getTemplatesPath({ fileDataUrl })
-      .then(path => files.readJSON({ path }));
+      .then(path => files.readJSON({ path }))
 
     const templatePromises = templateIndexPromise
       .then(templateIndex => {
-        return _.map(templateIndex, ({ templateId }) => {
+        const templateIds = templateIndex.templateIds
+        return _.map(templateIds, (templateId) => {
           return paths
-            .getTemplatePath({ templateId, fileDataUrl })
-            .then(path => files.readJSON({ path }));
-        });
-      });
+            .getTemplatePath({ username: null, guideId: null, templateId, fileDataUrl })
+            .then(path => files.readJSON({ path }))
+        })
+      })
 
     Q.all(templatePromises)
       .then(templates => filterTemplatesByActive(active, templates))
       .then(filteredTemplates => callback(null, filteredTemplates))
       .catch(error => {
-        debug(error);
-        callback(error);
-      });
+        debug(error)
+        callback(error)
+      })
   },
 
   /**
@@ -114,52 +119,51 @@ module.exports = {
    * GET /api/templates/{guide_id}?active=true
    * GET /api/templates/{guide_id}?active=false
    */
-  get(guideId, params, callback) {
-    debug('GET /api/templates/' + guideId);
+  get (guideId, params, callback) {
+    debug('GET /api/templates/' + guideId)
 
-    const { cookieHeader } = params;
-    const { active } = (params.query || {});
-    const usernamePromise = user.getCurrentUser({ cookieHeader });
+    const { cookieHeader } = params
+    const { active } = (params.query || {})
+    const { fileDataUrl } = (params.query || '')
+    const usernamePromise = user.getCurrentUser({ cookieHeader })
 
-    const filterByGuideId = function(coll) {
-      return _.filter(coll, o => o.guideId === guideId);
-    };
+    let username
 
-    const filteredTemplateSummaries = usernamePromise
-      .then(username => this.getTemplatesJSON({ username }))
-      .then(filterByGuideId);
+    const templatePathPromises = usernamePromise
+    .then(currentUsername => {
+      username = currentUsername
+      return this.getTemplatesJSON({ username, guideId, fileDataUrl })
+    })
+    .then(({guideId, templateIds}) => {
+      return templateIds.map(templateId => {
+        return paths.getTemplatePath({ username, guideId, templateId })
+      })
+    })
 
-    const templatePromises = Q
-      .all([filteredTemplateSummaries, usernamePromise])
-      .then(([ filteredTemplates, username ]) => {
-        return _.map(filteredTemplates, ({ guideId, templateId }) => {
-          const pathPromise = paths.getTemplatePath({
-            guideId, templateId, username
-          });
+    const templatePromises = Q.all(templatePathPromises)
+      .then(templatePaths => {
+        return templatePaths.map(path => {
+          return files.readJSON({ path })
+        })
+      })
 
-          return pathPromise.then(path => {
-            return files.readJSON({ path });
-          });
-        });
-      });
-
-    const debugTemplatesByGuide = function(templates) {
+    const debugTemplatesByGuide = function (templates) {
       if (templates.length) {
-        debug('Found', templates.length, 'templates for guide', guideId);
+        debug('Found', templates.length, 'templates for guide', guideId)
       } else {
-        debug('No templates found for guideId ' + guideId);
+        debug('No templates found for guideId ' + guideId)
       }
-    };
+    }
 
     Q.all(templatePromises)
       .then(templates => filterTemplatesByActive(active, templates))
       .then(filteredTemplates => {
-        debugTemplatesByGuide(filteredTemplates);
-        callback(null, filteredTemplates);
+        debugTemplatesByGuide(filteredTemplates)
+        callback(null, filteredTemplates)
       })
       .catch(error => {
-        debug(error);
-        callback(error);
-      });
+        debug(error)
+        callback(error)
+      })
   }
-};
+}

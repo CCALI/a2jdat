@@ -1,11 +1,11 @@
-<can-import from="author/templates/edit/toolbar/toolbar.less!" />
+<can-import from="caja/author/templates/edit/toolbar/toolbar.less!" />
 <can-import from="bootstrap/js/modal" />
 
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="row">
       <div class="col-xs-6 form-container">
-        <a class="back-to-list" href="{{routeUrl page='templates'}}">
+        <a class="back-to-list" href="{{routeUrl page='templates' guideId=guideId}}">
           <i class="glyphicon glyphicon-left-open"></i>
         </a>
 

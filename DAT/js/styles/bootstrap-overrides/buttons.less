@@ -12,7 +12,7 @@
   * <input class="btn btn-default" type="submit" value="Submit">
   *```
   *
-  * @demo docs/demos/buttons/demo.html
+  * @demo demos/buttons/demo.html
   *
   * > #### Context-specific usage
   * > While button classes can be used on `<a>` and `<button>` elements, only `<button>` elements are supported within our nav and navbar components.
@@ -28,19 +28,28 @@
   * ## Options
   * Use any of the available button classes to quickly create a styled button.
   *
-  * @demo docs/demos/buttons-options/demo.html
+  * @demo demos/buttons-options/demo.html
   *
   * > #### Conveying meaning to assistive technologies
   * > Using color to add meaning to a button only provides a visual indication, which will not be conveyed to users of assistive technologies - such as screen readers. Ensure that information denoted by the color is either obvious from the content itself (the visible text of the button), or is included through alternative means, such as additional text hidden with the `.sr-only` class.
   *
+  * ## Dropdown
+  * Any button can be a dropdown toggle.
+  * 
+  * The interaction is handled by `dropdown.js` which is not included in the style guide. 
+  * The javascript adds a class `.open` to the parent `.btn-group` class allowing the 
+  * `.dropdown-menu` class to display.
+  *
+  * @demo demos/buttons-dropdown/demo.html
+  *
   * ## Sizes
   * Fancy larger or smaller buttons- Add `.btn-lg`, `.btn-sm`, or `.btn-xs` for additional sizes.
   *
-  * @demo docs/demos/buttons-sizes/demo.html
+  * @demo demos/buttons-sizes/demo.html
   *
   * Create block level buttons-those that span the full width of a parent- by adding `.btn-block`.
   *
-  * @demo docs/demos/buttons-block/demo.html
+  * @demo demos/buttons-block/demo.html
   *
   * ## Active state
   * Buttons will appear pressed (with a darker background, darker border, and inset shadow) when active. For `<button>` elements, this is done via `:active`. For `<a>` elements, it's done with `.active`. However, you may use `.active` on `<button>`s (and include the `aria-pressed="true"` attribute) should you need to replicate the active state programmatically.
@@ -48,12 +57,12 @@
   * ### Button element
   * No need to add `:active` as it's a pseudo-class, but if you need to force the same appearance, go ahead and add `.active`.
   *
-  * @demo docs/demos/buttons-element/demo.html
+  * @demo demos/buttons-element/demo.html
   *
   * ### Anchor element
   * Add the `.active` class to `<a>` buttons.
   *
-  * @demo docs/demos/buttons-anchor/demo.html
+  * @demo demos/buttons-anchor/demo.html
   *
   * ## Disabled state
   * Make buttons look unclickable by fading them back with `opacity`.
@@ -61,7 +70,7 @@
   * ### Button element
   * Add the `disabled` attribute to `<button>` buttons.
   *
-  * @demo docs/demos/buttons-disabled-element/demo.html
+  * @demo demos/buttons-disabled-element/demo.html
   *
   * > #### Cross-browser compatibility
   * > If you add the `disabled` attribute to a `<button>`, Internet Explorer 9 and below will render text gray with a nasty text-shadow that we cannot fix.
@@ -69,7 +78,7 @@
   * ### Anchor element
   * Add the `.disabled` class to `<a>` buttons.
   *
-  * @demo docs/demos/buttons-disabled-anchor/demo.html
+  * @demo demos/buttons-disabled-anchor/demo.html
   *
   * We use .disabled as a utility class here, similar to the common .active class, so no prefix is required.
   *
@@ -97,7 +106,7 @@
 @btn-default-border:             #ccc;
 
 @btn-primary-color:              #fff;
-@btn-primary-bg:                 @brand-primary;
+@btn-primary-bg:                 @brand-secondary;
 @btn-primary-border:             darken(@btn-primary-bg, 5%);
 
 @btn-success-color:              #fff;
@@ -122,3 +131,48 @@
 @btn-border-radius-base:         @border-radius-base;
 @btn-border-radius-large:        @border-radius-large;
 @btn-border-radius-small:        @border-radius-small;
+
+/**
+* @styles margins Margins
+* @parent buttons.less 2
+*
+* Adds a right margin to button class `.btn` to give more distance between clickstates.
+*
+* @demo demos/buttons/button-margin.html
+*
+**/
+
+@btn-right-margin:                10px;
+
+// Setting button margins wider
+.bootstrap-styles .btn {
+  margin-right: @btn-right-margin;
+}
+.bootstrap-styles .btn:last-child {
+  margin-right: 0;
+}
+
+/**
+* @styles widths Button Widths
+* @parent buttons.less 3
+*
+* Creates button widths for uniform button sizing: `.btn-wide-sm`, `.btn-wide-md`, and `.btn-wide-lg`.
+* Widths are applied using `min-width` declaration so that buttons with longer text will expand the button (rather than get clipped).
+*
+* @demo demos/buttons/button-widths.html
+*
+**/
+// Extending buttons with width options
+@btn-wide-sm:                    100px;
+@btn-wide-md:                    225px;
+@btn-wide-lg:                    350px;
+
+.btn-wide-sm {
+  min-width: @btn-wide-sm;
+}
+.btn-wide-md {
+  min-width: @btn-wide-md;
+}
+.btn-wide-lg {
+  min-width: @btn-wide-lg;
+}

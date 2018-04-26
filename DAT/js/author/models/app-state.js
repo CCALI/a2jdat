@@ -3,15 +3,31 @@ import Map from 'can/map/';
 import List from 'can/list/';
 import A2JVariable from './a2j-variable';
 import _isEmpty from 'lodash/isEmpty';
+import {Gender, Hair, Skin} from 'caja/viewer/desktop/avatar/colors';
 
 // with the existing Guide model that works with a different data structure.
-let Guide = Map.extend({
+let Guide = Map.extend('AppStateGuide', {
   define: {
     variablesList: {
       get() {
         let vars = this.attr('vars');
         return A2JVariable.fromGuideVars(vars.attr());
       }
+    },
+
+    guideGender: {
+      type: Gender,
+      value: Gender.defaultValue
+    },
+
+    avatarSkinTone: {
+      type: Skin,
+      value: Skin.defaultValue
+    },
+
+    avatarHairColor: {
+      type: Hair,
+      value: Hair.defaultValue
     }
   }
 });
@@ -25,11 +41,28 @@ let Guide = Map.extend({
 export default Map.extend({
   define: {
     /**
+    * @property {String} selectedReport
+    *
+    * selected report type
+    */
+    selectedReport: {
+      serialize: false
+    },
+    /**
     * @property {List} traceLogic
     *
     * latest message to display in the trace panel
     */
     traceLogic: {
+      serialize: false
+    },
+
+    /**
+    * @property {List} traceLogicList
+    *
+    * active list of each pages traceLogic
+    */
+    traceLogicList: {
       serialize: false
     },
 
@@ -44,15 +77,40 @@ export default Map.extend({
     },
 
     /**
+     * @property {can.Map} interviews
+     *
+     * The available interviews shown to the Author
+     *
+     */
+    interviews: {
+      serialize: false
+    },
+
+    /**
      * @property {String} guideId
      *
-     * The identifier to the guided interview currently loaded.
+     * The identifier to the guideId interview currently loaded.
      */
     guideId: {
-      serialize: false,
       value() {
         return window.gGuideID || '';
       }
+    },
+
+    /**
+     * @property {String} templateId
+     *
+     * The identifier to the templateId interview currently loaded.
+     */
+    templateId: {},
+
+    /**
+     * @property {String} hideAllGrades
+     *
+     * This state is passed between the reports tab and it's toolbar
+     */
+    hideAllGrades: {
+      serialize: false
     },
 
     /**
@@ -111,9 +169,23 @@ export default Map.extend({
     },
 
     /**
+     * @property {Boolean} showDevPublishButtons
+     *
+     * Whether currently developing locally or on Staging server
+     * used to show special DEV publish buttons for LHI and Marlabs
+     */
+    showDevPublishButtons: {
+      value: false,
+      serialize: false,
+      get() {
+        return location.hostname === 'localhost' || location.hostname === 'staging.a2jauthor.org';
+      }
+    },
+
+    /**
      * @property {String} previewPageName
      *
-     * The name of the page that will be loaded when user clicks the interview
+     * The name of the page that will be loaded when user clicks the preview
      * button in the edit page popup, when empty the first page of the interview
      * will be loaded.
      */
@@ -150,7 +222,10 @@ export default Map.extend({
      * The Interview instance used by the viewer app in preview mode.
      */
     viewerInterview: {
-      serialize: false
+      serialize: false,
+      set (val) {
+        return val;
+      }
     },
 
     /**
@@ -173,7 +248,7 @@ export default Map.extend({
   },
 
   init() {
-    let appState = this;  
+    let appState = this;
 
     $(document).ajaxError(function globalAjaxHandler(event, jqxhr) {
       let status = jqxhr.status;

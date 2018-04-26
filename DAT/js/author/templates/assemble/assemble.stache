@@ -1,4 +1,4 @@
-<can-import from="author/templates/assemble/assemble.less!" />
+<can-import from="caja/author/templates/assemble/assemble.less!" />
 
 <div id="test-assemble-modal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-md">
@@ -26,7 +26,7 @@
               <button type="button" class="btn btn-default load-answers pull-right">
                 Load Answers
               </button>
-              <input class="answers-file-input" type="file" style="display: none;" />
+              <input class="answers-file-input" type="file" accept=".anx" style="display: none;" />
             {{/if}}
           </div>
         </div>

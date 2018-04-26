@@ -1,4 +1,4 @@
-import navbarItems from 'author/vertical-navbar/navbar-items';
+import navbarItems from 'caja/author/vertical-navbar/navbar-items';
 
 /**
  * @module {{}} author/utils/tabs-routing tabs-routing
@@ -16,12 +16,14 @@ export default function tabsRouting(appState) {
 
   let onPageChange = function(evt, newPage) {
     if (newPage !== 'templates') {
-      appState.removeAttr('id');
+      appState.removeAttr('templateId');
       appState.removeAttr('action');
     }
 
     let item = navbarItems.filter(item => item.page === newPage).shift();
-    window.gotoTabOrPage(item.ref);
+    if (item && item.ref) {
+      window.gotoTabOrPage(item.ref);
+    }
   };
 
   // navigate to the right page/tab on load.

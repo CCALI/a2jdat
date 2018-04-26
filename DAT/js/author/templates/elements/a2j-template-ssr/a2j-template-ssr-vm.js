@@ -1,8 +1,8 @@
-import Map from 'can/map/';
-import List from 'can/list/';
-import Answers from 'caja/author/models/answers';
-import A2JTemplate from 'caja/author/models/a2j-template';
-import evalAuthorCondition from 'caja/author/utils/eval-author-condition';
+import Map from "can/map/";
+import List from "can/list/";
+import Answers from "caja/author/models/answers";
+import A2JTemplate from "caja/author/models/a2j-template";
+import evalAuthorCondition from "caja/author/utils/eval-author-condition";
 
 /**
  * @module {can.Map} A2jTemplateSsrVM
@@ -22,13 +22,22 @@ export default Map.extend({
     templatesPromise: {
       get() {
         const active = true;
-        const guideId = this.attr('guideId');
-        const templateId = this.attr('templateId');
-        const fileDataUrl = this.attr('fileDataUrl');
+        const guideId = this.attr("guideId");
+        const templateId = this.attr("templateId");
+        const templateIds = this.attr("templateIds");
+        const fileDataUrl = this.attr("fileDataUrl");
 
-        return templateId ?
-          this.findOneAndMakeList(templateId) :
-          A2JTemplate.findAll({ guideId, fileDataUrl, active });
+        if (Array.isArray(templateIds)) {
+          return Promise.all(
+            templateIds.map(templateId => A2JTemplate.findOne({ templateId }))
+          ).then(templates => new List(templates));
+        }
+
+        if (templateId) {
+          return this.findOneAndMakeList(guideId, templateId);
+        }
+
+        return A2JTemplate.findAll({ guideId, fileDataUrl, active });
       }
     },
 
@@ -39,8 +48,8 @@ export default Map.extend({
      */
     templates: {
       get(last, set) {
-        this.attr('templatesPromise').then(set, error => {
-          console.log('Failed to get templates from server: ', error);
+        this.attr("templatesPromise").then(set, error => {
+          console.log("Failed to get templates from server: ", error);
         });
       }
     },
@@ -61,12 +70,12 @@ export default Map.extend({
   /**
    * @function findOneAndMakeList
    *
-   * Calls `A2JTemplate.findOne` with the id value pass as a parameter and
-   * returns an `A2JTemplate.List` with the template instance retrieved from
-   * the server.
+   * Calls `A2JTemplate.findOne` with the guideId and templateId values passed
+   * as a parameter and returns an `A2JTemplate.List` with the template instance
+   * retrieved from the server.
    */
-  findOneAndMakeList(id) {
-    const promise = A2JTemplate.findOne({ templateId: id });
+  findOneAndMakeList(guideId, templateId) {
+    const promise = A2JTemplate.findOne({ guideId, templateId });
     return promise.then(template => new List([template]));
   },
 
@@ -81,9 +90,8 @@ export default Map.extend({
 
     try {
       answers = JSON.parse(json);
-    }
-    catch (e) {
-      console.error('Invalid JSON', e);
+    } catch (e) {
+      console.error("Invalid JSON", e);
     }
 
     return answers;
@@ -95,16 +103,18 @@ export default Map.extend({
    * Determines whether the template passed to the function can be rendered
    */
   canRenderTemplate(template) {
-    const state = template.attr('rootNode.state');
-    const hasConditionalLogic = state.attr('hasConditionalLogic') === 'true';
+    const state = template.attr("rootNode.state");
+    const hasConditionalLogic = state.attr("hasConditionalLogic") === "true";
 
-    return !hasConditionalLogic || evalAuthorCondition({
-      answers: this.attr('answers'),
-      operator: state.attr('operator'),
-      leftOperand: state.attr('leftOperand'),
-      rightOperand: state.attr('rightOperand'),
-      rightOperandType: state.attr('rightOperandType')
-    });
+    return (
+      !hasConditionalLogic ||
+      evalAuthorCondition({
+        answers: this.attr("answers"),
+        operator: state.attr("operator"),
+        leftOperand: state.attr("leftOperand"),
+        rightOperand: state.attr("rightOperand"),
+        rightOperandType: state.attr("rightOperandType")
+      })
+    );
   }
 });
-

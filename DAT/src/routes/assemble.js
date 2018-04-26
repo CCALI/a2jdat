@@ -1,115 +1,254 @@
-const he = require('he');
-const url = require('url');
-const path = require('path');
-const ssr = require('done-ssr');
-const through = require('through2');
-const feathers = require('feathers');
-const wkhtmltopdf = require('wkhtmltopdf');
-const filenamify = require('../util/pdf-filename');
-const forwardCookies = require('../util/cookies').forwardCookies;
-const getCssBundlePath = require('../util/get-css-bundle-path');
-var conf = require('../util/config');
+const he = require('he')
+const url = require('url')
+const path = require('path')
+const ssr = require('done-ssr')
+const through = require('through2')
+const feathers = require('feathers')
+const wkhtmltopdf = require('wkhtmltopdf')
+const filenamify = require('../util/pdf-filename')
+const forwardCookies = require('../util/cookies').forwardCookies
+const getCssBundlePath = require('../util/get-css-bundle-path')
 
+const fs = require('fs')
+const hummus = require('hummus')
+const {storage} = require('../pdf/storage')
+const {overlayer} = require('../pdf/overlayer')
+const {getTemplateOverlay} = require('../../js/author/pdf/assemble')
+const paths = require('../util/paths')
+const templates = require('../routes/templates')
+const files = require('../util/files')
+const user = require('../util/user')
+const {data} = require('../util/data')
 
-const debug = require('debug')('A2J:assemble');
-const router = feathers.Router();
+const {
+  setDownloadHeaders,
+  deleteFile,
+  getTemporaryPdfFilepath,
+  mergeGuideVariableWithAnswers,
+  filterTemplatesByCondition,
+  segmentTextAndPdfTemplates,
+  getXmlVariables,
+  getRequestPdfOptions
+} = require('./assemble-utils')
+
+const debug = require('debug')('A2J:assemble')
+const router = feathers.Router()
 
 const render = ssr({
   main: 'caja/server.stache!done-autorender',
   config: path.join(__dirname, '..', '..', 'package.json!npm')
-});
+})
 
-// it won't work on the server without this
-wkhtmltopdf.command = conf.get('WKHTMLTOPDF_PATH');//'C:\\Program Files\\wkhtmltopdf\\binwkhtmltopdf';//'/usr/local/bin/wkhtmltopdf';
+// config.json is optional for standalone viewer, but defines path to wkhtmltopdf binary
+// use linux default if config.json not found
+// sample paths: linux '/usr/local/bin/wkhtmltopdf';  windows 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf';
+// TODO: these checks can be removed once config.json is required for all standalone hosting
+let config
+const configPath = path.join(__dirname, '..', '..', '..', 'config.json')
+
+try {
+  fs.accessSync(configPath, fs.constants.R_OK)
+  debug('can read config.json from ', configPath)
+  config = require('../util/config')
+  wkhtmltopdf.command = config.get('WKHTMLTOPDF_PATH')
+} catch (err) {
+  console.warn('config.json file not found or unaccessible, using linux default path for wkhtmltopdf of : "/usr/local/bin/wkhtmltopdf"')
+  debug('expected config.json in ', configPath)
+  wkhtmltopdf.command = '/usr/local/bin/wkhtmltopdf'
+}
+
+debug('Path to wkhtmltopdf binary: ', wkhtmltopdf.command)
 
 // middleware to validate the presence of either `guideId` or
 // `fileDataUrl`, during document assembly one of those two
 // properties is needed to retrieve the template's data.
-const checkPresenceOf = function(req, res, next) {
-  const { guideId, fileDataUrl } = req.body;
+const checkPresenceOf = function (req, res, next) {
+  const { guideId, fileDataUrl } = req.body
 
   if (!guideId && !fileDataUrl) {
     return res.status(400)
-      .send('You must provide either guideId or fileDataUrl');
+      .send('You must provide either guideId or fileDataUrl')
   }
 
-  next();
-};
+  next()
+}
 
-router.post('/', checkPresenceOf, forwardCookies, function(req, res) {
-  const url = req.protocol + '://' + req.get('host') + req.originalUrl;
-  const headerFooterUrl = url + '/header-footer?content=';
+router.post('/', checkPresenceOf, (req, res) => {
+  assemble(req, res).catch(error => {
+    debug('/assemble error:', error)
+    res.status(500).json({
+      ok: false,
+      error: error.message
+    })
+  })
+})
 
-  debug('Request payload: ', req.body);
-
-  const pdfOptions = {
-    'header-spacing': 5,
-    'footer-spacing': 5
-  };
-
-  const toPdf = function(filename, html) {
-    if (!html) {
-      res.status(500)
-        .send('There was a problem generating the document, try again later.');
+async function assemble (req, res) {
+  debug('Request body:', req.body)
+  const pdfOptions = Object.assign(
+    getRequestPdfOptions(req),
+    {
+      'header-spacing': 5,
+      'footer-spacing': 5,
+      'margin-top': 20
     }
+  )
 
-    const { header, hideHeaderOnFirstPage } = req.body;
-    const { footer, hideFooterOnFirstPage } = req.body;
+  const cookieHeader = req.headers.cookie
+  const {guideId, templateId, answers: answersJson, fileDataUrl} = req.body
+  const htmlOptions = req // Done SSR needs the whole request, sadly
+  const downloadName = filenamify('A2J Test Assemble')
 
-    res.set({
-      status: 201,
-      'Content-Type': 'application/pdf',
-      'Access-Control-Allow-Origin': '*',
-      'Content-Disposition': `attachment; filename=${filename}`
-    });
+  const isSingleTemplateAssemble = !!templateId
+  if (isSingleTemplateAssemble) {
+    return createPdfForTextTemplates(htmlOptions, pdfOptions)
+    .then(pdfStream => {
+      setDownloadHeaders(res, downloadName)
+      pdfStream.pipe(res)
+    })
+    .catch(error => {
+      debug('Single assemble error:', error)
+      res.status(500).send(error)
+    })
+  }
 
-    if (header) {
-      const h = encodeURIComponent(header);
-      const hofp = encodeURIComponent(hideHeaderOnFirstPage);
+  const username = fileDataUrl ? undefined : await user.getCurrentUser({cookieHeader})
+  const answers = JSON.parse(answersJson)
+  const allTemplates = await getTemplatesForGuide(username, guideId, fileDataUrl)
+  const isTemplateLogical = filterTemplatesByCondition(answers)
+  const templates = allTemplates.filter(isTemplateLogical)
+  const guideVariables = await getVariablesForGuide(username, guideId, fileDataUrl)
+  const variables = mergeGuideVariableWithAnswers(guideVariables, answers)
+  const segments = segmentTextAndPdfTemplates(templates)
+  const pdfFiles = await Promise.all(segments.map(
+    ({isPdf, templates}) => {
+      if (isPdf) {
+        return renderPdfForPdfTemplates(username, templates, variables, answers, fileDataUrl)
+      }
 
-      pdfOptions['header-html'] = `${headerFooterUrl}${h}&hideOnFirstPage=${hofp}`;
+      req.body.templateIds = templates.map(t => t.templateId)
+      return createPdfForTextTemplates(req, pdfOptions).then(pdfStream => {
+        const temporaryPath = getTemporaryPdfFilepath()
+        const fileStream = fs.createWriteStream(temporaryPath)
+        return new Promise((resolve, reject) => {
+          pdfStream.on('error', error => reject(error))
+          fileStream.on('finish', () => resolve(temporaryPath))
+          fileStream.on('error', error => reject(error))
+          pdfStream.pipe(fileStream)
+        })
+      })
     }
+  )).catch(error => {
+    debug('Assemble error:', error)
+    throw error
+  })
 
-    if (footer) {
-      const f = encodeURIComponent(footer);
-      const hofp = encodeURIComponent(hideFooterOnFirstPage);
+  const pdf = await combinePdfFiles(pdfFiles)
+  setDownloadHeaders(res, downloadName)
+  return new Promise((resolve, reject) => {
+    res.sendFile(pdf, error => {
+      if (error) {
+        debug('Send error:', error)
+      }
+      deleteFile(pdf)
+        .then(resolve)
+        .catch(error => {
+          debug('Delete error:', error)
+          reject(error)
+        })
+    })
+  })
+}
 
-      pdfOptions['footer-html'] = `${headerFooterUrl}${f}&hideOnFirstPage=${hofp}`;
-    }
+async function getTemplatesForGuide (username, guideId, fileDataUrl) {
+  const templateIndex = await templates.getTemplatesJSON({username, guideId, fileDataUrl})
+  // if guideId not defined, we are in standalone viewer/dat assembly using fileDataUrl
+  // set guideId to the local templates.json valu
+  if (fileDataUrl && !guideId) {
+    guideId = templateIndex.guideId
+  }
+  const templateIds = templateIndex.templateIds
+  const templatesPromises = templateIds
+  .map(templateId => paths
+      .getTemplatePath({guideId, templateId, username, fileDataUrl})
+      .then(path => files.readJSON({path}))
+    )
 
-    // finally call wkhtmltopdf with the html generated from the can-ssr call
-    // and pipe it into the response object.
-    wkhtmltopdf(html, pdfOptions).pipe(res);
-  };
+  const isActive = template =>
+    template.active === 'true' || template.active === true
 
-  const onFailure = function(error) {
-    res.status(500).send(error);
-  };
+  return Promise.all(templatesPromises)
+    .then(templates => templates.filter(isActive))
+}
 
-  // make the absolute path to the css bundle available in the request
-  // object so the template can use it to load it using a file uri,
-  // otherwise wkhtmltopdf won't load the styles at all.
-  req.__cssBundlePath = getCssBundlePath();
+async function getVariablesForGuide (username, guideId, fileDataUrl) {
+  const xml = await data.getGuideXml(username, guideId, fileDataUrl)
+  if (!xml) {
+    return {}
+  }
+  const variables = getXmlVariables(xml)
+  return variables.reduce((map, variable) => {
+    map[variable.name.toLowerCase()] = variable
+    return map
+  }, {})
+}
 
-  const renderStream = render(req);
-  renderStream.pipe(through(function(buffer){
-    const html = buffer.toString();
-    const title = req.body.guideTitle;
+async function renderPdfForPdfTemplates (username, templates, variables, answers, fileDataUrl) {
+  const pdfFiles = await Promise.all(templates.map(async template => {
+    const filepath = await storage.duplicateTemplatePdf(username, template.guideId, template.templateId, fileDataUrl)
+    const overlay = getTemplateOverlay(template, variables, answers)
+    await overlayer.forkWithOverlay(filepath, overlay)
+    return filepath
+  }))
 
-    toPdf(filenamify(title), he.decode(html));
-  }));
+  return combinePdfFiles(pdfFiles)
+}
 
-  renderStream.on('error', onFailure);
-});
+async function combinePdfFiles (pdfFiles) {
+  const [firstPdf, ...otherPdfs] = pdfFiles
+  const writer = hummus.createWriterToModify(firstPdf)
+  otherPdfs.forEach(pdf => {
+    writer.appendPDFPagesFromPDF(pdf)
+  })
+  writer.end()
 
-router.get('/header-footer', forwardCookies, function(req, res) {
-  var query = url.parse(req.originalUrl, true).query;
+  await Promise.all(otherPdfs.map(deleteFile))
+
+  return firstPdf
+}
+
+function getHtmlForRichText (options) {
+  const request = Object.assign(
+    options,
+    {__cssBundlePath: getCssBundlePath()}
+  )
+  const webpageStream = render(request)
+  return new Promise((resolve, reject) => {
+    webpageStream.pipe(through(buffer => {
+      const html = buffer.toString()
+      resolve(he.decode(html))
+    }))
+    webpageStream.on('error', error => reject(error))
+  })
+}
+
+function getPdfForHtml (html, pdfOptions) {
+  return wkhtmltopdf(html, pdfOptions)
+}
+
+async function createPdfForTextTemplates (htmlOptions, pdfOptions) {
+  const renderedWebpage = await getHtmlForRichText(htmlOptions)
+  return getPdfForHtml(renderedWebpage, pdfOptions)
+}
+
+router.get('/header-footer', forwardCookies, function (req, res) {
+  var query = url.parse(req.originalUrl, true).query
 
   if (query.page === '1' && query.hideOnFirstPage === 'true') {
-    res.status(200).send('<!DOCTYPE html>');
+    res.status(200).send('<!DOCTYPE html>')
   } else {
-    res.status(200).send('<!DOCTYPE html>' + query.content);
+    res.status(200).send('<!DOCTYPE html>' + query.content)
   }
-});
+})
 
-module.exports = router;
+module.exports = router
