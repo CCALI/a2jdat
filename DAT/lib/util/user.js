@@ -1,11 +1,11 @@
 'use strict';
 
-var Q = require('q');
-var request = require('request');
-var config = require('./config');
-var url = require('url');
+const Q = require('q');
+const request = require('request');
+const config = require('./config');
+const url = require('url');
 
-var debug = require('debug')('A2J:util/user');
+const debug = require('debug')('A2J:util/user');
 
 /**
  * @module {Module} /util/user user
@@ -15,20 +15,15 @@ var debug = require('debug')('A2J:util/user');
  * information about the user.
  *
  */
-module.exports = {
+const user = {
   /**
    * @property {Function} user.handleError
    * @parent user
    *
    * Error Handler.
    */
-  handleError: function handleError(_ref) {
-    var msg = _ref.msg,
-        serverURL = _ref.serverURL,
-        deferred = _ref.deferred,
-        cookieHeader = _ref.cookieHeader;
-
-    var hostname = url.parse(serverURL).hostname;
+  handleError({ msg, serverURL, deferred, cookieHeader }) {
+    const hostname = url.parse(serverURL).hostname;
 
     if (hostname === 'localhost') {
       debug('getCurrentUser hardcoding to dev');
@@ -38,20 +33,15 @@ module.exports = {
     deferred.reject('Cannot authenticate current user');
   },
 
-
   /**
    * @property {Function} user.getCurrentUser
    * @parent user
    *
    * Get the current user based on the PHP session.
    */
-  getCurrentUser: function getCurrentUser(_ref2) {
-    var _this = this;
-
-    var cookieHeader = _ref2.cookieHeader;
-
-    var deferred = Q.defer();
-    var serverURL = config.get('SERVER_URL');
+  getCurrentUser({ cookieHeader }) {
+    const deferred = Q.defer();
+    const serverURL = config.get('SERVER_URL');
 
     debug('getCurrentUser request', cookieHeader);
 
@@ -60,31 +50,41 @@ module.exports = {
         Cookie: cookieHeader
       },
       form: { cmd: 'currentuser' }
-    }, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
+    }, (error, response, body) => {
+      if (!error && response.statusCode === 200) {
         try {
           body = JSON.parse(body);
-          debug('currentuser response ' + body.username);
+          debug(`currentuser response ${body.username}`);
           deferred.resolve(body.username);
         } catch (err) {
-          _this.handleError({
-            msg: 'getCurrentUser error ' + err,
-            serverURL: serverURL,
-            deferred: deferred,
-            cookieHeader: cookieHeader
+          this.handleError({
+            msg: `getCurrentUser error ${err}`,
+            serverURL,
+            deferred,
+            cookieHeader
           });
         }
       } else {
-        var statusCode = response && response.statusCode;
-        _this.handleError({
-          msg: 'getCurrentUser error (' + statusCode + '): ' + error + ' ',
-          serverURL: serverURL,
-          deferred: deferred,
-          cookieHeader: cookieHeader
+        const statusCode = response && response.statusCode;
+        this.handleError({
+          msg: `getCurrentUser error (${statusCode}): ${error} `,
+          serverURL,
+          deferred,
+          cookieHeader
         });
       }
     });
 
     return deferred.promise;
+  },
+
+  middleware(req, res, next) {
+    const cookieHeader = req.headers.cookie;
+    user.getCurrentUser({ cookieHeader }).then(username => {
+      req.user = { username };
+      next();
+    }).catch(error => next(error));
   }
 };
+
+module.exports = user;

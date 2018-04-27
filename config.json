@@ -14,5 +14,6 @@
   "DRUPAL_PASSWD": "root",
   "DRUPAL_DBNAME": "D7commons",
   "DRUPAL_PORT": 3306,
-  "WKHTMLTOPDF_PATH": "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf"
+  "WKHTMLTOPDF_PATH": "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf",
+  "VIEWER_PATH": "C:\\inetpub\\wwwroot\\a2j-viewer\\viewer\\"
 }

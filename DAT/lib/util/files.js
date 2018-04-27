@@ -1,8 +1,8 @@
 'use strict';
 
-var Q = require('q');
-var _ = require('lodash');
-var fs = require('fs-extra');
+const Q = require('q');
+const _ = require('lodash');
+const fs = require('fs-extra');
 
 /**
  * @module {Module} /util/files files
@@ -30,10 +30,8 @@ module.exports = {
    *   .then(data => console.log(data));
    * @codeend
    */
-  readJSON: function readJSON(_ref) {
-    var path = _ref.path;
-
-    var deferred = Q.defer();
+  readJSON({ path }) {
+    const deferred = Q.defer();
 
     fs.readFile(path, 'UTF-8', function (err, data) {
       if (!err) {
@@ -49,7 +47,6 @@ module.exports = {
 
     return deferred.promise;
   },
-
 
   /**
    * @property {Function} files.writeJSON
@@ -69,18 +66,15 @@ module.exports = {
    *   .then(data => console.log(data));
    * @codeend
    */
-  writeJSON: function writeJSON(_ref2) {
-    var path = _ref2.path,
-        data = _ref2.data;
-
-    var deferred = Q.defer();
+  writeJSON({ path, data }) {
+    const deferred = Q.defer();
 
     fs.ensureFile(path, function (error) {
       if (error) {
         deferred.reject(error);
       }
 
-      var fileData = JSON.stringify(data, null, '\t');
+      const fileData = JSON.stringify(data, null, '\t');
 
       fs.writeFile(path, fileData, function (err) {
         if (err) {
@@ -97,7 +91,6 @@ module.exports = {
 
     return deferred.promise;
   },
-
 
   /**
    * @property {Function} files.mergeJSON
@@ -134,31 +127,55 @@ module.exports = {
    * // [{"id":1},{"id":2,"bar":"baz"},{"id":3}]
    * @codeend
    */
-  mergeJSON: function mergeJSON(_ref3) {
-    var _this = this;
+  mergeJSON({ path, data, replaceKey }) {
+    const deferred = Q.defer();
 
-    var path = _ref3.path,
-        data = _ref3.data,
-        replaceKey = _ref3.replaceKey;
-
-    var deferred = Q.defer();
-
-    var mergeData = function mergeData(fileData) {
+    const mergeData = function (fileData) {
       if (!replaceKey) {
-        return fileData.concat(data);
+        fileData.templateIds.push(data.templateId);
+        return fileData;
       } else {
-        return _.map(fileData, function (o) {
+        return _.map(fileData, o => {
           return o[replaceKey] === data[replaceKey] ? data : o;
         });
       }
     };
 
-    this.readJSON({ path: path }).then(mergeData).then(function (mergedData) {
-      return _this.writeJSON({ path: path, data: mergedData });
-    }).then(function (data) {
-      return deferred.resolve(data);
-    }).catch(function (err) {
-      return deferred.reject(err);
+    this.readJSON({ path }).then(mergeData).then(mergedData => this.writeJSON({ path, data: mergedData })).then(data => deferred.resolve(data)).catch(err => deferred.reject(err));
+
+    return deferred.promise;
+  },
+
+  /**
+   * @property {Function} files.readDir
+   * @parent files
+   *
+   * Read a directory for filename list.
+   *
+   * @param {String} path - the path to the file to be read.
+   * @return {Promise} a Promise that will resolve to
+   * the list of filenames in that directory.
+   *
+   * ## Use
+   *
+   * @codestart
+   * files.readDir({ path: 'foo/bar/ })
+   *   .then(data => console.log(data));
+   * @codeend
+   */
+  readDir({ path }) {
+    const deferred = Q.defer();
+
+    fs.readdir(path, function (err, files) {
+      if (!err) {
+        try {
+          deferred.resolve(files);
+        } catch (e) {
+          deferred.reject(e);
+        }
+      } else {
+        deferred.reject(err);
+      }
     });
 
     return deferred.promise;

@@ -1,16 +1,14 @@
 'use strict';
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+const Q = require('q');
+const _ = require('lodash');
+const paths = require('../util/paths');
+const files = require('../util/files');
+const user = require('../util/user');
+const debug = require('debug')('A2J:routes/templates');
 
-var Q = require('q');
-var _ = require('lodash');
-var paths = require('../util/paths');
-var files = require('../util/files');
-var user = require('../util/user');
-var debug = require('debug')('A2J:routes/templates');
-
-var filterTemplatesByActive = function filterTemplatesByActive(active, templates) {
-  return active != null ? _.filter(templates, { active: active }) : templates;
+const filterTemplatesByActive = function (active, templates) {
+  return active != null ? _.filter(templates, { active }) : templates;
 };
 
 /**
@@ -34,30 +32,29 @@ module.exports = {
    * @parent templates
    *
    * Read the templates.json file. If it does not exist,
-   * create it with an empty array.
+   * create it with this data structure:
+   *    { 'guideId': 600, 'templateIds': [] }
    *
    * @return {Promise} a Promise that will resolve to the
    * path to templates data.
    */
-  getTemplatesJSON: function getTemplatesJSON(_ref) {
-    var username = _ref.username;
+  getTemplatesJSON({ username, guideId, fileDataUrl }) {
+    let templatesJSONPath;
 
-    var templatesJSONPath = void 0;
-
-    var pathPromise = paths.getTemplatesPath({ username: username }).then(function (templatesPath) {
+    const pathPromise = paths.getTemplatesPath({ username, guideId, fileDataUrl }).then(templatesPath => {
       templatesJSONPath = templatesPath;
       return templatesPath;
     });
 
-    return pathPromise.then(function (path) {
-      return files.readJSON({ path: path });
-    }).catch(function (err) {
+    return pathPromise.then(path => files.readJSON({ path })).catch((err, path) => {
       debug(err);
-      debug('Writing ' + templatesJSONPath);
-      return files.writeJSON({ path: templatesJSONPath, data: [] });
+      debug(`Writing ${templatesJSONPath}`);
+      return files.writeJSON({
+        path: templatesJSONPath,
+        data: { 'guideId': guideId, 'templateIds': [] }
+      });
     });
   },
-
 
   /**
    * @property {Function} templates.find
@@ -74,39 +71,27 @@ module.exports = {
    * GET /api/templates?fileDataUrl="path/to/data/folder"&active=true
    * GET /api/templates?fileDataUrl="path/to/data/folder"&active=false
    */
-  find: function find(params, callback) {
-    var _ref2 = params.query || {},
-        active = _ref2.active,
-        fileDataUrl = _ref2.fileDataUrl;
+  find(params, callback) {
+    const { active, fileDataUrl } = params.query || {};
 
     if (!fileDataUrl) {
-      return callback('You must provide fileDataUrl');
+      return callback(new Error('You must provide fileDataUrl'));
     }
 
-    var templateIndexPromise = paths.getTemplatesPath({ fileDataUrl: fileDataUrl }).then(function (path) {
-      return files.readJSON({ path: path });
-    });
+    const templateIndexPromise = paths.getTemplatesPath({ fileDataUrl }).then(path => files.readJSON({ path }));
 
-    var templatePromises = templateIndexPromise.then(function (templateIndex) {
-      return _.map(templateIndex, function (_ref3) {
-        var templateId = _ref3.templateId;
-
-        return paths.getTemplatePath({ templateId: templateId, fileDataUrl: fileDataUrl }).then(function (path) {
-          return files.readJSON({ path: path });
-        });
+    const templatePromises = templateIndexPromise.then(templateIndex => {
+      const templateIds = templateIndex.templateIds;
+      return _.map(templateIds, templateId => {
+        return paths.getTemplatePath({ username: null, guideId: null, templateId, fileDataUrl }).then(path => files.readJSON({ path }));
       });
     });
 
-    Q.all(templatePromises).then(function (templates) {
-      return filterTemplatesByActive(active, templates);
-    }).then(function (filteredTemplates) {
-      return callback(null, filteredTemplates);
-    }).catch(function (error) {
+    Q.all(templatePromises).then(templates => filterTemplatesByActive(active, templates)).then(filteredTemplates => callback(null, filteredTemplates)).catch(error => {
       debug(error);
       callback(error);
     });
   },
-
 
   /**
    * @property {Function} templates.get
@@ -124,48 +109,32 @@ module.exports = {
    * GET /api/templates/{guide_id}?active=true
    * GET /api/templates/{guide_id}?active=false
    */
-  get: function get(guideId, params, callback) {
-    var _this = this;
-
+  get(guideId, params, callback) {
     debug('GET /api/templates/' + guideId);
 
-    var cookieHeader = params.cookieHeader;
+    const { cookieHeader } = params;
+    const { active } = params.query || {};
+    const { fileDataUrl } = params.query || '';
+    const usernamePromise = user.getCurrentUser({ cookieHeader });
 
-    var _ref4 = params.query || {},
-        active = _ref4.active;
+    let username;
 
-    var usernamePromise = user.getCurrentUser({ cookieHeader: cookieHeader });
-
-    var filterByGuideId = function filterByGuideId(coll) {
-      return _.filter(coll, function (o) {
-        return o.guideId === guideId;
-      });
-    };
-
-    var filteredTemplateSummaries = usernamePromise.then(function (username) {
-      return _this.getTemplatesJSON({ username: username });
-    }).then(filterByGuideId);
-
-    var templatePromises = Q.all([filteredTemplateSummaries, usernamePromise]).then(function (_ref5) {
-      var _ref6 = _slicedToArray(_ref5, 2),
-          filteredTemplates = _ref6[0],
-          username = _ref6[1];
-
-      return _.map(filteredTemplates, function (_ref7) {
-        var guideId = _ref7.guideId,
-            templateId = _ref7.templateId;
-
-        var pathPromise = paths.getTemplatePath({
-          guideId: guideId, templateId: templateId, username: username
-        });
-
-        return pathPromise.then(function (path) {
-          return files.readJSON({ path: path });
-        });
+    const templatePathPromises = usernamePromise.then(currentUsername => {
+      username = currentUsername;
+      return this.getTemplatesJSON({ username, guideId, fileDataUrl });
+    }).then(({ guideId, templateIds }) => {
+      return templateIds.map(templateId => {
+        return paths.getTemplatePath({ username, guideId, templateId });
       });
     });
 
-    var debugTemplatesByGuide = function debugTemplatesByGuide(templates) {
+    const templatePromises = Q.all(templatePathPromises).then(templatePaths => {
+      return templatePaths.map(path => {
+        return files.readJSON({ path });
+      });
+    });
+
+    const debugTemplatesByGuide = function (templates) {
       if (templates.length) {
         debug('Found', templates.length, 'templates for guide', guideId);
       } else {
@@ -173,12 +142,10 @@ module.exports = {
       }
     };
 
-    Q.all(templatePromises).then(function (templates) {
-      return filterTemplatesByActive(active, templates);
-    }).then(function (filteredTemplates) {
+    Q.all(templatePromises).then(templates => filterTemplatesByActive(active, templates)).then(filteredTemplates => {
       debugTemplatesByGuide(filteredTemplates);
       callback(null, filteredTemplates);
-    }).catch(function (error) {
+    }).catch(error => {
       debug(error);
       callback(error);
     });
