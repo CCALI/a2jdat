@@ -2,14 +2,60 @@
 
 This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 8+ to run properly. The recommended additional tools for windows are nvm and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
 
-Within this repo and releases you'll find a `.zip` file containing the minified JavaScript source for the DAT and sample configuration files
+DAT versions installed before 1.0.0 use a template format that is mutually incompatible with this version. Old templates will neeed to be converted by uploading to staging.a2jauthor.org and republishing.
+
+Within this repo and releases you'll find a `.zip` file containing the JavaScript source for the DAT and sample configuration files
 
 NOTE: By downloading this application, you are agreeing to the terms included in the user license [LICENSE.md](https://github.com/CCALI/A2JDAT/blob/master/LICENSE.md).
 
-## Hosting
+## Known Good Hosting Environments
 The DAT requires nodejs 8+. Any system supporting nodejs 8+ is supported. It has been tested on ubuntu 14 and 16, centos, and Windows Server 2016 on Azure with apache and IIS
 
 While other server environments may work, they have not been tested.  Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/A2JDAT) repo to let us know any steps taken so that we may share with others.
+
+## Upgrading
+
+For \*nix based systems, if you followed the previous instructions simply follow these steps:
+
+1.) Download the code either through git or releases
+
+2.) run the following commands in sequence to transpile the sources
+```
+cd DAT
+npm install
+cd js
+npm install bootstrap
+cd ..
+npm run build
+npm run build:server
+```
+
+3.) Update config.json
+A new required key, "VIEWER_PATH", has been added to config.json which tells the DAT software the location of the viewer. An example of config.json for windows with the new key is below.
+a sample config.json for linux is below:
+
+```
+{
+  "SERVER_URL": "http://localhost",
+  "GUIDES_DIR": "/var/www/example.com/a2j-viewer/guides",
+  "GUIDES_URL": "/a2j-viewer/guides",
+  "SQL_HOST": "localhost",
+  "SQL_USERNAME": "root",
+  "SQL_PASSWD": "root",
+  "SQL_DBNAME": "caja",
+  "SQL_PORT": 3306,
+  "DRUPAL_HOST": "localhost",
+  "DRUPAL_USERNAME": "root",
+  "DRUPAL_PASSWD": "root",
+  "DRUPAL_DBNAME": "D7commons",
+  "DRUPAL_PORT": 3306,
+  "WKHTMLTOPDF_PATH": "/usr/bin/local/wkhtmltopdf",
+  "VIEWER_PATH": "/var/www/html/mysite.com/a2j-viewer/viewer/"
+}
+```
+
+4.) Templates must be uploaded and republished to your server
+
 
 ## Installation instructions
 
@@ -62,7 +108,7 @@ SERVER_URL- required to establish target endpoints for API
 GUIDES_DIR-  required to establish location of templates
 GUIDES_URL- relative web location of guides
 WKHTMLTOPDF_PATH- path to binary of WKHTMLTOPDF
-
+A new required key, "VIEWER_PATH", has been added to config.json which tells the DAT software the location of the viewer. An example of config.json for windows with the new key is below.
 All other keys must be present but the value is irrelevant.
 
 Ensure that the value for the key WKHTMLTOPDF_PATH matches the path noted above where WKHTMLTOPDF is installed. Backslashes are special characters in json so each backslash must be typed twice to escape them and work properly.
@@ -83,7 +129,8 @@ a sample config.json for windows is below:
   "DRUPAL_PASSWD": "root",
   "DRUPAL_DBNAME": "D7commons",
   "DRUPAL_PORT": 3306,
-  "WKHTMLTOPDF_PATH": "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf"
+  "WKHTMLTOPDF_PATH": "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf",
+  "VIEWER_PATH": "C:\\inetpub\\wwwroot\\a2j-viewer\\viewer\\"
 }
 ```
 
@@ -103,7 +150,8 @@ a sample config.json for linux is below:
   "DRUPAL_PASSWD": "root",
   "DRUPAL_DBNAME": "D7commons",
   "DRUPAL_PORT": 3306,
-  "WKHTMLTOPDF_PATH": "/usr/bin/local/wkhtmltopdf"
+  "WKHTMLTOPDF_PATH": "/usr/bin/local/wkhtmltopdf",
+  "VIEWER_PATH": "/var/www/html/mysite.com/a2j-viewer/viewer/"
 }
 ```
 
