@@ -50,7 +50,7 @@ a sample config.json for linux is below:
   "DRUPAL_DBNAME": "D7commons",
   "DRUPAL_PORT": 3306,
   "WKHTMLTOPDF_PATH": "/usr/bin/local/wkhtmltopdf",
-  "VIEWER_PATH": "/var/www/html/mysite.com/a2j-viewer/viewer/"
+  "VIEWER_PATH": "/var/www/example.com/a2j-viewer"
 }
 ```
 
@@ -81,10 +81,25 @@ check that the install was successful by typing
 
 which should produce the version number of node we installed
 
-3.) Install wkhtmltopdf
+3.) Install Git if not installed
+
+Git is a source control manager and required for npm. Install Git by downloading latest from
+https://git-scm.com/download/
+
+
+4.) Install build tools
+
+To build the dat you must install a c++ compiler and python 2.7
+
+you must also install the folowing build tools:
+
+npm install node-pre-gyp babel-cli steal-tools -g
+
+
+5.) Install wkhtmltopdf
 WKHTMLTOPDF is the engine used to transform interview data into PDF from an intermediate HTML file. Download the latest stable version from https://wkhtmltopdf.org/downloads.html  and install it in the environment. Make a note of the install path.
 
-4.) Install node process manager
+6.) Install node process manager
 
 For Windows and IIS:
 The recommended process manager is iisnode
@@ -96,11 +111,11 @@ The recommended process manager is pm2 (http://pm2.keymetrics.io/). Install it w
 
 `npm install pm2 -g`
 
-5.) Download the latest DAT from repo. It is recommended that you install the latest release from the releases page. These releases are compiled to target node 8.9.4. If you are running a different version of node, you will need to download the source and compile by following the instructions **compile from source instructions**.
+7.) Download the latest DAT from repo. It is recommended that you install the latest release from the releases page. These releases are compiled to target node 8.9.4. If you are running a different version of node, you will need to download the source and compile by following the instructions **compile from source instructions**.
 
-6.) Unzip the DAT package into your webroot or preferred directory on your web server.
+8.) Unzip the DAT package into your webroot or preferred directory on your web server.
 
-7.) Configure DAT
+9.) Configure DAT
 Since the A2J software can run on many platforms, there is a small amount of platform specific configuration that is necessary. Navigate to the root of the DAT in your websites folder. Open config.json
 
 The Most important keys are:
@@ -155,7 +170,7 @@ a sample config.json for linux is below:
 }
 ```
 
-8.) Configure the server
+10.) Configure the server
 
 The DAT is a simple restful interface with endpoints located at <host>/api/. Requests must be routed through the node /bin/www target. We will setup a reverse proxy to accomplish this.
 
@@ -201,7 +216,7 @@ Location /api {
 }
 ```
 
-9.)  Start the node process
+11.)  Start the node process
 for \*nix
 navigate to the DAT folder in a terminal
 
