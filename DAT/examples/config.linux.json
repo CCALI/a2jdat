@@ -1,0 +1,19 @@
+{
+  "SERVER_URL": "http://viewer.mysite.tld",
+  "GUIDES_DIR": "/vol/data/sites/viewer.mysite.tld/a2j-viewer/guides/",
+  "GUIDES_URL": "/guides/",
+  "SQL_HOST": "localhost",
+  "SQL_USERNAME": "alice",
+  "SQL_PASSWD": "password",
+  "SQL_DBNAME": "caja",
+  "SQL_PORT": 3356,
+  "DRUPAL_HOST": "localhost",
+  "DRUPAL_USERNAME": "bob",
+  "DRUPAL_PASSWD": "password",
+  "DRUPAL_DBNAME": "drupal_db",
+  "DRUPAL_PORT": 3356,
+  "WKHTMLTOPDF_PATH": "/usr/local/bin/wkhtmltopdf",
+  "VIEWER_PATH": "/vol/data/sites/viewer.mysite.tld/a2j-viewer/viewer",
+  "WKHTMLTOPDF_DPI": 300,
+  "WKHTMLTOPDF_ZOOM": 1.000
+}

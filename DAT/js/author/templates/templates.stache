@@ -24,10 +24,8 @@
     auto-close-time="{alertAutoCloseTime}">
 
     {{#each deletedTemplates}}
-      <p>
-        {{title}} - has been deleted -
-        <a href="#" ($click)="restoreTemplate(this)">Restore</a>
-      </p>
+      {{title}} - has been deleted -
+      <a href="#" ($click)="restoreTemplate(this)">Restore</a>
     {{/each}}
   </app-alert>
 
@@ -40,10 +38,8 @@
     auto-close-time="{alertAutoCloseTime}">
 
     {{#each restoredTemplates}}
-      <p>
-        {{title}} - has been restored -
-        <a href="#" ($click)="deleteTemplate(this)">Delete</a>
-      </p>
+      {{title}} - has been restored -
+      <a href="#" ($click)="deleteTemplate(this)">Delete</a>
     {{/each}}
   </app-alert>
 
@@ -77,9 +73,11 @@
         <templates-sortbar criteria="{sortCriteria}"/>
 
         <templates-list
-          templates="{displayList}"
+          {display-list}="displayList"
+          {(has-sorted)}="hasSorted"
+          active-filter="{activeFilter}"
           class="{{listStateClassName}}"
-          is-draggable="{listIsDraggable}"/>
+          is-draggable="{listIsDraggable}" />
       {{/if}}
     {{/if}}
   </div>
