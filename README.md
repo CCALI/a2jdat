@@ -81,9 +81,22 @@ The recommended process manager is pm2 (http://pm2.keymetrics.io/). Install it w
 ##### Note to Windows users:  
 Older versions of this project used iisnode (https://github.com/tjanczuk/iisnode) iisnode is no longer supported. For migration instructions go here: https://www.a2jauthor.org/content/migrate-pm2-iis
 
-7.) Download the latest DAT from repo. It is recommended that you install the latest release from the releases page. These releases are compiled to target node 8.9.4. If you are running a different version of node, you will need to download the source and compile by following the instructions **compile from source instructions**.
+7.) Download the latest DAT from repo through git or from https://github.com/CCALI/A2JDAT/releases into your webroot or preferred directory on your web server.
 
-8.) Unzip the DAT package into your webroot or preferred directory on your web server.
+8.) Compile from source instructions  
+
+navigate to the downloaded location in a terminal and run the following commands in sequence
+```
+cd DAT
+npm install
+cd js
+npm install bootstrap
+cd ..
+npm run build
+npm run build:server
+```
+
+if you encounter an error in this step it can often be resolved by deleting node_modules in DAT and DAT\\js and repeating the step.
 
 9.) Configure DAT
 Since the A2J software can run on many platforms, there is a small amount of platform specific configuration that is necessary. Navigate to the root of the DAT in your websites folder. Open config.json
@@ -119,7 +132,10 @@ a sample config.json for windows is below:
   "DRUPAL_PASSWD": "root",
   "DRUPAL_DBNAME": "D7commons",
   "DRUPAL_PORT": 3306,
-  "WKHTMLTOPDF_PATH": "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf"
+  "WKHTMLTOPDF_PATH": "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf",
+  "VIEWER_PATH": "C:\\inetpub\\wwwroot\\a2j-viewer\\viewer\\",
+  "WKHTMLTOPDF_DPI": 300,
+  "WKHTMLTOPDF_ZOOM": 1.280
 }
 ```
 
@@ -127,7 +143,7 @@ a sample config.json for linux is below:
 ```
 {
   "SERVER_URL": "http://localhost",
-  "GUIDES_DIR": "/var/www/example.com/a2j-viewer/guides",
+  "GUIDES_DIR": "/var/www/mysite.tld/a2j-viewer/guides",
   "GUIDES_URL": "/a2j-viewer/guides",
   "SQL_HOST": "localhost",
   "SQL_USERNAME": "root",
@@ -139,7 +155,10 @@ a sample config.json for linux is below:
   "DRUPAL_PASSWD": "root",
   "DRUPAL_DBNAME": "D7commons",
   "DRUPAL_PORT": 3306,
-  "WKHTMLTOPDF_PATH": "/usr/bin/local/wkhtmltopdf"
+  "WKHTMLTOPDF_PATH": "/usr/bin/local/wkhtmltopdf",
+  "VIEWER_PATH": "/vol/data/sites/viewer.mysite.tld/a2j-viewer/viewer",
+  "WKHTMLTOPDF_DPI": 300,
+  "WKHTMLTOPDF_ZOOM": 1.000
 }
 ```
 
@@ -188,25 +207,6 @@ navigate to the DAT folder in a terminal
 
 `pm2 start npm --name “prod-api” -- run start`
 
-## Compile from source instructions
-This section assumes you installed the node dependencies in the previous section.
-
-1.) Download the latest source code from the github repo at https://github.com/ccali/a2jdat
-
-2.) navigate to the downloaded location in a terminal
-
-3.)  run the following commands in sequence
-```
-cd DAT
-npm install
-cd js
-npm install bootstrap
-cd ..
-npm run build
-npm run build:server
-```
-
-if you encounter an error in this step it can often be resolved by deleting node_modules in DAT and DAT\\js and repeating the step.
 
 ## Security Note
 This software uses a version of jquery with a known security vulnerability. The features required to exploit this vulnereability are not used in this software and hence it is not an issue.
