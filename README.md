@@ -13,15 +13,14 @@ While other server environments may work, they have not been tested.  Should you
 
 ## Insatallation instructions
 
-1.)  Install nvm
-The DAT is a simple restful API that requires nodejs to serve endpoints. Though, you are free to install the node version that the DAT targets and manage it manually the recommended method is to use a node version manager which will allow the simultaneous installation of multiple versions of node and mitigates certain administration issues.
+1.)  Install nvm  
+The DAT is a simple restful API that requires nodejs to serve endpoints. Though, you are free to install the node version that the DAT targets and manage it manually, the recommended method is to use a node version manager which will allow the simultaneous installation of multiple versions of node and mitigates several administration issues.
 
 Obtain nvm for windows here: https://github.com/coreybutler/nvm-windows
 
-For \*nix go here:
-https://github.com/creationix/nvm
+For \*nix go here: https://github.com/creationix/nvm
 
-2.) Install node through nvm
+2.) Install node through nvm  
 after installation of nvm, type the following commands in the terminal to install the required node version
 
 ```
@@ -35,36 +34,70 @@ check that the install was successful by typing
 
 which should produce the version number of node we installed
 
-3.) Install wkhtmltopdf
+#### For Windows Users:
+
+##### Ensure Node is in PATH:  
+The node installer might not always set the PATH variable correctly. Check Environment variables to ensure that there is an entry for the folder containing node.exe.  For this tutorial that folder is C:\Program Files\nodejs\.
+
+##### Configure Node Permissions:  
+Node.exe must be added to the IIS_IUSRS group in order to be allowed to handle requests. This must occur every time the node executable is switched through nvm. Open a command prompt and run as administrator and run
+```icacls “%programfiles%\nodejs\node.exe” /grant IIS_IUSRS:rx```
+
+
+3.) Install global DAT dependencies and subdependencies:  
+
+Git is a source control manager and required for npm. This can be obtained through most \*nix package managers. For windows, install Git by downloading latest from
+https://git-scm.com/download/win
+As of this documents writing, the latest version for the system in the azure demo environment is located at:
+https://github.com/git-for-windows/git/releases/download/v2.16.2.windows.1/Git-2.16.2-64-bit.exe
+
+
+4.) Install build tools:  
+
+The node sub-dependencies for the DAT must be built locally on the target system and requires build tools for languages other than node. Run the command below to install the necessary build tools:
+
+##### For windows
+use the command below to install 
+```npm --add-python-to-path='true' --debug install --global windows-build-tools```
+
+This requires administrator access. This is a very lengthy install-  it can take over an hour even on a fast connection.
+
+#### For all platforms run the command below
+
+```npm install node-pre-gyp babel-cli steal-tools -g```
+
+
+5.) Install wkhtmltopdf  
 WKHTMLTOPDF is the engine used to transform interview data into PDF from an intermediate HTML file. Download the latest stable version from https://wkhtmltopdf.org/downloads.html  and install it in the VM. Make a note of the install path.
 
-4.) Install node process manager
+6.) Install node process manager  
+The node process manager handles automatic restarts, memory mangement, monitoring, and error logging.
 
 For All platforms:
 The recommended process manager is pm2 (http://pm2.keymetrics.io/). Install it with the following command
 
 `npm install pm2 -g`
 
-Note to Windows users:
+##### Note to Windows users:  
 Older versions of this project used iisnode (https://github.com/tjanczuk/iisnode) iisnode is no longer supported. For migration instructions go here: https://www.a2jauthor.org/content/migrate-pm2-iis
 
-5.) Download the latest DAT from repo. It is recommended that you install the latest release from the releases page. These releases are compiled to target node 8.9.4. If you are running a different version of node, you will need to download the source and compile by following the instructions **compile from source instructions**.
+7.) Download the latest DAT from repo. It is recommended that you install the latest release from the releases page. These releases are compiled to target node 8.9.4. If you are running a different version of node, you will need to download the source and compile by following the instructions **compile from source instructions**.
 
-6.) Unzip the DAT package into your webroot or preferred directory on your web server.
+8.) Unzip the DAT package into your webroot or preferred directory on your web server.
 
-7.) Configure DAT
+9.) Configure DAT
 Since the A2J software can run on many platforms, there is a small amount of platform specific configuration that is necessary. Navigate to the root of the DAT in your websites folder. Open config.json
 
 The Most important keys are:
-SERVER_URL- required to establish target endpoints for API
-GUIDES_DIR-  required to establish location of templates
-GUIDES_URL- relative web location of guides
-WKHTMLTOPDF_PATH- path to binary of WKHTMLTOPDF
+SERVER_URL- required to establish target endpoints for API 
+GUIDES_DIR-  required to establish location of templates  
+GUIDES_URL- relative web location of guides  
+WKHTMLTOPDF_PATH- path to binary of WKHTMLTOPDF  
 
 and these new keys:
-VIEWER_PATH- path to viewer
-WKHTMLTOPDF_DPI- desired default dpi to render pdfs. CALI reccomends minimum of 300
-WKHTMLTOPDF_ZOOM- The correction factor used to render text pdfs. This is necessary to standardize rendering accross all platforms. On most \*nix systems this should be 1.000 and on most windows systems this should be 1.280.
+VIEWER_PATH- path to viewer  
+WKHTMLTOPDF_DPI- desired default dpi to render pdfs. CALI reccomends minimum of 300  
+WKHTMLTOPDF_ZOOM- The correction factor used to render text pdfs. This is necessary to standardize rendering accross all platforms. On most \*nix systems this should be 1.000 and on most windows systems this should be 1.280.  
 
 All other keys must be present but the value is irrelevant.
 
@@ -110,7 +143,7 @@ a sample config.json for linux is below:
 }
 ```
 
-8.) Configure the server
+10.) Configure the server  
 
 The DAT is a simple restful interface with endpoints located at <host>/api/. Requests must be routed through the node /bin/www target. We will setup a reverse proxy to accomplish this.
 
@@ -149,7 +182,7 @@ Location /api {
 }
 ```
 
-9.)  Start the node process
+11.)  Start the node process
 for \*nix
 navigate to the DAT folder in a terminal
 
