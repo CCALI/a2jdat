@@ -1,29 +1,28 @@
 <can-import from="caja/author/templates/elements/options-pane/" />
 <can-import from="caja/author/templates/elements/element-container/" />
 <can-import from="caja/author/templates/elements/a2j-page-break/a2j-page-break.less!" />
-
-{{#if editEnabled}}
+{{#if (editEnabled) }}
   <element-container
-    {node-id}="id"
-    {deleted}="deleted"
-    {(selected)}="editActive"
-    {clone-node}="@cloneNode"
-    {delete-node}="@deleteNode"
-    {toggle-edit-active-node}="@toggleEditActiveNode">
+    nodeId:from="nodeId"
+    deleted:from="deleted"
+    selected:from="editActive"
+    cloneNode:from="cloneNode"
+    deleteNode:from="deleteNode"
+    toggleEditActiveNode:from="toggleEditActiveNode">
 
     <p><span class="text-muted">Page Break</span></p>
   </element-container>
 
-  {{#if editActive}}
+  {{#if (editActive) }}
     <element-options-pane
       title="Page Break"
-      {node-id}="nodeId"
-      {save-and-close}="@updateNode">
+      nodeId:from="nodeId"
+      saveAndClose:from="updateNode">
 
       <form>
         <div class="form-group">
           <label>Notes</label>
-          <textarea class="form-control" {($value)}="notes" rows="3"></textarea>
+          <textarea class="form-control" el:value:bind="../notes" rows="3"></textarea>
           <span class="help-block">
             For reference only. These notes are not part of the assembled document.
           </span>

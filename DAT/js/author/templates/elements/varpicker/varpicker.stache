@@ -1,12 +1,10 @@
 <can-import from="caja/author/templates/elements/varpicker/varpicker.less!" />
 <can-import from="bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css!" />
-<can-import from="./tokenfield-disabled-attr" />
 
 <input
   type="text"
-  style="display: none;"
+  style:raw="display: none;"
   class="form-control"
-  {($value)}="selected"
-  {$disabled}="disabled"
-  tokenfield-disabled="disabled"
+  value:bind="selected"
+  disabled:from="disabled"
 />

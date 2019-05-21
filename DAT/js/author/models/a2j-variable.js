@@ -1,9 +1,11 @@
-import List from 'can/list/'
-import Model from 'can/model/'
+import $ from 'jquery'
+import CanList from 'can-list'
+import Model from 'can-model'
 import _values from 'lodash/values'
 import _toPlainObject from 'lodash/toPlainObject'
+import setupPromise from 'can-reflect-promise'
 
-import 'can/map/define/'
+import 'can-map-define'
 
 /**
  * @module A2JVariable
@@ -12,12 +14,13 @@ import 'can/map/define/'
  * An A2J variable is an answer, or list of answers, to a guided interview
  * question. They are used when generating documents.
  */
-let A2JVariable = Model.extend({
+let A2JVariable = Model.extend('A2JVariable', {
   id: 'name',
 
   makeFindOne () {
     return function (params, success, error) {
-      let deferred = new can.Deferred()
+      let deferred = new $.Deferred()
+      setupPromise(deferred)
       let gGuide = window.gGuide || {}
       let vars = gGuide.vars || {}
       let name = params.name || ''
@@ -87,7 +90,7 @@ let A2JVariable = Model.extend({
      * A one-based array of responses.
      */
     values: {
-      value: List
+      value: CanList
     }
   }
 })

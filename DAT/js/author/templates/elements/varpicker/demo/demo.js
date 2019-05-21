@@ -1,9 +1,9 @@
-import Map from 'can/map/';
-import Component from 'can/component/';
-import template from './demo.stache';
-import A2JVariable from 'caja/author/models/a2j-variable';
+import CanMap from 'can-map'
+import Component from 'can-component'
+import template from './demo.stache'
+import A2JVariable from 'caja/author/models/a2j-variable'
 
-import 'can/map/define/';
+import 'can-map-define'
 
 const guideVars = {
   'user gender': {
@@ -43,20 +43,21 @@ const guideVars = {
     repeating: false,
     values: [null]
   }
-};
+}
 
-let VarPickerDemoVM = Map.extend({
+let VarPickerDemoVM = CanMap.extend({
   define: {
     variables: {
-      value() {
-        return A2JVariable.fromGuideVars(guideVars);
+      value () {
+        return A2JVariable.fromGuideVars(guideVars)
       }
     }
   }
-});
+})
 
 export default Component.extend({
-  template,
+  view: template,
   tag: 'varpicker-demo',
-  viewModel: VarPickerDemoVM
-});
+  ViewModel: VarPickerDemoVM,
+  leakScope: true
+})

@@ -1,6 +1,6 @@
-import Map from 'can/map/';
-import Component from 'can/component/';
-import template from './assignment-form.stache';
+import CanMap from 'can-map'
+import Component from 'can-component'
+import template from './assignment-form.stache'
 
 /*
   Assignment = {
@@ -59,7 +59,7 @@ function getBufferOptions (buffer, boxCount) {
     isCheck
   }
 
-  const hasChoice = type === 'MC';
+  const hasChoice = type === 'MC'
   const boxes = fillArray(boxCount, 0)
   const boxOptions = boxes.map((_, index) => ({
     variable: name,
@@ -95,6 +95,7 @@ function makeDefaultVariableBuffer () {
     repeating: false,
     comment: '',
     overflowStyle: 'clip-overflow',
+    addendumLabel: '',
     checkIcon: 'normal-check',
     isGroup: false,
     isCheck: false,
@@ -110,8 +111,10 @@ function uniq (list) {
   )
 }
 
-export const AssignmentFormVm = Map.extend('AssignmentFormVm', {
+export const AssignmentFormVm = CanMap.extend('AssignmentFormVm', {
   define: {
+    conflictingVariables: {},
+
     onAssign: {
       type: 'function'
     },
@@ -165,7 +168,7 @@ export const AssignmentFormVm = Map.extend('AssignmentFormVm', {
         }
 
         const names = []
-        dict.each(variable => {
+        dict.forEach(variable => {
           names.push(variable.name)
         })
         return names
@@ -188,7 +191,7 @@ export const AssignmentFormVm = Map.extend('AssignmentFormVm', {
       type: 'boolean',
       get () {
         const type = this.attr('variableBuffer.type')
-        return type === 'Text';
+        return type === 'Text'
       }
     },
 
@@ -197,7 +200,7 @@ export const AssignmentFormVm = Map.extend('AssignmentFormVm', {
       get () {
         const type = this.attr('variableBuffer.type')
         const isCheck = this.attr('variableBuffer.isCheck')
-        return (isCheck && type === 'MC') || type === 'TF';
+        return (isCheck && type === 'MC') || type === 'TF'
       }
     },
 
@@ -205,7 +208,7 @@ export const AssignmentFormVm = Map.extend('AssignmentFormVm', {
       type: 'boolean',
       get () {
         const type = this.attr('variableBuffer.type')
-        return type === 'TF';
+        return type === 'TF'
       }
     },
 
@@ -213,7 +216,7 @@ export const AssignmentFormVm = Map.extend('AssignmentFormVm', {
       type: 'boolean',
       get () {
         const type = this.attr('variableBuffer.type')
-        return type === 'MC';
+        return type === 'MC'
       }
     },
 
@@ -221,7 +224,7 @@ export const AssignmentFormVm = Map.extend('AssignmentFormVm', {
       type: 'boolean',
       get () {
         const type = this.attr('variableBuffer.type')
-        const isMultipleChoice = type === 'MC';
+        const isMultipleChoice = type === 'MC'
         const isCheck = this.attr('variableBuffer.isCheck')
         return isMultipleChoice && isCheck
       }
@@ -244,7 +247,7 @@ export const AssignmentFormVm = Map.extend('AssignmentFormVm', {
         'variableBuffer',
         makeVariableBuffer(
           toJs(variable),
-          toJs(options || new Map()),
+          toJs(options || new CanMap()),
           toJs(boxes || [])
         )
       )
@@ -284,7 +287,6 @@ export const AssignmentFormVm = Map.extend('AssignmentFormVm', {
     )
     const isGroup = groupNames.length === 1 && !!groupNames[0]
     buffer.attr('isGroup', isGroup)
-
   },
 
   onOverflowStyleChange (event) {
@@ -311,7 +313,7 @@ export const AssignmentFormVm = Map.extend('AssignmentFormVm', {
   },
 
   onPassValueChange (event) {
-    const {value: passValue} = event.target
+    const { value: passValue } = event.target
     const isCheck = passValue === 'pass-check'
     this.attr('variableBuffer.isCheck', isCheck)
   },
@@ -341,7 +343,7 @@ export const AssignmentFormVm = Map.extend('AssignmentFormVm', {
   },
 
   fireAssign () {
-    const handler = this.attr('onAssign')
+    let handler = this.attr('onAssign')
     if (handler) {
       const buffer = this.attr('variableBuffer').serialize()
       const variable = getBufferVariable(buffer)
@@ -359,16 +361,16 @@ export const AssignmentFormVm = Map.extend('AssignmentFormVm', {
         createVariable: variable,
         variableOptions,
         boxOptions
-      })
+      })/* .call(this) */
     }
   }
 })
 
 export default Component.extend({
   tag: 'assignment-form',
-  template,
+  view: template,
   leakScope: false,
-  viewModel: AssignmentFormVm,
+  ViewModel: AssignmentFormVm,
   events: {
     inserted () {
       this.viewModel.didInsertElement()

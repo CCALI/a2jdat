@@ -1,10 +1,10 @@
-import Map from 'can/map/';
-import Component from 'can/component/';
-import template from './add-element.stache';
-import _isFunction from 'lodash/isFunction';
-import createEmptyNode from 'caja/author/utils/create-empty-node';
+import CanMap from 'can-map'
+import Component from 'can-component'
+import template from './add-element.stache'
+import _isFunction from 'lodash/isFunction'
+import createEmptyNode from 'caja/author/utils/create-empty-node'
 
-import 'can/map/define/';
+import 'can-map-define'
 
 /**
  * @module {Module} author/templates/elements/a2j-conditional/add-element/ <conditional-add-element>
@@ -27,7 +27,7 @@ import 'can/map/define/';
  *
  * `<conditional-add-element>`'s viewModel.
  */
-const AddElementVM = Map.extend({
+const AddElementVM = CanMap.extend('AddElementVM', {
   define: {
     /**
      * @property {Boolean} addElement.ViewModel.prototype.selected selected
@@ -49,23 +49,23 @@ const AddElementVM = Map.extend({
    * `selected` to `true` which causes the `element-options-pane` to be shown
    * allowing the user to effectively add elements.
    */
-  select() {
-    const selected = this.attr('selected');
+  select (event) {
+    event && event.preventDefault()
+    event && event.stopPropagation()
+    const selected = this.attr('selected')
 
     if (!selected) {
-      const id = this.attr('nodeId');
-      const toggleEditActiveNode = this.attr('toggleEditActiveNode');
+      const id = this.attr('nodeId')
+      const toggleEditActiveNode = this.attr('toggleEditActiveNode')
 
-      this.attr('selected', true);
+      this.attr('selected', true)
 
       if (_isFunction(toggleEditActiveNode)) {
-        toggleEditActiveNode(id);
+        toggleEditActiveNode(id)
       } else {
-        console.error('toggleEditActiveNode should be a function');
+        console.error('toggleEditActiveNode should be a function')
       }
     }
-
-    return false;
   },
 
   /**
@@ -75,8 +75,8 @@ const AddElementVM = Map.extend({
    * Callback function passed down to `element-options-pane`, it is called when
    * the pane is about to be closed.
    */
-  closeOptionsPopup() {
-    this.attr('selected', false);
+  closeOptionsPopup () {
+    this.attr('selected', false)
   },
 
   /**
@@ -85,17 +85,21 @@ const AddElementVM = Map.extend({
    *
    * Adds the element matching `tagName` to the available `template` object.
    */
-  addElement(tagName) {
-    const template = this.attr('template');
-    const children = template.attr('rootNode.children');
+  addElement (event, tagName) {
+    event.stopPropagation()
+    const template = this.attr('template')
+    const children = template.attr('rootNode.children')
 
-    children.push(createEmptyNode(tagName));
-    return false;
+    children.push(createEmptyNode(tagName))
+    // Close the options popup
+    this.closeOptionsPopup()
+    return false
   }
-});
+})
 
 export default Component.extend({
-  template,
-  viewModel: AddElementVM,
-  tag: 'conditional-add-element'
-});
+  view: template,
+  ViewModel: AddElementVM,
+  tag: 'conditional-add-element',
+  leakScope: true
+})

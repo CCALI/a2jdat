@@ -1,9 +1,12 @@
 import F from 'funcunit'
-import Map from 'can/map/'
-import assert from 'assert'
+import CanMap from 'can-map'
+import { assert } from 'chai'
 import Templates from './templates-vm'
+import A2JTemplate from 'caja/author/models/a2j-template'
+import stache from 'can-stache'
+import 'caja/author/models/fixtures/templates'
 
-import 'can/route/'
+import 'can-route'
 import 'steal-mocha'
 import './templates'
 
@@ -12,9 +15,14 @@ describe('<templates-page>', function () {
     let vm
 
     beforeEach(function () {
+      window.localStorage.clear()
       vm = new Templates({
-        appState: new Map()
+        appState: new CanMap()
       })
+    })
+
+    afterEach(function () {
+      window.localStorage.clear()
     })
 
     it('defaults activeFilter to "active" status', function () {
@@ -29,8 +37,8 @@ describe('<templates-page>', function () {
     })
 
     it('returns a newly ordered list of templateIds', function () {
-      const templatesSource = [{templateId: 1}, {templateId: 2}, {templateId: 3}]
-      vm.attr('templates', templatesSource)
+      const templatesSource = [{ templateId: 1, active: true }, { templateId: 2, active: true }, { templateId: 3, active: true }]
+      vm.attr('templates', new A2JTemplate.List(templatesSource))
       const templates = vm.attr('templates')
 
       const currentTemplateIdOrder = templatesSource.map(t => t.templateId)
@@ -45,13 +53,16 @@ describe('<templates-page>', function () {
 
   describe('Component', function () {
     beforeEach(function (done) {
-      let appState = new Map({guideId: '1261'})
+      let appState = new CanMap({
+        guideId: '1261',
+        guide: { title: '' }
+      })
 
-      let frag = can.view.stache(
-        '<templates-page app-state="{appState}"></templates-page>'
+      let frag = stache(
+        '<templates-page appState:bind="appState" />'
       )
 
-      $('#test-area').html(frag({appState}))
+      $('#test-area').html(frag({ appState }))
 
       F('templates-list-item').size(size => size > 0)
       F(done)
@@ -61,9 +72,9 @@ describe('<templates-page>', function () {
       $('#test-area').empty()
     })
 
-    it.skip('renders a list of active templates by default', function (done) {
+    it('renders a list of active templates by default', function (done) {
       F(function () {
-        let templates = $('templates-page').viewModel().attr('displayList')
+        let templates = $('templates-page')[0].viewModel.attr('displayList')
         let deleted = templates.filter(template => !template.attr('active'))
         assert.equal(deleted.attr('length'), 0, 'should not have deleted templates')
       })
@@ -71,11 +82,11 @@ describe('<templates-page>', function () {
       F(done)
     })
 
-    it.skip('rendered list is sorted by buildOrder asc by default', function (done) {
+    it('rendered list is sorted by buildOrder asc by default', function (done) {
       F(function () {
-        let templates = $('templates-page').viewModel().attr('displayList')
+        let templates = $('templates-page')[0].viewModel.attr('displayList')
         let buildOrder = templates.attr().map(template => template.buildOrder)
-        assert.deepEqual(buildOrder, [1, 2, 3], 'should be sorted asc')
+        assert.deepEqual(buildOrder, [2, 3], 'should be sorted asc')
       })
 
       F(done)
@@ -89,10 +100,10 @@ describe('<templates-page>', function () {
         totalActive = $('templates-list-item').length
 
         // set transition time to 0ms, to speed up the test
-        $('templates-list').viewModel().attr('itemTransitionTime', delay)
+        $('templates-list')[0].viewModel.attr('itemTransitionTime', delay)
 
         // set hovered to true to display the delete template link
-        $('templates-list-item').first().viewModel().attr('hovered', true)
+        $('templates-list-item').first()[0].viewModel.attr('hovered', true)
       })
 
       F('templates-list-item .delete').size(1, 'delete link should be on screen')
@@ -107,9 +118,9 @@ describe('<templates-page>', function () {
       F(done)
     })
 
-    it.skip('displays alert if there are no search results', function (done) {
+    it('displays alert if there are no search results', function (done) {
       F(function () {
-        $('templates-page').viewModel().attr('searchToken', '123456789')
+        $('templates-page')[0].viewModel.attr('searchToken', '123456789')
       })
 
       F('templates-list-item').size(0)
@@ -117,10 +128,10 @@ describe('<templates-page>', function () {
       F(done)
     })
 
-    it.skip('displays alert if there are no templates', function (done) {
+    it('displays alert if there are no templates', function (done) {
       // replace component's template list with an empty array.
       F(function () {
-        $('templates-page').viewModel().attr('templates').replace([])
+        $('templates-page')[0].viewModel.attr('templates').replace([])
       })
 
       F('.no-templates-exist').visible('no templates message should be visible')
@@ -129,10 +140,10 @@ describe('<templates-page>', function () {
 
     it.skip('displays alert if no templates match filters', function (done) {
       F(function () {
-        let vm = $('templates-page').viewModel()
+        let vm = $('templates-page')[0].viewModel
 
         // mark all templates as deleted
-        vm.attr('templates').each(template => template.attr('active', false))
+        vm.attr('templates').forEach(template => template.attr('active', false))
       })
 
       F('.no-match-filter').visible('no templates match "active" filter')
@@ -140,12 +151,12 @@ describe('<templates-page>', function () {
       F(done)
     })
 
-    it.skip('displays alert if there are no templates in the trash', function (done) {
+    it('displays alert if there are no templates in the trash', function (done) {
       F(function () {
-        let vm = $('templates-page').viewModel()
+        let vm = $('templates-page')[0].viewModel
 
         // mark all templates as active and set filter to deleted.
-        vm.attr('templates').each(template => template.attr('active', true))
+        vm.attr('templates').forEach(template => template.attr('active', true))
         vm.attr('activeFilter', 'deleted')
       })
 

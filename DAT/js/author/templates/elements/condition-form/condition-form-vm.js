@@ -1,5 +1,5 @@
-import Map from 'can/map/';
-import _includes from 'lodash/includes';
+import CanMap from 'can-map'
+import _includes from 'lodash/includes'
 
 /**
  * @module ConditionFormVM
@@ -7,7 +7,7 @@ import _includes from 'lodash/includes';
  *
  * `<condition-form />` viewmodel
  */
-export default Map.extend({
+export default CanMap.extend({
   define: {
     /**
      * @property {Boolean} disabled
@@ -87,11 +87,12 @@ export default Map.extend({
      * E.g: 'is-true' only requires one operand.
      */
     isUnaryOperation: {
-      get() {
-        let operator = this.attr('operator');
-        return _includes(['is-true', 'is-false'], operator);
+      get () {
+        let operator = this.attr('operator')
+        return _includes(['is-true', 'is-false'], operator)
       }
-    }
-  }
-});
+    },
 
+    variablesList: {}
+  }
+})

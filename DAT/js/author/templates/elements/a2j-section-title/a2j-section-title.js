@@ -1,12 +1,11 @@
-import Map from 'can/map/';
-import Component from 'can/component/';
-import contentTpl from './content.stache';
-import template from './a2j-section-title.stache';
-
-import 'can/view/';
+import CanMap from 'can-map'
+import Component from 'can-component'
+import contentTpl from './content.stache'
+import template from './a2j-section-title.stache'
+import stache from 'can-stache'
 
 // preload stache partial
-can.view.preload('section-title-content', contentTpl);
+stache.registerPartial('section-title-content', contentTpl)
 
 /**
  * @module {Module} author/templates/elements/a2j-section-title/ <a2j-section-title>
@@ -28,8 +27,11 @@ can.view.preload('section-title-content', contentTpl);
  *
  * `<a2j-section-title>`'s viewModel.
  */
-export let SectionTitleVM = Map.extend({
+export let SectionTitleVM = CanMap.extend('SectionTitleVM', {
   define: {
+    // passed in via a2j-template.stache
+    fontProperties: {},
+
     /**
      * @property {Boolean} sectionTitle.ViewModel.prototype.editEnabled editEnabled
      * @parent sectionTitle.ViewModel
@@ -47,6 +49,16 @@ export let SectionTitleVM = Map.extend({
      * Whether the component is currently selected.
      */
     editActive: {
+      value: false
+    },
+
+    /**
+     * @property {Boolean} sectionTitle.ViewModel.prototype.deleted deleted
+     * @parent sectionTitle.ViewModel
+     *
+     * Whether the component is currently deleted.
+     */
+    deleted: {
       value: false
     },
 
@@ -73,6 +85,16 @@ export let SectionTitleVM = Map.extend({
     },
 
     /**
+     * @property {String} sectionTitle.ViewModel.prototype.title title
+     * @parent sectionTitle.ViewModel
+     *
+     * The title of the section.
+     */
+    title: {
+      value: ''
+    },
+
+    /**
      * @property {String} sectionTitle.ViewModel.prototype.underline underline
      * @parent sectionTitle.ViewModel
      *
@@ -82,27 +104,34 @@ export let SectionTitleVM = Map.extend({
       type: 'boolean',
       value: false
     }
+  },
+  // Prevent the form from being submitted when pressing enter
+  // when inside an input
+  preventSubmit (e) {
+    e.preventDefault()
   }
-});
+})
 
 export default Component.extend({
-  template,
+  view: template,
   tag: 'a2j-section-title',
-  viewModel: SectionTitleVM,
+  ViewModel: SectionTitleVM,
 
   events: {
-    '.title-input keyup': function($el) {
-      this.viewModel.attr('title', $el.val());
+    '.title-input keyup': function (el) {
+      this.viewModel.attr('title', el.value)
     }
   },
 
   helpers: {
-    showSectionTitle() {
-      let title = this.attr('title');
-      let tag = this.attr('titleTag');
-      let sectionCounter = this.attr("sectionCounter");
+    showSectionTitle () {
+      let title = this.attr('title')
+      let tag = this.attr('titleTag')
+      let sectionCounter = this.attr('sectionCounter')
 
-      return `<${tag} class="section-title count-${sectionCounter}">${title}</${tag}>`;
+      return `<${tag} class="section-title count-${sectionCounter}">${title}</${tag}>`
     }
-  }
-});
+  },
+
+  leakScope: true
+})

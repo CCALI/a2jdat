@@ -1,9 +1,9 @@
-import Map from 'can/map/';
-import List from 'can/list/';
-import _last from 'lodash/last';
-import _range from 'lodash/range';
+import CanMap from 'can-map'
+import CanList from 'can-list'
+import _last from 'lodash/last'
+import _range from 'lodash/range'
 
-import 'can/map/define/';
+import 'can-map-define'
 
 /**
  * @property {can.Map} repeatLoop.ViewModel
@@ -11,8 +11,19 @@ import 'can/map/define/';
  *
  * `<a2j-repeat-loop>`'s viewModel.
  */
-export default Map.extend({
+export default CanMap.extend('RepeatLoopVM', {
   define: {
+    // passed in via stache
+    nodeId: {},
+    answers: {},
+    cloneNode: {},
+    useAnswers: {},
+    deleteNode: {},
+    updateNode: {},
+    fontProperties: {},
+    toggleEditActiveNode: {},
+    variablesList: {},
+
     /**
      * @property {Boolean} repeatLoop.ViewModel.prototype.editEnabled editEnabled
      * @parent repeatLoop.ViewModel
@@ -36,6 +47,17 @@ export default Map.extend({
     },
 
     /**
+     * @property {Boolean} repeatLoop.ViewModel.prototype.deleted deleted
+     * @parent repeatLoop.ViewModel
+     *
+     * FIXME
+     */
+    deleted: {
+      type: 'boolean',
+      value: false
+    },
+
+    /**
      * @property {Number} repeatLoop.ViewModel.prototype.loopCounter loopCounter
      * @parent repeatLoop.ViewModel
      *
@@ -45,8 +67,8 @@ export default Map.extend({
      */
     loopCounter: {
       value: 1,
-      set(value) {
-        return value < 1 ? 1 : value;
+      set (value) {
+        return value < 1 ? 1 : value
       }
     },
 
@@ -97,7 +119,7 @@ export default Map.extend({
      * to use a variable name to loop over 'repeating' variables.
      */
     loopType: {
-      value: 'counter',
+      value: 'counter'
     },
 
     /**
@@ -172,12 +194,12 @@ export default Map.extend({
      * This list holds the data used to render a html table.
      */
     tableColumns: {
-      value() {
-        return new List([{
+      value () {
+        return new CanList([{
           width: 100,
           variable: '',
           column: 'Column 1'
-        }]);
+        }])
       }
     },
 
@@ -200,11 +222,11 @@ export default Map.extend({
      * This list holds the data used to render a html list.
      */
     listItems: {
-      value() {
-        return new List([{
+      value () {
+        return new CanList([{
           variable: '',
           item: 'Item 1'
-        }]);
+        }])
       }
     },
 
@@ -216,9 +238,9 @@ export default Map.extend({
      * interview variable as the loop control.
      */
     useLoopCounter: {
-      get() {
-        let loopType = this.attr('loopType');
-        return loopType === 'counter';
+      get () {
+        let loopType = this.attr('loopType')
+        return loopType === 'counter'
       }
     },
 
@@ -232,97 +254,98 @@ export default Map.extend({
      * `[0, 1, 2, 3, 4]`.
      */
     loopCollection: {
-      get() {
-        let useCounter = this.attr('useLoopCounter');
+      get () {
+        let useCounter = this.attr('useLoopCounter')
 
         if (useCounter) {
-          let counter = this.attr('loopCounter');
-          return new List(_range(counter));
+          let counter = this.attr('loopCounter')
+          return new CanList(_range(counter))
         } else {
-          let varName = this.attr('loopVariable');
-          return this.rangeFromVariable(varName);
+          let varName = this.attr('loopVariable')
+          return this.rangeFromVariable(varName)
         }
       }
     }
   },
 
-  addColumn() {
-    let columns = this.attr('tableColumns');
-    let newLength = columns.attr('length') + 1;
-    let colWidth = Math.floor(100 / newLength);
+  addColumn () {
+    let columns = this.attr('tableColumns')
+    let newLength = columns.attr('length') + 1
+    let colWidth = Math.floor(100 / newLength)
 
-    columns.each(function(col) {
-      col.attr('width', colWidth);
-    });
+    columns.forEach(function (col) {
+      col.attr('width', colWidth)
+    })
 
     columns.push({
       variable: '',
       width: colWidth,
       column: `Column ${newLength}`
-    });
+    })
   },
 
-  removeColumn(index) {
-    let columns = this.attr('tableColumns');
-    let newLength = columns.attr('length') - 1;
-    let colWidth = Math.floor(100 / newLength);
+  removeColumn (index) {
+    let columns = this.attr('tableColumns')
+    let newLength = columns.attr('length') - 1
+    let colWidth = Math.floor(100 / newLength)
 
-    columns.each(function(col) {
-      col.attr('width', colWidth);
-    });
+    columns.forEach(function (col) {
+      col.attr('width', colWidth)
+    })
 
-    columns.splice(index, 1);
+    columns.splice(index, 1)
   },
 
-  addListItem() {
-    let items = this.attr('listItems');
-    let newLength = items.attr('length') + 1;
+  addListItem () {
+    let items = this.attr('listItems')
+    let newLength = items.attr('length') + 1
 
     items.push({
       variable: '',
       item: `Item ${newLength}`
-    });
+    })
   },
 
-  removeListItem(index) {
-    let items = this.attr('listItems');
-    items.splice(index, 1);
+  removeListItem (index) {
+    let items = this.attr('listItems')
+    items.splice(index, 1)
   },
 
-  getAnswer(varName = '') {
-    let answers = this.attr('answers');
-    let answerKey = varName.toLowerCase();
+  getAnswer (varName = '') {
+    let answers = this.attr('answers')
+    let answerKey = varName.toLowerCase()
 
     if (answers && answerKey) {
-      return answers.attr(answerKey);
+      return answers.attr(answerKey)
     }
   },
 
-  rangeFromVariable(varName = '') {
-    let counter = 0;
-    let variable = this.getAnswer(varName);
+  rangeFromVariable (varName = '') {
+    let counter = 0
+    let variable = this.getAnswer(varName)
 
     if (variable) {
-      counter = _last(variable.attr('values').attr());
+      counter = _last(variable.attr('values').attr())
     }
 
-    return new List(_range(counter));
+    return new CanList(_range(counter))
   },
 
-  updateLoopRichText() {
-    let editor = this.attr('ckeditorInstance');
+  updateLoopRichText () {
+    let editor = this.attr('ckeditorInstance')
 
     if (editor) {
-      this.attr('loopRichText', editor.getData());
+      this.attr('loopRichText', editor.getData())
     }
   },
 
-  destroyEditorInstance() {
-    let editor = this.attr('ckeditorInstance');
+  destroyEditorInstance () {
+    let editor = this.attr('ckeditorInstance')
 
     if (editor) {
-      editor.destroy();
-      this.attr('ckeditorInstance', null);
+      editor.destroy()
+      editor.removeAllListeners()
+      this.attr('ckeditorInstance', null)
     }
   }
-});
+})

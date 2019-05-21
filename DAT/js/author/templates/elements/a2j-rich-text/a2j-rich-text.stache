@@ -1,16 +1,17 @@
 <can-import from="caja/author/templates/elements/options-pane/" />
 <can-import from="caja/author/templates/elements/element-container/" />
+<can-import from="caja/author/templates/elements/a2j-legal-nav-resource/" />
 <can-import from="caja/author/templates/elements/a2j-rich-text/a2j-rich-text.less!" />
 
-{{#if editEnabled}}
-  {{#if wrapWithContainer}}
+{{#if (editEnabled )}}
+  {{#if (wrapWithContainer) }}
     <element-container
-      {node-id}="id"
-      {deleted}="deleted"
-      {(selected)}="editActive"
-      {clone-node}="@cloneNode"
-      {delete-node}="@deleteNode"
-      {toggle-edit-active-node}="@toggleEditActiveNode">
+      nodeId:from="nodeId"
+      deleted:from="deleted"
+      selected:from="editActive"
+      cloneNode:from="cloneNode"
+      deleteNode:from="deleteNode"
+      toggleEditActiveNode:from="toggleEditActiveNode">
 
       {{> rich-text-content }}
     </element-container>
@@ -18,17 +19,17 @@
     {{> rich-text-content }}
   {{/if}}
 
-  {{#if showOptionsPane}}
-    {{#if editActive}}
+  {{#if (showOptionsPane) }}
+    {{#if (editActive) }}
       <element-options-pane
         title="Text"
-        {node-id}="nodeId"
-        {save-and-close}="@updateNode">
+        nodeId:from="nodeId"
+        saveAndClose:from="updateNode">
 
         <form>
           <div class="form-group">
             <label>Notes</label>
-            <textarea class="form-control" {($value)}="notes" rows="3"></textarea>
+            <textarea class="form-control" value:bind="../notes" rows="3"></textarea>
             <span class="help-block">
               For reference only. These notes are not part of the assembled document.
             </span>

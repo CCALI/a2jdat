@@ -6,35 +6,36 @@
 <can-import from="caja/author/templates/elements/a2j-conditional/add-element/" />
 <can-import from="caja/author/templates/elements/a2j-conditional/a2j-conditional.less!" />
 
-{{#if editEnabled}}
+{{#if (editEnabled) }}
   <element-container
-    {node-id}="id"
-    {deleted}="deleted"
-    {(selected)}="editActive"
-    {clone-node}="@cloneNode"
-    {delete-node}="@deleteNode"
-    {toggle-edit-active-node}="@toggleEditActiveNode"
+    variablesList:from="scope/variablesList"
+    nodeId:from="nodeId"
+    deleted:from="deleted"
+    selected:from="editActive"
+    cloneNode:from="scope/cloneNode"
+    deleteNode:from="scope/deleteNode"
+    toggleEditActiveNode:from="toggleEditActiveNode"
   >
     <div class="panel panel-warning">
       <div class="panel-heading">
         IF
-        {{#if leftOperand}}
+        {{#if (scope/leftOperand)}}
           <span class="label label-default">
-            {{#is leftOperandType 'variable'}}
-              <a2j-variable {name}="leftOperand" />
+            {{#is(scope/leftOperandType, 'variable')}}
+              <a2j-variable name:from="scope/leftOperand" />
             {{else}}
-              {{leftOperand}}
+              {{scope/leftOperand}}
             {{/is}}
           </span>
 
-          {{formatOperator(operator)}}
+          {{formatOperator(scope/operator)}}
 
-          {{#if rightOperand}}
+          {{#if (scope/rightOperand)}}
             <span class="label label-default">
-              {{#is rightOperandType 'variable'}}
-                <a2j-variable {name}="rightOperand" />
+              {{#is(scope/rightOperandType, 'variable')}}
+                <a2j-variable vm:name:from="scope/rightOperand" />
               {{else}}
-                {{rightOperand}}
+                {{scope/rightOperand}}
               {{/is}}
             </span>
           {{/if}}
@@ -43,34 +44,36 @@
 
       <div class="panel-body">
         <a2j-template
-          edit-enabled="true"
-          {(template)}="ifBody"
-          {save-callback}="@updateNodeState"
+          guide:from="scope.top.guide"
+          editEnabled:from="true"
+          template:from="scope/ifBody"
+          saveCallback:from="scope/updateNodeState"
         />
 
         <conditional-add-element
-          {(template)}="ifBody"
-          {node-id}="addToIfNode.id"
-          {(selected)}="addToIfNode.state.editActive"
-          {toggle-edit-active-node}="@toggleEditActiveNode"
+          template:from="scope/ifBody"
+          nodeId:from="scope/addToIfNode.id"
+          selected:bind="scope/addToIfNode.state.editActive"
+          toggleEditActiveNode:from="toggleEditActiveNode"
         />
       </div>
 
-      {{#if elseClause}}
+      {{#if (scope/elseClause)}}
         <div class="panel-else">ELSE</div>
 
         <div class="panel-body">
           <a2j-template
-            edit-enabled="true"
-            {(template)}="elseBody"
-            {save-callback}="@updateNodeState"
+            guide:from="scope.top.guide"
+            editEnabled:from="true"
+            template:from="scope/elseBody"
+            saveCallback:from="scope/updateNodeState"
           />
 
           <conditional-add-element
-            {(template)}="elseBody"
-            {node-id}="addToElseNode.id"
-            {(selected)}="addToElseNode.state.editActive"
-            {toggle-edit-active-node}="@toggleEditActiveNode"
+            template:from="scope/elseBody"
+            nodeId:from="scope/addToElseNode.id"
+            selected:bind="scope/addToElseNode.state.editActive"
+            toggleEditActiveNode:from="toggleEditActiveNode"
           />
         </div>
       {{/if}}
@@ -79,23 +82,23 @@
     </div>
   </element-container>
 
-  {{#if editActive}}
+  {{#if(scope/editActive)}}
     <element-options-pane
-      {node-id}="nodeId"
-      title="If / Else Conditional"
-      {save-and-close}="@updateNode"
+      nodeId:from="nodeId"
+      title:raw="If / Else Conditional"
+      saveAndClose:from="updateNode"
     >
       <condition-form
-        {variables-list}="variablesList"
-        {(operator)}="operator"
-        {(left-operand)}="leftOperand"
-        {(right-operand)}="rightOperand"
-        {(right-operand-type)}="rightOperandType"
+        variablesList:from="scope/variablesList"
+        operator:bind="scope/operator"
+        leftOperand:bind="scope/leftOperand"
+        rightOperand:bind="scope/rightOperand"
+        rightOperandType:bind="scope/rightOperandType"
       />
 
       <div class="checkbox">
         <label>
-          <input type="checkbox" {($checked)}="elseClause"> Else Clause
+          <input type="checkbox" checked:bind="scope/elseClause"> Else Clause
         </label>
       </div>
     </element-options-pane>
@@ -103,17 +106,19 @@
 {{else}}
   {{#if evalCondition()}}
     <a2j-template
-      use-answers="true"
-      {answers}="answers"
-      {template}="ifBody"
-      edit-enabled="false"
+      guide:from="scope.top.guide"
+      useAnswers:raw="true"
+      answers:from="scope/answers"
+      template:from="scope/ifBody"
+      editEnabled:raw="false"
     />
   {{else}}
     <a2j-template
-      use-answers="true"
-      {answers}="answers"
-      edit-enabled="false"
-      {template}="elseBody"
+      guide:from="scope.top.guide"
+      useAnswers:raw="true"
+      answers:from="scope/answers"
+      editEnabled:raw="false"
+      template:from="scope/elseBody"
     />
   {{/if}}
 {{/if}}

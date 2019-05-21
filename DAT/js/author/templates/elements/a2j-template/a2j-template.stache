@@ -8,133 +8,136 @@
 <can-import from="caja/author/templates/elements/a2j-template/a2j-template.less!" />
 
 <ul>
-  {{#each rootNode.children}}
+  {{#for (childNode of rootNode.children) }}
     <li
       draggable="true"
-      class="node-wrapper{{#if isBeingDragged}} drag-placeholder{{/if}}">
+      class="node-wrapper{{#if(childNode.isBeingDragged)}} drag-placeholder{{/if}}">
 
-      {{#if deleted}}
+      {{#if (childNode.deleted) }}
         <app-alert
-          open="true"
-          auto-close="true"
-          dismissible="true"
-          alert-type="default"
-          (closed)="removeNodeFromChildren(id)">
+          open:raw="true"
+          autoClose:raw="true"
+          dismissible:raw="true"
+          alertType:raw="default"
+          on:vm:closed="scope/removeNodeFromChildren(childNode.id)">
 
           <p>
             Element has been deleted -
-            <a href="#" ($click)="restoreNode(id)">Restore</a>
+            <a href="#" on:el:click="scope/restoreNode(childNode.id, scope.event)">Restore</a>
           </p>
         </app-alert>
       {{/if}}
 
-      {{#is tag 'a2j-page-break'}}
+      {{#is (childNode.tag, 'a2j-page-break') }}
         <a2j-page-break
-          {(notes)}="state.notes"
 
-          {node-id}="id"
-          {clone-node}="@cloneNode"
-          {deleted}="state.deleted"
-          {delete-node}="@deleteNode"
-          {update-node}="@updateNode"
-          {edit-enabled}="editEnabled"
-          {font-properties}="fontProperties"
-          {(edit-active)}="./state.editActive"
-          {toggle-edit-active-node}="@toggleEditActiveNode"
+          nodeId:from="childNode.id"
+          deleted:from="childNode.state.deleted"
+          editActive:from="childNode.state.editActive"
+          notes:bind="childNode.state.notes"
+
+          cloneNode:from="scope/cloneNode"
+          deleteNode:from="scope/deleteNode"
+          updateNode:from="scope/updateNode"
+          editEnabled:from="this.editEnabled"
+          fontProperties:from="this.fontProperties"
+          toggleEditActiveNode:from="toggleEditActiveNode"
         />
       {{/is}}
 
-      {{#is tag 'a2j-section-title'}}
+      {{#is (childNode.tag, 'a2j-section-title') }}
         <a2j-section-title
-          {(title)}="state.title"
-          {(underline)}="state.underline"
+          nodeId:from="childNode.id"
+          deleted:from="childNode.state.deleted"
+          editActive:from="childNode.state.editActive"
+          title:bind="childNode.state.title"
+          underline:bind="childNode.state.underline"
+          titleTag:bind="childNode.state.titleTag"
 
-          {node-id}="id"
-          {clone-node}="@cloneNode"
-          {delete-node}="@deleteNode"
-          {update-node}="@updateNode"
-          {edit-enabled}="editEnabled"
-          {font-properties}="fontProperties"
-          {(edit-active)}="./state.editActive"
-          {toggle-edit-active-node}="@toggleEditActiveNode"
-          {section-counter}="../rootNode.state.sectionCounter"
-          {(title-tag)}="state.titleTag"
+          cloneNode:from="scope/cloneNode"
+          deleteNode:from="scope/deleteNode"
+          updateNode:from="scope/updateNode"
+          editEnabled:from="this.editEnabled"
+          fontProperties:from="this.fontProperties"
+          toggleEditActiveNode:from="toggleEditActiveNode"
+          sectionCounter:from="scope/rootNode.state.sectionCounter"
         />
       {{/is}}
 
-      {{#is tag 'a2j-rich-text'}}
+      {{#is (childNode.tag, 'a2j-rich-text') }}
         <a2j-rich-text
-          {(notes)}="state.notes"
-          {(user-content)}="state.userContent"
+          nodeId:from="childNode.id"
+          userContent:bind="childNode.state.userContent"
+          deleted:from="childNode.state.deleted"
+          editActive:from="childNode.state.editActive"
+          notes:bind="childNode.state.notes"
 
-          {node-id}="id"
-          {answers}="answers"
-          {clone-node}="@cloneNode"
-          {use-answers}="useAnswers"
-          {deleted}="{state.deleted}"
-          {delete-node}="@deleteNode"
-          {update-node}="@updateNode"
-          {edit-enabled}="editEnabled"
-          {font-properties}="fontProperties"
-          {(edit-active)}="./state.editActive"
-          {toggle-edit-active-node}="@toggleEditActiveNode"
+          answers:from="scope/answers"
+          cloneNode:from="scope/cloneNode"
+          useAnswers:from="this.useAnswers"
+          deleteNode:from="scope/deleteNode"
+          updateNode:from="scope/updateNode"
+          editEnabled:from="this.editEnabled"
+          fontProperties:from="this.fontProperties"
+          toggleEditActiveNode:from="toggleEditActiveNode"
         />
       {{/is}}
 
-      {{#is tag 'a2j-conditional'}}
+      {{#is (childNode.tag, 'a2j-conditional') }}
         <a2j-conditional
-          {(children)}="children"
-          {(operator)}="state.operator"
-          {(else-clause)}="state.elseClause"
-          {(left-operand)}="state.leftOperand"
-          {(right-operand)}="state.rightOperand"
-          {variables-list}="guide.variablesList"
-          {(left-operand-type)}="state.leftOperandType"
-          {(right-operand-type)}="state.rightOperandType"
+          guide:from="this.guide"
+          nodeId:from="childNode.id"
+          deleted:from="childNode.state.deleted"
+          editActive:from="childNode.state.editActive"
+          children:from="childNode.children"
+          operator:bind="childNode.state.operator"
+          elseClause:bind="childNode.state.elseClause"
+          leftOperand:bind="childNode.state.leftOperand"
+          rightOperand:bind="childNode.state.rightOperand"
+          leftOperandType:bind="childNode.state.leftOperandType"
+          rightOperandType:bind="childNode.state.rightOperandType"
 
-          {node-id}="id"
-          {answers}="answers"
-          {clone-node}="@cloneNode"
-          {use-answers}="useAnswers"
-          {deleted}="{state.deleted}"
-          {delete-node}="@deleteNode"
-          {update-node}="@updateNode"
-          {edit-enabled}="editEnabled"
-          {font-properties}="fontProperties"
-          {(edit-active)}="./state.editActive"
-          {toggle-edit-active-node}="@toggleEditActiveNode"
+          answers:from="answers"
+          cloneNode:from="cloneNode"
+          useAnswers:from="useAnswers"
+          deleteNode:from="deleteNode"
+          updateNode:from="updateNode"
+          editEnabled:from="editEnabled"
+          fontProperties:from="fontProperties"
+          variablesList:from="this.guide.variablesList"
+          toggleEditActiveNode:from="toggleEditActiveNode"
         />
       {{/is}}
 
-      {{#is tag 'a2j-repeat-loop'}}
+      {{#is (childNode.tag, 'a2j-repeat-loop') }}
         <a2j-repeat-loop
-          {(loop-type)}="state.loopType"
-          {(loop-title)}="state.loopTitle"
-          {(list-items)}="state.listItems"
-          {(table-style)}="state.tableStyle"
-          {(loop-counter)}="state.loopCounter"
-          {(display-type)}="state.displayType"
-          {(table-columns)}="state.tableColumns"
-          {(loop-variable)}="state.loopVariable"
-          {variables-list}="guide.variablesList"
-          {(loop-title-tag)}="state.loopTitleTag"
-          {(loop-rich-text)}="state.loopRichText"
-          {(list-style-type)}="state.listStyleType"
-          {(repeat-each-in-one-list)}="state.repeatEachInOneList"
+          nodeId:from="childNode.id"
+          editActive:from="childNode.state.editActive"
+          loopType:from="childNode.state.loopType"
+          loopTitle:from="childNode.state.loopTitle"
+          listItems:from="childNode.state.listItems"
+          tableStyle:from="childNode.state.tableStyle"
+          loopCounter:from="childNode.state.loopCounter"
+          displayType:from="childNode.state.displayType"
+          tableColumns:from="childNode.state.tableColumns"
+          loopTitleTag:from="childNode.state.loopTitleTag"
+          loopRichText:from="childNode.state.loopRichText"
+          listStyleType:from="childNode.state.listStyleType"
+          deleted:from="childNode.state.deleted"
+          repeatEachInOneList:from="childNode.state.repeatEachInOneList"
+          loopVariable:bind="childNode.state.loopVariable"
 
-          {node-id}="id"
-          {answers}="answers"
-          {clone-node}="@cloneNode"
-          {use-answers}="useAnswers"
-          {deleted}="{state.deleted}"
-          {delete-node}="@deleteNode"
-          {update-node}="@updateNode"
-          {edit-enabled}="editEnabled"
-          {font-properties}="fontProperties"
-          {(edit-active)}="./state.editActive"
-          {toggle-edit-active-node}="@toggleEditActiveNode"
+          answers:from="scope/answers"
+          cloneNode:from="scope/cloneNode"
+          deleteNode:from="scope/deleteNode"
+          updateNode:from="scope/updateNode"
+          useAnswers:from="this.useAnswers"
+          editEnabled:from="this.editEnabled"
+          fontProperties:from="this.fontProperties"
+          variablesList:from="this.guide.variablesList"
+          toggleEditActiveNode:from="toggleEditActiveNode"
         />
       {{/is}}
     </li>
-  {{/each}}
+  {{/for}}
 </ul>

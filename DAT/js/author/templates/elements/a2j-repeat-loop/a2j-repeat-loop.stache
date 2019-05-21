@@ -4,48 +4,49 @@
 <can-import from="caja/author/templates/elements/element-container/" />
 <can-import from="caja/author/templates/elements/a2j-repeat-loop/a2j-repeat-loop.less!" />
 
-{{#if editEnabled}}
+{{#if (editEnabled) }}
   <element-container
-    {node-id}="id"
-    {deleted}="deleted"
-    {(selected)}="editActive"
-    {clone-node}="@cloneNode"
-    {delete-node}="@deleteNode"
-    {toggle-edit-active-node}="@toggleEditActiveNode">
+    nodeId:from="nodeId"
+    deleted:from="deleted"
+    selected:from="editActive"
+    cloneNode:from="cloneNode"
+    deleteNode:from="deleteNode"
+    variablesList:from="this.variablesList"
+    toggleEditActiveNode:from="toggleEditActiveNode">
 
     <div class="panel panel-info">
       <div class="panel-heading">
-        {{#if useLoopCounter}}
-          REPEAT <span class="label label-default">{{loopCounter}}</span>
-          {{#is loopCounter 1}}TIME{{else}}TIMES{{/is}} in {{displayTypeText()}}
+        {{#if (scope/useLoopCounter) }}
+          REPEAT <span class="label label-default">{{scope/loopCounter}}</span>
+          {{#is (scope/loopCounter, 1) }}TIME{{else}}TIMES{{/is}} in {{displayTypeText()}}
         {{else}}
-          LOOP FOR EACH <span class="label label-default">{{loopVariable}}</span>
+          LOOP FOR EACH <span class="label label-default">{{scope/loopVariable}}</span>
           in {{displayTypeText()}}
         {{/if}}
       </div>
 
-      <div class="panel-body" style="{{fontProperties}}">
+      <div class="panel-body" style="{{scope/fontProperties}}">
         {{{ showRepeatLoopTitle() }}}
 
-        {{#is displayType "table"}}
+        {{#is (scope/displayType, "table") }}
           {{> loop-table-tpl }}
         {{/is}}
 
-        {{#is displayType "list"}}
+        {{#is (scope/displayType, "list") }}
           {{> loop-list-tpl }}
         {{/is}}
 
-        {{#is displayType "text"}}
-          {{#if editActive}}
-            <textarea>{{loopRichText}}</textarea>
+        {{#is (scope/displayType, "text") }}
+          {{#if (scope/editActive) }}
+            <textarea>{{scope/loopRichText}}</textarea>
           {{else}}
-            {{a2jParse(loopRichText)}}
+            {{a2jParse(scope/loopRichText)}}
           {{/if}}
         {{/is}}
       </div>
 
       <div class="panel-footer">
-        {{#if useLoopCounter}}
+        {{#if (scope/useLoopCounter) }}
           END REPEAT
         {{else}}
           END LOOP
@@ -54,25 +55,24 @@
     </div>
   </element-container>
 
-  {{#if editActive}}
+  {{#if (editActive)}}
     {{> repeat-loop-options-tpl }}
   {{/if}}
 {{else}}
-  <div style="{{fontProperties}}">
-    {{{ showRepeatLoopTitle() }}}
-
-    {{#is displayType "table"}}
+  <div style="{{scope/fontProperties}}">
+    {{{ scope/showRepeatLoopTitle() }}}
+    {{#is (scope/displayType, "table") }}
       {{> loop-table-tpl }}
     {{/is}}
 
-    {{#is displayType "list"}}
+    {{#is (scope/displayType, "list") }}
       {{> loop-list-tpl }}
     {{/is}}
 
-    {{#is displayType "text"}}
-      {{#each loopCollection}}
-        {{a2jParse(loopRichText, %index)}}
-      {{/each}}
+    {{#is (scope/displayType, "text") }}
+      {{#for (loopIndex of scope/loopCollection) }}
+        {{ a2jParse(loopRichText, loopIndex) }}
+      {{/for}}
     {{/is}}
   </div>
 {{/if}}

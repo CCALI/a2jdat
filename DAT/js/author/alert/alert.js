@@ -1,9 +1,8 @@
-import Map from 'can/map/'
-import Component from 'can/component/'
+import CanMap from 'can-map'
+import Component from 'can-component'
 import template from './alert.stache'
-
-import 'can/util/event'
-import 'can/map/define/'
+import $ from 'jquery'
+import 'can-map-define'
 
 const alertTypeClasses = {
   info: 'alert-info',
@@ -43,7 +42,7 @@ const alertTypeSymbols = {
  *
  * `<app-alert>`'s viewModel.
  */
-export let Alert = Map.extend({
+export let Alert = CanMap.extend('AppAlertVM', {
   define: {
     /**
      * @property {Boolean} alert.ViewModel.prototype.define.autoClose autoClose
@@ -167,12 +166,13 @@ export let Alert = Map.extend({
 })
 
 export default Component.extend({
-  template,
+  view: template,
   tag: 'app-alert',
-  viewModel: Alert,
+  ViewModel: Alert,
 
   events: {
     inserted () {
+      this.element = $(this.element)
       if (this.viewModel.attr('open')) {
         this.element.show()
       } else {
@@ -181,14 +181,14 @@ export default Component.extend({
     },
 
     '{viewModel} open': function () {
-      let $el = this.element
+      let $el = $(this.element)
       let vm = this.viewModel
       let open = vm.attr('open')
 
       if (open) {
         $el.slideDown()
       } else {
-        $el.slideUp(() => can.trigger(vm, 'closed'))
+        $el.slideUp(() => vm.dispatch('closed'))
         vm.clearAutoCloseTimeout()
       }
     }
@@ -203,5 +203,7 @@ export default Component.extend({
       let type = this.attr('alertType')
       return alertTypeSymbols[type]
     }
-  }
+  },
+
+  leakScope: true
 })

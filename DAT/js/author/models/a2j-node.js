@@ -1,10 +1,10 @@
 import cuid from 'cuid'
-import Map from 'can/map/'
-import List from 'can/list/'
+import CanMap from 'can-map'
+import CanList from 'can-list'
 import _omit from 'lodash/omit'
 import makeNodeOutline from './make-node-outline'
 
-import 'can/map/define/'
+import 'can-map-define'
 
 const omitStateAttrs = [
   'guide', 'answers', 'useAnswers', 'ckeditorInstance',
@@ -12,11 +12,17 @@ const omitStateAttrs = [
   'editEnabled', 'variablesList'
 ]
 
-const NodeState = Map.extend({
+const NodeState = CanMap.extend({
   define: {
     editActive: {
       value: false
-    }
+    },
+    deleted: {
+      type: 'boolean'
+    },
+    notes: {},
+    titleTag: {},
+    sectionCounter: {}
   }
 })
 
@@ -35,7 +41,7 @@ if (navigator.mimeTypes == null) {
  * An A2JNode is a branch if it has child A2JNodes of its own,
  * otherwise it's a leaf.
  */
-export default Map.extend({
+export default CanMap.extend('A2JNodeModel', {
   define: {
     /**
      * @property {String} A2JNode.prototype.id id
@@ -78,7 +84,17 @@ export default Map.extend({
      * If a node has other nodes beneath it then its a branch.
      */
     children: {
-      Value: List
+      Value: CanList
+    },
+
+    /**
+     * @property {Boolean} A2JNode.prototype.isBeingDragged isBeingDragged
+     *
+     * If a node is being dragged for list ordering.
+     */
+    isBeingDragged: {
+      serialize: false,
+      value: false
     },
 
     /**
@@ -90,6 +106,8 @@ export default Map.extend({
       get () {
         return makeNodeOutline(this)
       }
-    }
+    },
+
+    deleted: {}
   }
 })

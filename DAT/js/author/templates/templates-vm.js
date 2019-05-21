@@ -1,8 +1,9 @@
 import $ from 'jquery'
-import Map from 'can/map/'
+import CanMap from 'can-map'
 import A2JTemplate from 'caja/author/models/a2j-template'
+import sort from 'caja/author/utils/sort'
 
-import 'can/map/define/'
+import 'can-map-define'
 
 /**
  * @property {can.Map} templatesPage.ViewModel
@@ -10,8 +11,16 @@ import 'can/map/define/'
  *
  * `<templates-page>`'s viewModel.
  */
-export default Map.extend({
+export default CanMap.extend({
   define: {
+    /**
+     * @property {CanList?} templatesPage.ViewModel.prototype.define.appState appState
+     * @parent templatesPage.ViewModel
+     *
+     * The application state
+     */
+    appState: {},
+
     /**
      * @property {Promise} templatesPage.ViewModel.prototype.define.templatesPromise templatesPromise
      * @parent templatesPage.ViewModel
@@ -23,7 +32,7 @@ export default Map.extend({
         let appState = this.attr('appState')
         let guideId = appState.attr('guideId')
 
-        return A2JTemplate.findAll({guideId})
+        return A2JTemplate.findAll({ guideId })
       }
     },
 
@@ -39,10 +48,7 @@ export default Map.extend({
           return lastSet
         }
 
-        this.attr('templatesPromise').then((data) => {
-          resolve(data)
-          this.attr('displayList', this.makeDisplayList())
-        })
+        this.attr('templatesPromise').then(resolve)
       }
     },
 
@@ -52,7 +58,35 @@ export default Map.extend({
      *
      * displayList of templates based on filtering
      */
-    displayList: {},
+    displayList: {
+      get () {
+        const templates = this.attr('templates')
+
+        if (templates) {
+          return this.performSearch(
+            this.sortList(
+              this.filterList(templates)
+            )
+          )
+        }
+      }
+    },
+
+    /**
+     * @property {CanList?} templatesPage.ViewModel.prototype.define.deletedTemplates deletedTemplates
+     * @parent templatesPage.ViewModel
+     *
+     * templates that were deleted
+     */
+    deletedTemplates: {},
+
+    /**
+     * @property {CanList?} templatesPage.ViewModel.prototype.define.restoredTemplates restoredTemplates
+     * @parent templatesPage.ViewModel
+     *
+     * templates that were deleted and then restored
+     */
+    restoredTemplates: {},
 
     /**
      * @property {String} templatesPage.ViewModel.prototype.define.activeFilter activeFilter
@@ -199,21 +233,9 @@ export default Map.extend({
     hasSorted: {}
   },
 
-  makeDisplayList () {
-    const templates = this.attr('templates')
-
-    if (templates) {
-      return this.performSearch(
-        this.sortList(
-          this.filterList(templates)
-        )
-      )
-    }
-  },
-
   sortList (templates) {
     let criteria = this.attr('sortCriteria')
-    let {key, direction} = criteria.attr()
+    let { key, direction } = criteria.attr()
     templates.sortBy(key, direction)
     return templates
   },
@@ -261,24 +283,6 @@ export default Map.extend({
   },
 
   /**
-   * @function templatesPage.ViewModel.prototype.updateDisplayList updateDisplayList
-   * @parent templatesPage.ViewModel
-   *
-   * This function is meant to update the list when templates are removed or
-   * restored, it generates the `displayList` again and compares it to the list
-   * currently being displayed, the bound list is updated if there is a difference
-   * between them (length).
-   */
-  updateDisplayList () {
-    const currentDisplayList = this.attr('displayList')
-    let displayList = this.makeDisplayList()
-
-    if (currentDisplayList.length !== displayList.length) {
-      this.attr('displayList', displayList)
-    }
-  },
-
-  /**
    * @function templatesPage.ViewModel.prototype.handleDeletedTemplates handleDeletedTemplates
    * @parent templatesPage.ViewModel
    *
@@ -294,7 +298,7 @@ export default Map.extend({
     // they will continue to show up in the alert component when other templates
     // are deleted later on.
     if (alreadyDeleted && alreadyDeleted.attr('length')) {
-      alreadyDeleted.each(template => template.removeAttr('deleted'))
+      alreadyDeleted.forEach(template => template.removeAttr('deleted'))
     }
 
     if (beingDeleted.attr('length')) {
@@ -315,7 +319,7 @@ export default Map.extend({
     let beingRestored = templates.filter(template => template.attr('restored'))
 
     if (alreadyRestored && alreadyRestored.attr('length')) {
-      alreadyRestored.each(template => template.removeAttr('restored'))
+      alreadyRestored.forEach(template => template.removeAttr('restored'))
     }
 
     if (beingRestored.attr('length')) {
@@ -338,13 +342,13 @@ export default Map.extend({
 
     // TODO: build es6 map of template to it's index to remove performance hit of indexOf
 
-    templates.sort((a, b) => {
-      if (!a.active) return 1
-      if (!b.active) return -1
+    let outTemplates = sort(templates, (a, b) => {
+      if (!a.attr('active')) return -1
+      if (!b.attr('active')) return 1
       return currentDisplayList.indexOf(a) - currentDisplayList.indexOf(b)
     })
 
-    const templateIds = templates.serialize().map(t => t.templateId)
+    const templateIds = outTemplates.serialize().map(t => t.templateId)
     return templateIds
   },
 
@@ -357,7 +361,7 @@ export default Map.extend({
    */
   saveTemplatesOrder (templateIds) {
     const guideId = this.attr('appState.guideId')
-    // const templateIds = this.attr('templates').serialize().map(t => t.templateId);
+
     if (templateIds) {
       return $.ajax({
         url: `/api/templates/${guideId}`,

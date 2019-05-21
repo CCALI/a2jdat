@@ -1,10 +1,13 @@
+import $ from 'jquery'
 import moment from 'moment'
-import Model from 'can/model/'
+import Model from 'can-model'
 import _omit from 'lodash/omit'
 import A2JNode from './a2j-node'
 import comparator from './template-comparator'
+import sort from '../utils/sort'
 
-import 'can/map/define/'
+import 'can-list'
+import 'can-map-define'
 
 /**
  * @module {function} A2JTemplate
@@ -17,7 +20,7 @@ import 'can/map/define/'
  *
  * A guided interview can have one or more A2J Templates associated to it.
  */
-const A2JTemplate = Model.extend(
+const A2JTemplate = Model.extend('A2JTemplateModel',
   {
     init () {
       const update2 = update1 =>
@@ -84,8 +87,11 @@ const A2JTemplate = Model.extend(
       return function (params, success, error) {
         let dfd = findAllData(params).then(response => {
           let a2jTemplates = this.models(response)
+          if (params.active) {
+            a2jTemplates = a2jTemplates.filter((template) => template.active)
+          }
 
-          a2jTemplates.each((a2jTemplate, index) => {
+          a2jTemplates.forEach((a2jTemplate, index) => {
             // extend template with buildOrder property.
             a2jTemplate.attr('buildOrder', index + 1)
 
@@ -274,6 +280,8 @@ A2JTemplate.List = A2JTemplate.List.extend({
         this.attr('comparator', comparator.moment(key, direction))
         break
     }
+
+    sort(this, this.attr('comparator'))
   },
 
   search (token) {

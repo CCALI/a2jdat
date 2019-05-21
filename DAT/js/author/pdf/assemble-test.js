@@ -1,5 +1,5 @@
 import 'steal-mocha'
-import assert from 'assert'
+import { assert } from 'chai'
 import assemble from './assemble'
 
 const {
@@ -98,9 +98,9 @@ describe('pdf/assemble', () => {
         height: 100
       }
 
-      const box1 = {page: 0, area: topLeftCorner}
-      const box2 = {page: 1, area: topLeftCorner}
-      const box3 = {page: 2, area: topLeftCorner}
+      const box1 = { page: 0, area: topLeftCorner }
+      const box2 = { page: 1, area: topLeftCorner }
+      const box3 = { page: 2, area: topLeftCorner }
 
       assert.deepEqual(
         [box1, box2, box3].sort(boxComparator),
@@ -178,26 +178,26 @@ describe('pdf/assemble', () => {
       const boxes = [{
         id: 'vb-0',
         page: 0,
-        area: {top: 0, left: 0, width: 0, height: 0},
+        area: { top: 0, left: 0, width: 0, height: 0 },
         variable: 'Client first name TE'
       },
       {
         id: 'vb-1',
         page: 0,
-        area: {top: 10, left: 10, width: 10, height: 10},
+        area: { top: 10, left: 10, width: 10, height: 10 },
         variable: 'Age NU'
       },
       {
         id: 'vb-2',
         page: 0,
-        area: {top: 30, left: 30, width: 30, height: 30},
+        area: { top: 30, left: 30, width: 30, height: 30 },
         isInverted: true,
         variable: 'Fun TF'
       },
       {
         id: 'vb-3',
         page: 0,
-        area: {top: 60, left: 60, width: 60, height: 60},
+        area: { top: 60, left: 60, width: 60, height: 60 },
         variable: 'Status MC',
         variableValue: 'married'
       }]
@@ -242,8 +242,8 @@ describe('pdf/assemble', () => {
           type: 'MC'
         }
       }
-      const pages = [{ domSize: {height: 990, width: 765}, pdfSize: {height: 792, width: 612} }]
-      const documentOptions = {variableOptions: {'status mc': {isCheck: true}}, addendumOptions: {}}
+      const pages = [{ domSize: { height: 990, width: 765 }, pdfSize: { height: 792, width: 612 } }]
+      const documentOptions = { variableOptions: { 'status mc': { isCheck: true } }, addendumOptions: {} }
       const templateData = {
         boxes,
         answers,
@@ -263,10 +263,10 @@ describe('pdf/assemble', () => {
     const defaultTextOptions = 'DefaultTextOptions'
     const boxes = [{
       page: 0,
-      area: {top: 0, left: 0, width: 0, height: 0}
+      area: { top: 0, left: 0, width: 0, height: 0 }
     }, {
       page: 0,
-      area: {top: 10, left: 10, width: 0, height: 0}
+      area: { top: 10, left: 10, width: 0, height: 0 }
     }]
 
     describe('tables', () => {
@@ -354,7 +354,7 @@ describe('pdf/assemble', () => {
       it('should return an array of text patches', () => {
         const boxes = [{
           page: 1,
-          area: {top: 0, left: 0, width: 0, height: 0}
+          area: { top: 0, left: 0, width: 0, height: 0 }
         }]
         const variable = {}
         const answerValue = 'Hello'
@@ -382,7 +382,7 @@ describe('pdf/assemble', () => {
     it('should return an array of text patches', () => {
       const boxes = [{
         page: 0,
-        area: {top: 0, left: 0, width: 0, height: 0}
+        area: { top: 0, left: 0, width: 0, height: 0 }
       }]
       const getBoxArea = () => 'GetBoxArea'
       const answerValue = 12
@@ -391,7 +391,7 @@ describe('pdf/assemble', () => {
         boxes,
         getBoxArea,
         answerValue,
-        variable: {repeating: false},
+        variable: { repeating: false },
         variableOptions: {},
         defaultTextOptions
       })
@@ -409,10 +409,10 @@ describe('pdf/assemble', () => {
       it('should return an array of table-text patches', () => {
         const boxes = [{
           page: 0,
-          area: {top: 0, left: 0, width: 0, height: 0}
+          area: { top: 0, left: 0, width: 0, height: 0 }
         }, {
           page: 0,
-          area: {top: 10, left: 10, width: 0, height: 0}
+          area: { top: 10, left: 10, width: 0, height: 0 }
         }]
         const variable = {
           repeating: true
@@ -461,7 +461,7 @@ describe('pdf/assemble', () => {
     it('should return an array of text patches', () => {
       const boxes = [{
         page: 0,
-        area: {top: 0, left: 0, width: 0, height: 0}
+        area: { top: 0, left: 0, width: 0, height: 0 }
       }]
       const getBoxArea = () => 'GetBoxArea'
       const answerValue = 12
@@ -470,7 +470,7 @@ describe('pdf/assemble', () => {
         boxes,
         getBoxArea,
         answerValue,
-        variable: {repeating: false},
+        variable: { repeating: false },
         variableOptions: {},
         defaultTextOptions
       })
@@ -488,10 +488,10 @@ describe('pdf/assemble', () => {
       it('should return an array of table-text patches', () => {
         const boxes = [{
           page: 0,
-          area: {top: 0, left: 0, width: 0, height: 0}
+          area: { top: 0, left: 0, width: 0, height: 0 }
         }, {
           page: 0,
-          area: {top: 10, left: 10, width: 0, height: 0}
+          area: { top: 10, left: 10, width: 0, height: 0 }
         }]
         const variable = {
           repeating: true
@@ -540,11 +540,11 @@ describe('pdf/assemble', () => {
     it('should return an array of checkmark patches', () => {
       const boxes = [{
         page: 0,
-        area: {top: 0, left: 0, width: 0, height: 0}
+        area: { top: 0, left: 0, width: 0, height: 0 }
       }]
       const getBoxArea = () => 'GetBoxArea'
       const answerValue = true
-      const variableOptions = {checkIcon: 'normal-check'}
+      const variableOptions = { checkIcon: 'normal-check' }
       const patches = getTrueFalsePatches({
         boxes,
         getBoxArea,
@@ -570,12 +570,12 @@ describe('pdf/assemble', () => {
     it('should return boxes which are inverted if the answer value is false', () => {
       const boxes = [{
         page: 0,
-        area: {top: 0, left: 0, width: 0, height: 0},
+        area: { top: 0, left: 0, width: 0, height: 0 },
         isInverted: true
       }]
       const getBoxArea = () => 'GetBoxArea'
       const answerValue = false
-      const variableOptions = {checkIcon: 'normal-check'}
+      const variableOptions = { checkIcon: 'normal-check' }
       const patches = getTrueFalsePatches({
         boxes,
         getBoxArea,
@@ -596,16 +596,16 @@ describe('pdf/assemble', () => {
     it('should return an array of checkmark patches', () => {
       const boxes = [{
         page: 0,
-        area: {top: 0, left: 0, width: 0, height: 0},
+        area: { top: 0, left: 0, width: 0, height: 0 },
         variableValue: 'foo'
       }, {
         page: 1,
-        area: {top: 0, left: 0, width: 0, height: 0},
+        area: { top: 0, left: 0, width: 0, height: 0 },
         variableValue: 'bar'
       }]
       const getBoxArea = () => 'GetBoxArea'
       const answerValue = 'foo'
-      const variableOptions = {isCheck: true, checkIcon: 'normal-check'}
+      const variableOptions = { isCheck: true, checkIcon: 'normal-check' }
       const patches = getMultipleChoicePatches({
         boxes,
         getBoxArea,

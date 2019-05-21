@@ -1,9 +1,9 @@
-import Map from 'can/map/';
-import Component from 'can/component/';
-import _isFunction from 'lodash/isFunction';
-import template from './element-container.stache';
+import CanMap from 'can-map'
+import Component from 'can-component'
+import _isFunction from 'lodash/isFunction'
+import template from './element-container.stache'
 
-import 'can/map/define/';
+import 'can-map-define'
 
 /**
  * @module {Module} author/templates/elements/element-container/ <element-container>
@@ -28,8 +28,13 @@ import 'can/map/define/';
  *
  * `<element-container>`'s viewModel.
  */
-export let ContainerVM = Map.extend({
+export let ContainerVM = CanMap.extend('ElementContainerVM', {
   define: {
+    // passed in via stache
+    nodeId: {},
+    cloneNode: {},
+    deleteNode: {},
+    variablesList: {},
     /**
      * @property {Boolean} element-container.ViewModel.prototype.selected selected
      * @parent element-container.ViewModel
@@ -48,11 +53,11 @@ export let ContainerVM = Map.extend({
    * Calls `doSelectNode` if node is not selected already, used as the handler
    * for the click event.
    */
-  setSelected() {
-    const selected = this.attr('selected');
+  setSelected () {
+    const selected = this.attr('selected')
 
     if (!selected) {
-      this.doSelectNode();
+      this.doSelectNode()
     }
   },
 
@@ -63,46 +68,56 @@ export let ContainerVM = Map.extend({
    * Sets `selected` to `true` and calls `toggleEditActiveNode` to make sure
    * there is only element selected at a time.
    */
-  doSelectNode() {
-    const id = this.attr('nodeId');
-    const toggleEditActiveNode = this.attr('toggleEditActiveNode');
+  doSelectNode () {
+    const id = this.attr('nodeId')
+    const toggleEditActiveNode = this.attr('toggleEditActiveNode')
 
-    this.attr('selected', true);
+    this.attr('selected', true)
 
     if (_isFunction(toggleEditActiveNode)) {
-      toggleEditActiveNode(id);
+      toggleEditActiveNode(id)
     } else {
-      console.error('toggleEditActiveNode should be a function');
+      console.error('toggleEditActiveNode should be a function')
     }
   }
-});
+})
 
 export default Component.extend({
-  template,
-  viewModel: ContainerVM,
+  view: template,
+  ViewModel: ContainerVM,
   tag: 'element-container',
 
   events: {
     // when a new element is added to a template, is selected by default,
     // we want to make sure any selected element is toggled properly.
-    inserted() {
-      const vm = this.viewModel;
+    inserted () {
+      const vm = this.viewModel
 
       if (vm.attr('selected')) {
-        vm.doSelectNode();
+        vm.doSelectNode()
       }
     },
 
-    '{viewModel} deleted': function(ps, evt, deleted) {
-      let $el = this.element;
+    '{viewModel} deleted': function (ps, evt, deleted) {
+      let $el = $(this.element)
 
       if (deleted) {
-        $el.slideUp('fast');
-        $el.siblings('element-options-pane').hide();
+        $el.slideUp('fast')
+        $el.siblings('element-options-pane').hide()
       } else {
-        $el.slideDown('fast');
-        $el.siblings('element-options-pane').show();
+        $el.slideDown('fast')
+        $el.siblings('element-options-pane').show()
       }
+    },
+
+    '.wrapper dblclick': function (_el, event) {
+      event.stopPropagation()
+      event.preventDefault()
+
+      const vm = this.viewModel
+      vm.setSelected()
     }
-  }
-});
+  },
+
+  leakScope: true
+})

@@ -1,17 +1,18 @@
-import Map from 'can/map/';
-import _keys from 'lodash/keys';
-import Component from 'can/component/';
-import template from './assemble.stache';
-import parser from 'caja/viewer/mobile/util/parser';
+import $ from 'jquery'
+import CanMap from 'can-map'
+import _keys from 'lodash/keys'
+import Component from 'can-component'
+import template from './assemble.stache'
+import parser from 'caja/viewer/mobile/util/parser'
 
-import 'can/map/define/';
+import 'can-map-define'
 
 /**
  * @module {Module} author/templates/assemble/ <test-assemble-options>
  * @parent api-components
  *
  * This component is used when user clicks the "Test Assemble" button, it
- * exposes two buttons that allow the author to load an anwers file and/or get
+ * exposes two buttons that allow the author to load an answers file and/or get
  * a PDF generated out of a single template or of all the templates matching the
  * provided [guideId].
  *
@@ -29,8 +30,18 @@ import 'can/map/define/';
  *
  * <test-assemble-options>'s viewModel.
  */
-let AssembleOptionsVM = Map.extend({
+let AssembleOptionsVM = CanMap.extend('AssembleOptionsVM', {
   define: {
+    /**
+     * @property {String} assemble.ViewModel.prototype.fileDataUrl fileDataUrl
+     * @parent assemble.ViewModel
+     *
+     * The fileDataUrl for standalone viewer
+     */
+    fileDataUrl: {
+      value: ''
+    },
+
     /**
      * @property {String} assemble.ViewModel.prototype.guideId guideId
      * @parent assemble.ViewModel
@@ -82,7 +93,7 @@ let AssembleOptionsVM = Map.extend({
      * uploaded by the author.
      */
     interviewAnswers: {
-      Value: Map
+      Value: CanMap
     },
 
     /**
@@ -92,9 +103,9 @@ let AssembleOptionsVM = Map.extend({
      * Whether user has loaded an answers file already.
      */
     hasLoadedAnswers: {
-      get() {
-        const answers = this.attr('interviewAnswers');
-        return _keys(answers.attr()).length > 0;
+      get () {
+        const answers = this.attr('interviewAnswers')
+        return _keys(answers.attr()).length > 0
       }
     },
 
@@ -106,47 +117,86 @@ let AssembleOptionsVM = Map.extend({
      * document assembly.
      */
     answersString: {
-      get() {
-        const answers = this.attr('interviewAnswers');
+      get () {
+        const answers = this.attr('interviewAnswers')
 
-        return JSON.stringify(answers.serialize());
+        return JSON.stringify(answers.serialize())
+      }
+    },
+
+    /**
+     * @property {String} assemble.ViewModel.prototype.header header
+     * @parent assemble.ViewModel
+     *
+     * The header
+     */
+    header: {
+      value: ''
+    },
+
+    /**
+     * @property {String} assemble.ViewModel.prototype.footer footer
+     * @parent assemble.ViewModel
+     *
+     * The footer
+     */
+    footer: {
+      value: ''
+    },
+
+    /**
+     * @property {String} assemble.ViewModel.prototype.hideHeaderOnFirstPage hideHeaderOnFirstPage
+     * @parent assemble.ViewModel
+     *
+     * hideHeaderOnFirstPage
+     */
+    hideHeaderOnFirstPage: {},
+
+    /**
+     * @property {String} assemble.ViewModel.prototype.hideFooterOnFirstPage hideFooterOnFirstPage
+     * @parent assemble.ViewModel
+     *
+     * hideFooterOnFirstPage
+     */
+    hideFooterOnFirstPage: {}
+  },
+
+  clearAnswers () {
+    this.attr('interviewAnswers', new CanMap())
+  }
+})
+
+export default Component.extend({
+  view: template,
+  ViewModel: AssembleOptionsVM,
+  tag: 'test-assemble-options',
+
+  events: {
+    '.load-answers click': function ($el, evt) {
+      evt.preventDefault()
+      $(this.element).find('.answers-file-input').click()
+    },
+
+    '.answers-file-input change': function (el) {
+      const $el = $(el)
+      const vm = this.viewModel
+      const file = $el.get(0).files[0]
+
+      if (file) {
+        const reader = new window.FileReader()
+
+        reader.onload = function () {
+          const answers = parser.parseJSON(reader.result, {})
+
+          if (answers) {
+            vm.attr('interviewAnswers', answers)
+          }
+        }
+
+        reader.readAsText(file)
       }
     }
   },
 
-  clearAnswers() {
-    this.attr('interviewAnswers', new Map());
-  }
-});
-
-export default Component.extend({
-  template,
-  viewModel: AssembleOptionsVM,
-  tag: 'test-assemble-options',
-
-  events: {
-    '.load-answers click': function($el, evt) {
-      evt.preventDefault();
-      this.element.find('.answers-file-input').click();
-    },
-
-    '.answers-file-input change': function($el) {
-      const vm = this.viewModel;
-      const file = $el.get(0).files[0];
-
-      if (file) {
-        const reader = new FileReader();
-
-        reader.onload = function() {
-          const answers = parser.parseJSON(reader.result, {});
-
-          if (answers) {
-            vm.attr('interviewAnswers', answers);
-          }
-        };
-
-        reader.readAsText(file);
-      }
-    }
-  }
-});
+  leakScope: true
+})

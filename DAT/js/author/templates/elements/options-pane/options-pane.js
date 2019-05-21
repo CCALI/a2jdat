@@ -1,8 +1,8 @@
-import Map from 'can/map/';
-import Component from 'can/component/';
-import template from './options-pane.stache';
+import CanMap from 'can-map'
+import Component from 'can-component'
+import template from './options-pane.stache'
 
-import 'can/map/define/';
+import 'can-map-define'
 
 /**
  * @module {Module} optionsPane <element-options-pane>
@@ -26,7 +26,7 @@ import 'can/map/define/';
  *
  * `<element-options-pane>`'s viewModel.
  */
-export let OptionsPaneVM = Map.extend({
+export let OptionsPaneVM = CanMap.extend('OptionsPaneVM', {
   define: {
     /**
      * @property {Boolean} optionsPane.ViewModel.prototype.define.title title
@@ -51,10 +51,21 @@ export let OptionsPaneVM = Map.extend({
       value: true
     }
   }
-});
+})
 
 export default Component.extend({
-  template,
-  viewModel: OptionsPaneVM,
-  tag: 'element-options-pane'
-});
+  view: template,
+  ViewModel: OptionsPaneVM,
+  tag: 'element-options-pane',
+
+  events: {
+    '.popover dblclick': function (_target, event) {
+      // prevent a bug where double clicking an a2j-conditional child element's
+      // popup would unexpectedly close that popup, and open the a2j-conditional
+      // element's popup
+      event.stopPropagation()
+    }
+  },
+
+  leakScope: true
+})

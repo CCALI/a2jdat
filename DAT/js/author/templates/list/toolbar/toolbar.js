@@ -1,59 +1,56 @@
-import Map from "can/map/";
-import Component from "can/component/";
-import template from "./toolbar.stache";
+import CanMap from 'can-map'
+import Component from 'can-component'
+import template from './toolbar.stache'
 
-import "can/route/";
-import "can/map/define/";
-import "bootstrap/js/modal";
+import route from 'can-route'
+import 'can-map-define'
+import 'bootstrap/js/modal'
 
-import { sharedPdfFlag } from "caja/author/pdf/index";
+import { sharedPdfFlag } from 'caja/author/pdf/index'
 
-export let Toolbar = Map.extend({
+export let Toolbar = CanMap.extend({
   define: {
     filter: {
-      type: "string"
+      type: 'string'
     },
 
     searchToken: {
-      type: "string",
-      value: ""
+      type: 'string',
+      value: ''
     },
 
     showClearButton: {
-      get() {
-        return this.attr("searchToken").length;
+      get () {
+        return this.attr('searchToken').length
       }
     }
   },
 
-  setFilter(filter) {
-    this.attr("filter", filter);
+  setFilter (filter) {
+    this.attr('filter', filter)
   },
 
-  clearSearchToken() {
-    this.attr("searchToken", "");
+  clearSearchToken () {
+    this.attr('searchToken', '')
   },
 
-  openNewTemplate(flag) {
-    sharedPdfFlag.set(flag);
-    const newTemplateTransition = {
-      page: "templates",
-      templateId: "new"
-    };
+  openNewTemplate (flag) {
+    sharedPdfFlag.set(flag)
 
-    can.route.attr(newTemplateTransition);
+    route.data.attr('page', 'templates')
+    route.data.attr('templateId', 'new')
   }
-});
+})
 
 export default Component.extend({
-  template,
+  view: template,
   leakScope: false,
-  viewModel: Toolbar,
-  tag: "templates-toolbar",
+  ViewModel: Toolbar,
+  tag: 'templates-toolbar',
   events: {
-    ".search-input keyup": function(target) {
-      let newToken = target.val().trim();
-      this.viewModel.attr("searchToken", newToken);
+    '.search-input keyup': function (target) {
+      let newToken = target.val().trim()
+      this.viewModel.attr('searchToken', newToken)
     }
   }
-});
+})

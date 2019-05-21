@@ -1,0 +1,7 @@
+import 'caja/author/models/fixtures/'
+import 'caja/author/models/tests/guide-test'
+import 'caja/author/models/tests/a2j-node-test'
+import 'caja/author/models/tests/app-state-test'
+import 'caja/author/models/tests/a2j-template-test'
+import 'caja/author/models/tests/a2j-variable-test'
+import 'caja/author/models/tests/trace-message-test'

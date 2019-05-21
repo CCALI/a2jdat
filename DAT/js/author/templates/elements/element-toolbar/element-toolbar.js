@@ -1,9 +1,9 @@
-import Map from 'can/map/';
-import Component from 'can/component/';
-import _isFunction from 'lodash/isFunction';
-import template from './element-toolbar.stache';
+import CanMap from 'can-map'
+import Component from 'can-component'
+import _isFunction from 'lodash/isFunction'
+import template from './element-toolbar.stache'
 
-import 'can/map/define/';
+import 'can-map-define'
 
 /**
  * @module {Module} author/templates/elements/element-toolbar/ <element-toolbar>
@@ -19,39 +19,61 @@ import 'can/map/define/';
  * @codeend
  */
 
-export const ElementToolbar = Map.extend({
-  define: {},
-
-  clone() {
-    const id = this.attr('nodeId');
-    const cloneNode = this.attr('cloneNode');
-
-    if (_isFunction(cloneNode)) {
-      cloneNode(id);
-    } else {
-      console.error('cloneNode should be a function');
+export const ElementToolbar = CanMap.extend({
+  define: {
+    // passed in via stache
+    nodeId: {},
+    cloneNode: {},
+    deleteNode: {},
+    moveNode: {},
+    nodeIndex: {
+      type: 'number'
     }
-
-    return false;
   },
 
-  delete() {
-    const id = this.attr('nodeId');
-    const deleteNode = this.attr('deleteNode');
+  clone (event) {
+    event && event.preventDefault()
+
+    const id = this.attr('nodeId')
+    const cloneNode = this.attr('cloneNode')
+
+    if (_isFunction(cloneNode)) {
+      cloneNode(id)
+    } else {
+      console.error('cloneNode should be a function')
+    }
+  },
+
+  delete (event) {
+    event && event.preventDefault()
+
+    const id = this.attr('nodeId')
+    const deleteNode = this.attr('deleteNode')
 
     if (_isFunction(deleteNode)) {
-      deleteNode(id);
+      deleteNode(id)
     } else {
-      console.error('deleteNode should be a function');
+      console.error('deleteNode should be a function')
     }
+  },
 
-    return false;
+  move (event, direction) {
+    event && event.preventDefault()
+
+    const id = this.attr('nodeId')
+    const moveNode = this.attr('moveNode')
+
+    if (_isFunction(moveNode)) {
+      moveNode(id, direction, this.attr('nodeIndex'))
+    } else {
+      console.error('moveNode should be a function')
+    }
   }
-});
+})
 
 export default Component.extend({
-  template,
+  view: template,
   leakScope: false,
   tag: 'element-toolbar',
-  viewModel: ElementToolbar
-});
+  ViewModel: ElementToolbar
+})

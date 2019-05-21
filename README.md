@@ -57,7 +57,7 @@ https://github.com/git-for-windows/git/releases/download/v2.16.2.windows.1/Git-2
 The node sub-dependencies for the DAT must be built locally on the target system and requires build tools for languages other than node. Run the command below to install the necessary build tools:
 
 ##### For windows
-use the command below to install 
+use the command below to install
 ```npm --add-python-to-path='true' --debug install --global windows-build-tools```
 
 This requires administrator access. This is a very lengthy install-  it can take over an hour even on a fast connection.
@@ -102,7 +102,7 @@ if you encounter an error in this step it can often be resolved by deleting node
 Since the A2J software can run on many platforms, there is a small amount of platform specific configuration that is necessary. Navigate to the root of the DAT in your websites folder. Open config.json
 
 The Most important keys are:
-SERVER_URL- required to establish target endpoints for API 
+SERVER_URL- required to establish target endpoints for API
 GUIDES_DIR-  required to establish location of templates  
 GUIDES_URL- relative web location of guides  
 WKHTMLTOPDF_PATH- path to binary of WKHTMLTOPDF  
@@ -201,11 +201,14 @@ Location /api {
 }
 ```
 
-11.)  Start the node process
-for \*nix
+11.) Edit ecosystem.config.js
+
+we have created a script to allow pm2 to manage memory and multiple instances of the DAT. The default script will run a cluster of 4 processes and restart a process if it uses more than 768MB.
+
+12.)  Start the node process
 navigate to the DAT folder in a terminal
 
-`pm2 start npm --name “prod-api” -- run start`
+`pm2 start ecosystem.config.js`
 
 
 ## Security Note

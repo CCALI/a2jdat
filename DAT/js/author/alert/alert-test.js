@@ -1,7 +1,7 @@
 import $ from 'jquery'
-import assert from 'assert'
-import {Alert} from './alert'
-import stache from 'can/view/stache/'
+import { assert } from 'chai'
+import { Alert } from './alert'
+import stache from 'can-stache'
 
 import 'steal-mocha'
 
@@ -49,7 +49,7 @@ describe('<app-alert>', function () {
   describe('Component', function () {
     beforeEach(function () {
       $.fx.off = true
-      let frag = stache('<app-alert open="true"></app-alert>')
+      let frag = stache('<app-alert open:from="true"></app-alert>')
       $('#test-area').html(frag())
     })
 
@@ -63,12 +63,12 @@ describe('<app-alert>', function () {
     })
 
     it('is hidden if "open" is "false"', function () {
-      $('app-alert').viewModel().attr('open', false)
+      $('app-alert')[0].viewModel.attr('open', false)
       assert.isFalse($('app-alert').is(':visible'))
     })
 
     it('triggers "closed" event', function (done) {
-      let vm = $('app-alert').viewModel()
+      let vm = $('app-alert')[0].viewModel
 
       vm.bind('closed', function () {
         done()
@@ -79,7 +79,7 @@ describe('<app-alert>', function () {
     })
 
     it('close button is not visible unless dismissible', function () {
-      let vm = $('app-alert').viewModel()
+      let vm = $('app-alert')[0].viewModel
 
       // dismissible false by default
       assert.isFalse($('.close').is(':visible'))

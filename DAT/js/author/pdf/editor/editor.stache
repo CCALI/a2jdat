@@ -4,6 +4,7 @@
 <can-import from='caja/author/pdf/addendum-options/' />
 <can-import from='caja/author/pdf/assignment-form/' />
 <can-import from='caja/author/pdf/thumbnail-sidebar/' />
+<can-import from='can-stache-route-helpers' />
 
 <div class='editor-container'>
   <div class='editor-sidebar'>
@@ -17,9 +18,9 @@
         <input
           class='template-name'
           type='text'
-          {($value)}="template.title"
+          el:value:bind="template.title"
           placeholder='My PDF Template'
-          ($change)="onTitleChange()"
+          on:el:change="onTitleChange()"
         />
       </label>
     </div>
@@ -27,8 +28,8 @@
       <div class='btn-set'>
         <button
           class="btn btn-default"
-          ($click)="onTestAssemble()"
-          {{^if hasPdf}}disabled{{/if}}
+          on:el:click="onTestAssemble()"
+          {{^if(hasPdf)}}disabled{{/if}}
         >
           <span class='ui-button-text'>
             <span class="glyphicon-file-pdf"></span>
@@ -38,8 +39,8 @@
 
         <button
           class="btn btn-default"
-          ($click)="onTemplateSave()"
-          {{#if isSavingTemplate}}
+          on:el:click="onTemplateSave()"
+          {{#if(isSavingTemplate)}}
             disabled='disabled'
           {{/if}}
         >
@@ -49,7 +50,7 @@
           </span>
         </button>
       </div>
-      {{#if lastSaveDate}}
+      {{#if(lastSaveDate)}}
         <div class='save-status'>
           {{#if saveError}}
             <p title='Error: {{saveError.message}}'>Unable to save template</p>
@@ -58,7 +59,7 @@
               {{lastSaveDateShortText}}
             </time>
           {{/if}}
-          <div class='indicator {{#if isDirtyTimer}}indicator--dirty{{else}}{{#if isSavingTemplate}}indicator--saving{{else}}{{#if saveError}}indicator--danger{{/if}}{{/if}}{{/if}}'></div>
+          <div class='indicator {{#if(isDirtyTimer)}}indicator--dirty{{else}}{{#if(isSavingTemplate)}}indicator--saving{{else}}{{#if(saveError)}}indicator--danger{{/if}}{{/if}}{{/if}}'></div>
         </div>
       {{/if}}
     </div>
@@ -67,44 +68,44 @@
       <div class='font-option'>
         <label>Base PDF</label>
         <div>
-          {{#if hasPdf}}
-            {{#if templatePdfUrl}}
+          {{#if(hasPdf)}}
+            {{#if(templatePdfUrl)}}
               <a title='View and/or download' href='{{templatePdfUrl}}' target='_blank'>View</a>
               &bull;
             {{/if}}
-            <a title='Replace base PDF' ($click)='uploadNewPdf()'>Replace</a>
+            <a title='Replace base PDF' on:el:click='uploadNewPdf()'>Replace</a>
           {{else}}
             None..yet
           {{/if}}
         </div>
       </div>
-      {{#if isReplacing}}
+      {{#if(isReplacing)}}
         <author-modal
-          modal-title='Confirm PDF replacement'
-          cancel-text='Cancel'
-          {@on-cancel}='@cancelLesserReplacement'
-          submit-text='Replace PDF'
-          {@on-submit}='@confirmLesserReplacement'
+          modalTitle:raw="Confirm PDF replacement"
+          cancelText:raw="Cancel"
+          onCancel:from='cancelLesserReplacement'
+          submitText:raw="Replace PDF"
+          onSubmit:from='confirmLesserReplacement'
         >
           <p>
-            The replacement PDF ({{newPageCount}} {{#is newPageCount 1}}page{{else}}pages{{/is}})
-            is shorter then the original PDF ({{currentPageCount}} {{#is currentPageCount 1}}page{{else}}pages{{/is}}).
+            The replacement PDF ({{newPageCount}} {{#is(newPageCount, 1)}}page{{else}}pages{{/is}})
+            is shorter then the original PDF ({{currentPageCount}} {{#is(currentPageCount, 1)}}page{{else}}pages{{/is}}).
             Variable boxes will be discarded from the excess pages.
           </p>
         </author-modal>
       {{/if}}
       <div class='font-option'>
         <label>Font name</label>
-        {{#if fontError}}
+        {{#if(fontError)}}
           <p title="{{fontError}}">Failed to load supported fonts</p>
         {{else}}
           <select
-            {($value)}="documentOptions.fontName"
-            {{#if isLoadingFonts}}
+            el:value:bind="documentOptions.fontName"
+            {{#if(isLoadingFonts)}}
               disabled='disabled'
             {{/if}}
           >
-            {{#each supportedFonts}}
+            {{#each(supportedFonts)}}
               <option value="{{.}}">{{.}}</option>
             {{/each}}
           </select>
@@ -112,7 +113,7 @@
       </div>
       <div class='font-option'>
         <label>Font size</label>
-        <select {($value)}="documentOptions.fontSize">
+        <select el:value:bind="documentOptions.fontSize">
           <option value="11">11</option>
           <option value="12">12</option>
           <option value="13">13</option>
@@ -123,15 +124,15 @@
       <div class='font-option'>
         <label>Addendum</label>
         <div>
-          <a ($click)="showAddendumOptions()">Configure</a>
+          <a on:el:click="showAddendumOptions()">Configure</a>
         </div>
       </div>
-      {{#if isAddendumOptionsShowing}}
+      {{#if(isAddendumOptionsShowing)}}
         <addendum-options
-          {default-page-size}="getDefaultPageSize()"
-          {saved-options}="documentOptions.addendumOptions"
-          {@on-save-options}="@saveAddendumOptions"
-          {@on-cancel}="@hideAddendumOptions"
+          defaultPageSize:from="getDefaultPageSize()"
+          savedOptions:from="documentOptions.addendumOptions"
+          onSaveOptions:from="saveAddendumOptions"
+          onCancel:from="hideAddendumOptions"
         />
       {{/if}}
     </section>
@@ -141,106 +142,106 @@
         <input
           type='checkbox'
           class='label-check'
-          {($checked)}="isConditionalLogicEnabled"
+          checked:bind="isConditionalLogicEnabled"
         />
       </label>
-      <p class="{{#unless isConditionalLogicEnabled}}text-muted{{/unless}}">
+      <p class="{{#not(isConditionalLogicEnabled)}}text-muted{{/not}}">
         Only use this template if
       </p>
       <condition-form
-        {variables-list}="guide.variablesList"
-        {(operator)}="templateState.operator"
-        {(left-operand)}="templateState.leftOperand"
-        {(right-operand)}="templateState.rightOperand"
-        {disabled}="{{not(isConditionalLogicEnabled)}}"
-        {(right-operand-type)}="templateState.rightOperandType"
+        variablesList:from="guide.variablesList"
+        operator:bind="templateState.operator"
+        leftOperand:bind="templateState.leftOperand"
+        rightOperand:bind="templateState.rightOperand"
+        disabled:from="not(isConditionalLogicEnabled)"
+        rightOperandType:bind="templateState.rightOperandType"
       />
     </section>
   </div>
   <div class='editor-main'>
-    {{#if thumbnailImageUrls.length}}
+    {{#if(thumbnailImageUrls.length)}}
       <thumbnail-sidebar
-        {is-showing-thumbnails}="isShowingThumbnails"
-        {thumbnail-image-urls}="thumbnailImageUrls"
-        {on-drawer-handle-click}="@onDrawerHandleClick"
-        {on-thumbnail-click}="@onThumbnailClick"
+        isShowingThumbnails:from="isShowingThumbnails"
+        thumbnailImageUrls:from="thumbnailImageUrls"
+        onDrawerHandleClick:from="onDrawerHandleClick"
+        onThumbnailClick:from="onThumbnailClick"
       />
     {{/if}}
 
     <div class='editor-pdf-view'>
-      {{^if hasPdf}}
+      {{^if(hasPdf)}}
         <div class='pdf-state pdf-state--initial'>
           <span class="glyphicon-doc-new"></span>
           <p>Upload a base PDF to get started</p>
           <button
             class='btn btn-primary'
-            ($click)='uploadNewPdf()'
+            on:el:click='uploadNewPdf()'
           >Upload PDF</button>
         </div>
       {{else}}
-      {{#if isPdfLoading}}
+      {{#if(isPdfLoading)}}
         <div class="loading">
           <span class="glyphicon-spin6 animate-spin"></span>
         </div>
       {{else}}
-        {{#if pdfError}}
+        {{#if(pdfError)}}
           <div class='pdf-state pdf-state--error'>
             <span class="glyphicon-attention"></span>
             <p title='{{pdfError}}'>Failed to load PDF</p>
             <button
               class='btn btn-primary'
-              ($click)='uploadNewPdf()'
+              on:el:click='uploadNewPdf()'
             >Upload new PDF</button>
           </div>
         {{/if}}
 
-        {{#if isAssigning}}
+        {{#if(isAssigning)}}
           <assignment-form
-            {variable-dict}="guide.vars"
-            {variable-options-dict}="documentOptions.variableOptions"
-            {on-cancel}="@onAssignmentCancel"
-            {on-assign}="@onAssignmentSubmit"
-            {on-unassign}="@onAssignmentUnassign"
-            {selected-boxes}="selectedBoxes"
+            variableDict:from="guide.vars"
+            variableOptionsDict:from="documentOptions.variableOptions"
+            onCancel:from="onAssignmentCancel"
+            onAssign:from="onAssignmentSubmit"
+            onUnassign:from="onAssignmentUnassign"
+            selectedBoxes:from="selectedBoxes"
           />
         {{/if}}
 
-        {{#each pages}}
+        {{#each(pages)}}
           <div
             class='editor-pdf-page'
             data-page='{{page}}'
             draggable="false"
-            {{#if domSize}}
+            {{#if(domSize)}}
               style='width: {{domSize.width}}px; height: {{domSize.height}}px'
             {{/if}}
           >
-            {{#if isLoading}}
+            {{#if(isLoading)}}
               <div class="loading">
                 <span class="glyphicon-spin6 animate-spin"></span>
               </div>
             {{else}}
               <img src="{{url}}" draggable="false" />
               <div class='editor-pdf-overlay' draggable="false">
-                {{#if previewBox}}
+                {{#if(scope.vm.previewBox)}}
                   <div
                     class='preview-box'
-                    style="top: {{previewBox.top}}px; left: {{previewBox.left}}px; width: {{previewBox.width}}px; height: {{previewBox.height}}px">
+                    style="top: {{scope.vm.previewBox.top}}px; left: {{scope.vm.previewBox.left}}px; width: {{scope.vm.previewBox.width}}px; height: {{scope.vm.previewBox.height}}px">
                   </div>
                 {{/if}}
 
-                {{#each boxes}}
-                  {{#is ./page ../page}}
+                {{#each(scope.vm.boxes)}}
+                  {{#is(./page, ../page)}}
                     <div
                       data-id='{{id}}'
-                      class='variable-box{{#if variable}} variable-box--assigned{{/if}}{{#if isSelected}} variable-box--selected{{/if}}'
+                      class='variable-box{{#if(variable)}} variable-box--assigned{{/if}}{{#if(isSelected)}} variable-box--selected{{/if}}'
                       style="top: {{area.top}}px; left: {{area.left}}px; width: {{area.width}}px; height: {{area.height}}px"
                     >
-                      {{#if isSelected}}
-                        {{^if isSmallDimension(area.width)}}
+                      {{#if(isSelected)}}
+                        {{^if scope.vm.isSmallDimension(area.width)}}
                           <i class='box-resize-handle box-resize-handle--n'></i>
                           <i class='box-resize-handle box-resize-handle--s'></i>
                         {{/if}}
-                        {{^if isSmallDimension(area.height)}}
+                        {{^if(scope.vm.isSmallDimension(area.height))}}
                           <i class='box-resize-handle box-resize-handle--w'></i>
                           <i class='box-resize-handle box-resize-handle--e'></i>
                         {{/if}}
@@ -251,9 +252,9 @@
                       {{/if}}
                       <div class='box-content'>
                         <span class='box-label'>
-                          {{#if variable}}
+                          {{#if(variable)}}
                             {{variable}}
-                            {{#if variableValue}}
+                            {{#if(variableValue)}}
                               &mdash; {{variableValue}}
                             {{/if}}
                           {{else}}
@@ -261,11 +262,11 @@
                           {{/if}}
                         </span>
                       </div>
-                      {{#if isMiniBox(.)}}
+                      {{#if(scope.vm.isMiniBox(.))}}
                         <span class='box-tooltip'>
-                          {{#if variable}}
+                          {{#if(variable)}}
                             {{variable}}
-                            {{#if variableValue}}
+                            {{#if(variableValue)}}
                               &mdash; {{variableValue}}
                             {{/if}}
                           {{else}}
@@ -286,11 +287,11 @@
   </div>
 
   <div class='shortcut-menu'>
-    {{#if isShortcutMenuShowing}}
+    {{#if(isShortcutMenuShowing)}}
       <author-modal
-        modal-title='Keyboard Shortcuts'
-        cancel-text='Dismiss'
-        {@on-cancel}='@toggleShortcutMenu'
+        modalTitle:raw="Keyboard Shortcuts"
+        cancelText:raw="Dismiss"
+        onCancel:from='toggleShortcutMenu'
       >
         <table>
           <thead>

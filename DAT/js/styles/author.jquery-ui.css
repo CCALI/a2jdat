@@ -81,6 +81,10 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
+	z-index: 2050;
+	background: #000000;
+	opacity: .3;
+	filter: Alpha(Opacity=30);
 }
 .ui-accordion .ui-accordion-header {
 	display: block;
@@ -1037,18 +1041,6 @@ body .ui-tooltip {
 .ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
 .ui-icon-grip-diagonal-se { background-position: -80px -224px; }
 
-
-/* Misc visuals
-----------------------------------*/
-
-/* Overlays */
-.ui-widget-overlay {
-	background: #000000;
-	opacity: .8;
-	filter: Alpha(Opacity=80);
-}
-
-
 /* JPM/SJG A2J Theme Tweaks*/
 
 
@@ -1056,4 +1048,3 @@ html, body, input, select, textarea , .htmledit, .codeedit {
 	background-color: #fff;
 	color: #000;
 }
-

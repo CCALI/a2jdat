@@ -111,10 +111,15 @@ module.exports = {
    */
   get (comboId, params, callback) {
     debug(`GET /api/template/${comboId} request`)
-
     const [ guideId, templateId ] = comboId.split('-')
-    const { fileDataUrl } = params.query || ''
-    const usernamePromise = user.getCurrentUser({ cookieHeader: params.cookieHeader })
+    const { fileDataUrl } = (params && params.query) || ''
+    let usernamePromise
+
+    if (fileDataUrl) {     // standalone viewer/dat
+      usernamePromise = Promise.resolve(undefined)
+    } else {       // Author with logged in user
+      usernamePromise = user.getCurrentUser({ cookieHeader: params.cookieHeader })
+    }
 
     usernamePromise
       .then(username => paths.getTemplatePath({

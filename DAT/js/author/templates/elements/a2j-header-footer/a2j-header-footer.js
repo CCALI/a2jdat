@@ -1,7 +1,7 @@
-import $ from 'jquery';
-import Component from 'can/component/';
-import Map from 'can/map/';
-import template from './a2j-header-footer.stache';
+import $ from 'jquery'
+import Component from 'can-component'
+import CanMap from 'can-map'
+import template from './a2j-header-footer.stache'
 
 /**
  * @property {can.Map} headerFooter.ViewModel
@@ -9,7 +9,7 @@ import template from './a2j-header-footer.stache';
  *
  * `<a2j-header-footer>`'s viewModel.
  */
-export let HeaderFooterVM = Map.extend({
+export let HeaderFooterVM = CanMap.extend('HeaderFooterVM', {
   define: {
     /**
      * @property {String} headerFooter.ViewModel.prototype.title title
@@ -20,6 +20,15 @@ export let HeaderFooterVM = Map.extend({
     title: {
       type: 'string'
     },
+
+    /**
+     * @property {String} headerFooter.ViewModel.prototype.fontProperties fontProperties
+     * @parent headerFooter.ViewModel
+     *
+     * Font CSS rules to be applied to the content of each element of this
+     * page's a2j-template (these should be taken directly from that template)
+     */
+    fontProperties: {},
 
     /**
      * @property {Boolean} headerFooter.ViewModel.prototype.notDisplayedOnFirstPage notDisplayedOnFirstPage
@@ -53,29 +62,16 @@ export let HeaderFooterVM = Map.extend({
      */
     containsWords: {
       type: 'boolean',
-      get() {
-        return !!$(this.attr('userContent')).text();
+      get () {
+        return !!$(this.attr('userContent')).text()
       }
-    },
-
-    /**
-     * @property {Boolean} headerFooter.ViewModel.prototype.editEnabled editEnabled
-     * @parent headerFooter.ViewModel
-     *
-     * Allow the user to edit the <a2j-rich-text> content
-     */
-    editEnabled: {
-      value: true
     },
 
     /**
      * @property {Boolean} headerFooter.ViewModel.prototype.editActive editActive
      * @parent headerFooter.ViewModel
      *
-     * Whether the user is editing the Header/Footer content
-     *
-     * This is also passed to the <a2j-rich-text> element so that if the
-     * Header/Footer is being edited, the rich-text content will be editable.
+     * Whether the user is editing the Header/Footer content (at all)
      */
     editActive: {
       value: false
@@ -104,7 +100,6 @@ export let HeaderFooterVM = Map.extend({
     }
   },
 
-
   /**
    * @property {Function} headerFooter.ViewModel.prototype.setEditActive setEditActive
    * @parent headerFooter.ViewModel
@@ -117,15 +112,28 @@ export let HeaderFooterVM = Map.extend({
    * <button ($click)="setEditActive(false)" type="button">Close</button>
    * @codeend
    */
-  setEditActive(val) {
-    this.attr('editActive', val);
+  setEditActive (val) {
+    this.attr('editActive', val)
 
     if (!val) {
-      let save = this.attr('saveTemplate');
-      save();
+      let save = this.attr('saveTemplate')
+      save()
     }
+  },
+
+  /**
+   * @property {Function} headerFooter.ViewModel.prototype.setUserContent setUserContent
+   * @parent headerFooter.ViewModel
+   *
+   * Set the userContent property, out-of-band (it's usually set when
+   * `editActive' changes). This is useful e.g. if your element is removed from
+   * the DOM before its bindings can propagate. See a2j-header-footer's view for
+   * an example of this
+   */
+  setUserContent (val) {
+    this.attr('userContent', val)
   }
-});
+})
 
 /**
  * @module {Module} author/templates/list/header-footer/ <a2j-header-footer>
@@ -141,12 +149,15 @@ export let HeaderFooterVM = Map.extend({
  * @codeend
  */
 export default Component.extend({
-  template,
+  view: template,
   tag: 'a2j-header-footer',
-  viewModel: HeaderFooterVM,
+  ViewModel: HeaderFooterVM,
+
   events: {
-    inserted() {
-      this.viewModel.attr('title', this.element.attr('title'));
+    inserted () {
+      this.viewModel.attr('title', $(this.element).attr('title'))
     }
-  }
-});
+  },
+
+  leakScope: true
+})

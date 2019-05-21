@@ -2,13 +2,13 @@
 <can-import from='caja/author/modal/' />
 
 <author-modal
-  modal-title='Addendum options'
-  {on-cancel}='@onModalCancel'
-  cancel-text='Cancel'
-  {on-submit}='@onSubmit'
-  submit-text='Save options'
-  {on-left-button-click}='@onReset'
-  left-button-text='Reset'
+  modalTitle:raw="Addendum options"
+  onCancel:from='onModalCancel'
+  cancelText:raw="Cancel"
+  onSubmit:from='onSubmit'
+  submitText:raw="Save options"
+  onLeftButtonClick:from='onReset'
+  leftButtonText:raw="Reset"
 >
   <div class='split-fields'>
     <fieldset>
@@ -19,7 +19,7 @@
           <input
             type='number'
             class='editable'
-            {($value)}='pageWidth'
+            el:value:bind='pageWidth'
           />
           <span class='unit'>inches</span>
         </label>
@@ -28,7 +28,7 @@
           <input
             type='number'
             class='editable'
-            {($value)}='pageHeight'
+            el:value:bind='pageHeight'
           />
           <span class='unit'>inches</span>
         </label>
@@ -43,7 +43,7 @@
           <input
             type='number'
             class='editable'
-            {($value)}='topBottomMargin'
+            el:value:bind='topBottomMargin'
           />
           <span class='unit'>inches</span>
         </label>
@@ -52,7 +52,7 @@
           <input
             type='number'
             class='editable'
-            {($value)}='leftRightMargin'
+            el:value:bind='leftRightMargin'
           />
           <span class='unit'>inches</span>
         </label>
