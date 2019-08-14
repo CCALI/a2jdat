@@ -79,7 +79,7 @@ The recommended process manager is pm2 (http://pm2.keymetrics.io/). Install it w
 `npm install pm2 -g`
 
 ##### Note to Windows users:  
-Older versions of this project used iisnode (https://github.com/tjanczuk/iisnode) iisnode is no longer supported. For migration instructions go here: https://www.a2jauthor.org/content/migrate-pm2-iis
+Older versions of this project used iisnode (https://github.com/tjanczuk/iisnode) iisnode is no longer supported. For migration instructions go here: https://www.a2jauthor.org/content/migrate-pm2-iis. To make pm2 independent of logouts follow the instructions here to install `pm2-windows-service`.
 
 7.) Download the latest DAT from repo through git or from https://github.com/CCALI/A2JDAT/releases into your webroot or preferred directory on your web server.
 
@@ -210,6 +210,9 @@ navigate to the DAT folder in a terminal
 
 `pm2 start ecosystem.config.js`
 
+##  Configure auto-restart of pm2
+To configure pm2 to autoload on startup run the following command with the desired pm2 processes running
+`pm2 save`
 
 ## Security Note
 This software uses a version of jquery with a known security vulnerability. The features required to exploit this vulnereability are not used in this software and hence it is not an issue.
