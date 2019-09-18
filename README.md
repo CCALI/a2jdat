@@ -96,7 +96,7 @@ npm run build
 npm run build:server
 ```
 
-if you encounter an error in this step it can often be resolved by deleting node_modules in DAT and DAT\\js and repeating the step.
+if you encounter an error in this step it can often be resolved by deleting node_modules in DAT and DAT\\js and repeating the step. If that does not work, re-clone into a brand new directory and run the commands in that directory.
 
 9.) Configure DAT
 Since the A2J software can run on many platforms, there is a small amount of platform specific configuration that is necessary. Navigate to the root of the DAT in your websites folder. Open config.json
@@ -166,6 +166,9 @@ a sample config.json for linux is below:
 
 The DAT is a simple restful interface with endpoints located at <host>/api/. Requests must be routed through the node /bin/www target. We will setup a reverse proxy to accomplish this.
 
+for IIS Advanced Request Routing will need to be setup. Follow the instructions here:
+https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/reverse-proxy-with-url-rewrite-v2-and-application-request-routing#configuring-rules-for-the-reverse-proxy
+
 for IIS/Windows below is an example web.config
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -185,6 +188,7 @@ for IIS/Windows below is an example web.config
     </system.webServer>
 </configuration>
 ```
+IIS will need to be restarted before these changes take effect
 
 for apache add the following directives to your site config
 
