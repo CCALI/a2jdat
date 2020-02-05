@@ -1,15 +1,32 @@
 # A2JDAT
 
-This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 8+ to run properly. The recommended additional tools for windows are nvm and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
+This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 12+ to run properly. The recommended additional tools for windows are nvm and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
 
 Within this repo and releases you'll find a `.zip` file containing the minified JavaScript source for the DAT and sample configuration files
 
 NOTE: By downloading this application, you are agreeing to the terms included in the user license [LICENSE.md](https://github.com/CCALI/A2JDAT/blob/master/LICENSE.md).
 
 ## Hosting
-The DAT requires nodejs 8+. Any system supporting nodejs 8+ is supported. It has been tested on ubuntu 14, 16 and 18, centos, and Windows Server 2016 on Azure with apache and IIS
+The DAT requires nodejs 8+. Any system supporting nodejs 12+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
 
 While other server environments may work, they have not been tested.  Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/A2JDAT) repo to let us know any steps taken so that we may share with others.
+
+## Upgrade notes from node 8.9.4
+
+#### Linux users
+install as per this document
+
+#### Windows users
+This document should work as written but some components may need to be recompiled for node 12.
+
+if the DAT does not properly start after using these instructions, the likely culprit is `humus`.  To rectify
+follow the instructions below:
+
+1.) go to `DAT` subfolder
+
+2.) run `npm install humus` in a command line
+
+3.) restart DAT process and test
 
 ## Insatallation instructions
 
@@ -24,8 +41,8 @@ For \*nix go here: https://github.com/creationix/nvm
 after installation of nvm, type the following commands in the terminal to install the required node version
 
 ```
-nvm install 8.9.4
-nvm use 8.9.4
+nvm install 12.14.1
+nvm use 12.14.1
 ```
 
 check that the install was successful by typing
