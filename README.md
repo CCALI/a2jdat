@@ -7,7 +7,7 @@ Within this repo and releases you'll find a `.zip` file containing the minified 
 NOTE: By downloading this application, you are agreeing to the terms included in the user license [LICENSE.md](https://github.com/CCALI/A2JDAT/blob/master/LICENSE.md).
 
 ## Hosting
-The DAT requires nodejs 8+. Any system supporting nodejs 12+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
+The DAT requires nodejs 12+. Any system supporting nodejs 12+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
 
 While other server environments may work, they have not been tested.  Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/A2JDAT) repo to let us know any steps taken so that we may share with others.
 
@@ -49,7 +49,7 @@ check that the install was successful by typing
 
 `node -v`
 
-which should produce the version number of node we installed
+which should produce the version number of node we installed, `12.14.1`
 
 #### For Windows Users:
 
