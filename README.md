@@ -15,7 +15,7 @@ While other server environments may work, they have not been tested.  Should you
 
 
 #### All Platforms
-For all platforms this document should work as written. You can skip to `step 4` of `Installation Instructions` for systems with working DAT setup. Starting from step 1 may upgrade those DAT subdependencies which is expected to cause no issues.
+For all platforms this document should work as written. You can skip to `step 4` of `Installation Instructions` for systems with working DAT setup. Starting from `step 1` may upgrade those DAT subdependencies which is expected to cause no issues.
 
 #### Linux users
 install as per this document
