@@ -1,4 +1,3 @@
-<can-import from="caja/author/alert/" />
 <can-import from="caja/author/templates/elements/a2j-variable/" />
 <can-import from="caja/author/templates/elements/a2j-rich-text/" />
 <can-import from="caja/author/templates/elements/a2j-page-break/" />
