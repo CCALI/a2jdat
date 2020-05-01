@@ -5,7 +5,7 @@ const cheerio = require('cheerio')
 const {storage} = require('../pdf/storage')
 const debug = require('debug')('A2J:assemble')
 const wkhtmltopdf = require('wkhtmltopdf')
-const evalAuthorCondition = require('../../js/author/utils/eval-author-condition')
+const evalAuthorCondition = require('../../shared-deps/utils/eval-author-condition')
 
 function setDownloadHeaders (res, filename) {
   res.set({
