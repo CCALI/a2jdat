@@ -1,10 +1,10 @@
-<can-import from="caja/author/templates/elements/varpicker/" />
-<can-import from="caja/author/templates/elements/options-pane/" />
-<can-import from="caja/author/templates/elements/a2j-variable/" />
-<can-import from="caja/author/templates/elements/condition-form/" />
-<can-import from="caja/author/templates/elements/element-container/" />
-<can-import from="caja/author/templates/elements/a2j-conditional/add-element/" />
-<can-import from="caja/author/templates/elements/a2j-conditional/a2j-conditional.less" />
+<can-import from="caja/shared-deps/elements/varpicker/" />
+<can-import from="caja/shared-deps/elements/options-pane/" />
+<can-import from="caja/shared-deps/elements/a2j-variable/" />
+<can-import from="caja/shared-deps/elements/condition-form/" />
+<can-import from="caja/shared-deps/elements/element-container/" />
+<can-import from="caja/shared-deps/elements/a2j-conditional/add-element/" />
+<can-import from="caja/shared-deps/elements/a2j-conditional/a2j-conditional.less" />
 
 {{#if (editEnabled) }}
   <element-container

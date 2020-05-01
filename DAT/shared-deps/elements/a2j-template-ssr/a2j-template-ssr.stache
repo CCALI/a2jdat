@@ -1,5 +1,5 @@
-<can-import from="caja/author/templates/elements/a2j-template/" />
-<can-import from="caja/author/templates/elements/a2j-template-ssr/a2j-template-ssr.less!" />
+<can-import from="caja/shared-deps/elements/a2j-template/" />
+<can-import from="caja/shared-deps/elements/a2j-template-ssr/a2j-template-ssr.less!" />
 
 {{#if(scope.vm.templatesPromise.isResolved)}}
   {{#each(scope.vm.templates)}}

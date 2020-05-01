@@ -1,5 +1,5 @@
-<can-import from="caja/author/templates/elements/a2j-rich-text/" />
-<can-import from="caja/author/templates/elements/a2j-header-footer/a2j-header-footer.less!" />
+<can-import from="caja/shared-deps/elements/a2j-rich-text/" />
+<can-import from="caja/shared-deps/elements/a2j-header-footer/a2j-header-footer.less!" />
 
 {{#not(editActive)}}
   {{#if(containsWords)}}

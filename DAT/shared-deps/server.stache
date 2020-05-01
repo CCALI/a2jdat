@@ -9,7 +9,7 @@
   </head>
   <body class="bootstrap-styles">
     <can-import from="caja/server" export-as="viewModel" />
-    <can-import from="caja/author/templates/elements/a2j-template-ssr/" />
+    <can-import from="caja/shared-deps/elements/a2j-template-ssr/" />
 
     <a2j-template-ssr
       answers:from="request.body.answers"
