@@ -22,7 +22,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CCALI/CAJA"
+    "url": "https://github.com/CCALI/A2JDAT"
   },
   "system": {
     "configDependencies": [
