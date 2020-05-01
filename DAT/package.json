@@ -2,7 +2,7 @@
   "name": "caja",
   "private": true,
   "version": "2.2.3",
-  "main": "caja/server.stache!done-autorender",
+  "main": "server.stache!done-autorender",
   "description": "Authoring and viewer App GUI.",
   "scripts": {
     "test": "npm run lint:pdf && npm run mocha && npm run test:pdf",
@@ -46,9 +46,6 @@
       "steal-less",
       "steal-stache"
     ],
-    "directories": {
-      "lib": "js"
-    },
     "map": {
       "bloodhound": "typeahead.js/dist/bloodhound",
       "cuid": "cuid/dist/cuid",
