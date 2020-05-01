@@ -2,8 +2,8 @@ import CanMap from 'can-map'
 import _omit from 'lodash/omit'
 import _inRange from 'lodash/inRange'
 import _isFunction from 'lodash/isFunction'
-import A2JNode from 'caja/author/models/a2j-node'
-import Answers from 'caja/author/models/answers'
+import A2JNode from 'caja/shared-deps/models/a2j-node'
+import Answers from 'caja/shared-deps/models/answers'
 
 import 'can-map-define'
 

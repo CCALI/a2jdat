@@ -1,5 +1,5 @@
-import A2JNode from 'caja/author/models/a2j-node'
-import A2JTemplate from 'caja/author/models/a2j-template'
+import A2JNode from 'caja/shared-deps/models/a2j-node'
+import A2JTemplate from 'caja/shared-deps/models/a2j-template'
 
 const emptyNodes = {
   'section-title': {

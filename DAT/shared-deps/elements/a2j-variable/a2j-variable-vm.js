@@ -1,5 +1,5 @@
 import CanMap from 'can-map'
-import Answers from 'caja/author/models/answers'
+import Answers from 'caja/shared-deps/models/answers'
 
 import 'can-map-define'
 

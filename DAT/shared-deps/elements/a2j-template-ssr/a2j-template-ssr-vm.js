@@ -1,8 +1,8 @@
 import CanMap from 'can-map'
 import CanList from 'can-list'
-import Answers from 'caja/author/models/answers'
-import A2JTemplate from 'caja/author/models/a2j-template'
-import evalAuthorCondition from 'caja/author/utils/eval-author-condition'
+import Answers from 'caja/shared-deps/models/answers'
+import A2JTemplate from 'caja/shared-deps/models/a2j-template'
+import evalAuthorCondition from 'caja/shared-deps/utils/eval-author-condition'
 
 import 'can-map-define'
 

@@ -1,4 +1,4 @@
-<can-import from='caja/author/pdf/checkmark-picker/checkmark-picker.less' />
+<can-import from='caja/shared-deps/pdf/checkmark-picker/checkmark-picker.less' />
 
 {{#if (isLoadingChecks) }}
   <div class='status'>

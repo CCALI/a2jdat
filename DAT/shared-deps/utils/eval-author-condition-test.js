@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import Answers from 'caja/author/models/answers'
+import Answers from 'caja/shared-deps/models/answers'
 import evalAuthorCondition from './eval-author-condition'
 
 import 'steal-mocha'

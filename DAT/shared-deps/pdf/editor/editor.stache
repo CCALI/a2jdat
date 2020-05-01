@@ -1,9 +1,9 @@
-<can-import from="caja/author/pdf/editor/editor.less!" />
-<can-import from='caja/author/modal/' />
-<can-import from='caja/author/variables/editor/' />
-<can-import from='caja/author/pdf/addendum-options/' />
-<can-import from='caja/author/pdf/assignment-form/' />
-<can-import from='caja/author/pdf/thumbnail-sidebar/' />
+<can-import from="caja/shared-deps/pdf/editor/editor.less!" />
+<can-import from='caja/shared-deps/modal/' />
+<can-import from='caja/shared-deps/variables/editor/' />
+<can-import from='caja/shared-deps/pdf/addendum-options/' />
+<can-import from='caja/shared-deps/pdf/assignment-form/' />
+<can-import from='caja/shared-deps/pdf/thumbnail-sidebar/' />
 <can-import from='can-stache-route-helpers' />
 
 <div class='editor-container'>

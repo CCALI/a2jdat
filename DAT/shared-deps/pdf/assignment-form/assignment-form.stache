@@ -1,7 +1,7 @@
-<can-import from='caja/author/pdf/assignment-form/assignment-form.less' />
-<can-import from='caja/author/modal/' />
-<can-import from='caja/author/variables/editor/' />
-<can-import from='caja/author/pdf/checkmark-picker/' />
+<can-import from='caja/shared-deps/pdf/assignment-form/assignment-form.less' />
+<can-import from='caja/shared-deps/modal/' />
+<can-import from='caja/shared-deps/variables/editor/' />
+<can-import from='caja/shared-deps/pdf/checkmark-picker/' />
 <can-import from='can-stache-converters' />
 
 {{#if conflictingVariables}}

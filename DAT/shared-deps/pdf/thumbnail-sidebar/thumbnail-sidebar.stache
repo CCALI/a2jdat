@@ -1,4 +1,4 @@
-<can-import from='caja/author/pdf/thumbnail-sidebar/thumbnail-sidebar.less' />
+<can-import from='caja/shared-deps/pdf/thumbnail-sidebar/thumbnail-sidebar.less' />
 <div class='thumbnail-sidebar {{#if isShowingThumbnails}}active{{/if}}'>
   <div
     title='Toggle thumbnails'

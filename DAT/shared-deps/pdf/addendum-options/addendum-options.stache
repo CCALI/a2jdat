@@ -1,5 +1,5 @@
-<can-import from='caja/author/pdf/addendum-options/addendum-options.less' />
-<can-import from='caja/author/modal/' />
+<can-import from='caja/shared-deps/pdf/addendum-options/addendum-options.less' />
+<can-import from='caja/shared-deps/modal/' />
 
 <author-modal
   modalTitle:raw="Addendum options"

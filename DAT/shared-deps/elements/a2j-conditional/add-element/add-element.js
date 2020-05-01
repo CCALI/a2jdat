@@ -2,7 +2,7 @@ import CanMap from 'can-map'
 import Component from 'can-component'
 import template from './add-element.stache'
 import _isFunction from 'lodash/isFunction'
-import createEmptyNode from 'caja/author/utils/create-empty-node'
+import createEmptyNode from 'caja/shared-deps/utils/create-empty-node'
 
 import 'can-map-define'
 
