@@ -62,8 +62,8 @@
     "minify": true
   },
   "dependencies": {
-    "shared-deps": "1.0.0",
     "@open-xchange/bootstrap-tokenfield": "^0.13.1",
+    "a2j-deps": "file:../a2j-deps",
     "axios": "^0.18.1",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.19.0",
