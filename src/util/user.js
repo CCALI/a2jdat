@@ -43,7 +43,7 @@ const user = {
 
     debug('getCurrentUser request', cookieHeader)
 
-    request.post(serverURL + '/js/author/CAJA_WS.php', {
+    request.post(serverURL + '/author/CAJA_WS.php', {
       headers: {
         Cookie: cookieHeader
       },
