@@ -1,8 +1,8 @@
 {
-  "name": "caja",
+  "name": "a2jdat",
   "private": true,
   "version": "2.2.3",
-  "main": "server.stache!done-autorender",
+  "main": "a2jdat/server.stache!done-autorender",
   "description": "Authoring and viewer App GUI.",
   "scripts": {
     "test": "npm run lint:pdf && npm run mocha && npm run test:pdf",
