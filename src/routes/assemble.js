@@ -35,10 +35,12 @@ const {
 
 const debug = require('debug')('A2J:assemble')
 const router = feathers.Router()
+const configPath = path.join(__dirname, '..', '..', 'package.json!npm')
+debug('configPath', configPath)
 
 const render = ssr({
-  main: 'caja/server.stache!done-autorender',
-  config: path.join(__dirname, '..', '..', 'package.json!npm')
+  main: 'a2jdat/server.stache!done-autorender',
+  config: configPath
 }, {
   // this allows for debugging in Node --inspect-brk
   // setting a max of 20 seconds before done-ssr times out
