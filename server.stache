@@ -9,7 +9,7 @@
   </head>
   <body class="bootstrap-styles">
     <can-import from="server" export-as="viewModel" />
-    <can-import from="a2jdat/styles.less" />
+    <can-import from="a2j-deps/elements/a2j-template-ssr/"
 
     <a2j-template-ssr
       answers:from="request.body.answers"
