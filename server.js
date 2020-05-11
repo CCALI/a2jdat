@@ -3,6 +3,7 @@ import CanMap from 'can-map'
 import 'can-route'
 import 'can-map-define'
 import 'can-route-pushstate'
+import 'a2jdeps/elements/a2j-template-ssr/'
 
 const Body = CanMap.extend({
   define: {
