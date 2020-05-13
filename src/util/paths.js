@@ -2,6 +2,7 @@ const Q = require('q')
 const path = require('path')
 const config = require('./config')
 const urlRegex = require('url-regex')
+const debug = require('debug')('A2J:util/paths')
 
 /**
  * @module {Module} /util/paths paths
@@ -21,8 +22,9 @@ module.exports = {
    *  if not use the default A2J Author location
    */
   getViewerPath () {
-    const viewerConfigPath = config.get('VIEWER_PATH')
-    return viewerConfigPath || path.join(__dirname, '..', '..', 'js/viewer')
+    const viewerConfigPath = config.get('VIEWER_PATH') || path.join(__dirname, '..', '..', '..', 'a2jviewer')
+    debug('config.VIEWER_PATH', viewerConfigPath)
+    return viewerConfigPath
   },
 
   /**
