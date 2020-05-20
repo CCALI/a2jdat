@@ -39,8 +39,7 @@ const user = {
    */
   getCurrentUser ({ cookieHeader }) {
     const deferred = Q.defer()
-    const serverURL = config.get('SERVER_URL')
-    const cajaWsUrl = serverURL + '/a2jauthor/CAJA_WS.php'
+    const cajaWsUrl = config.get('CAJA_WS_URL')
 
     debug('getCurrentUser request', cookieHeader)
     debug('getCurrentUser url', cajaWsUrl)
