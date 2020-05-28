@@ -32,7 +32,7 @@ follow the instructions below:
 
 3.) restart DAT process and test
 
-## Insatallation instructions
+## Installation instructions
 
 1.)  Install nvm  
 The DAT is a simple restful API that requires nodejs to serve endpoints. Though, you are free to install the node version that the DAT targets and manage it manually, the recommended method is to use a node version manager which will allow the simultaneous installation of multiple versions of node and mitigates several administration issues.
