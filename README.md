@@ -34,14 +34,14 @@ follow the instructions below:
 
 ## Insatallation instructions
 
-1.)  Install nvm  
+1.)  Install nvm
 The DAT is a simple restful API that requires nodejs to serve endpoints. Though, you are free to install the node version that the DAT targets and manage it manually, the recommended method is to use a node version manager which will allow the simultaneous installation of multiple versions of node and mitigates several administration issues.
 
 Obtain nvm for windows here: https://github.com/coreybutler/nvm-windows
 
 For \*nix go here: https://github.com/creationix/nvm
 
-2.) Install node through nvm  
+2.) Install node through nvm
 after installation of nvm, type the following commands in the terminal to install the required node version
 
 ```
@@ -57,15 +57,15 @@ which should produce the version number of node we installed, `12.14.1`
 
 #### For Windows Users:
 
-##### Ensure Node is in PATH:  
+##### Ensure Node is in PATH:
 The node installer might not always set the PATH variable correctly. Check Environment variables to ensure that there is an entry for the folder containing node.exe.  For this tutorial that folder is C:\Program Files\nodejs\.
 
-##### Configure Node Permissions:  
+##### Configure Node Permissions:
 Node.exe must be added to the IIS_IUSRS group in order to be allowed to handle requests. This must occur every time the node executable is switched through nvm. Open a command prompt and run as administrator and run
 ```icacls “%programfiles%\nodejs\node.exe” /grant IIS_IUSRS:rx```
 
 
-3.) Install global DAT dependencies and subdependencies:  
+3.) Install global DAT dependencies and subdependencies:
 
 Git is a source control manager and required for npm. This can be obtained through most \*nix package managers. For windows, install Git by downloading latest from
 https://git-scm.com/download/win
@@ -73,7 +73,7 @@ As of this documents writing, the latest version for the system in the azure dem
 https://github.com/git-for-windows/git/releases/download/v2.16.2.windows.1/Git-2.16.2-64-bit.exe
 
 
-4.) Install build tools:  
+4.) Install build tools:
 
 The node sub-dependencies for the DAT must be built locally on the target system and requires build tools for languages other than node. Run the command below to install the necessary build tools:
 
@@ -88,10 +88,10 @@ This requires administrator access. This is a very lengthy install-  it can take
 ```npm install node-pre-gyp babel-cli steal-tools -g```
 
 
-5.) Install wkhtmltopdf  
+5.) Install wkhtmltopdf
 WKHTMLTOPDF is the engine used to transform interview data into PDF from an intermediate HTML file. Download the latest stable version from https://wkhtmltopdf.org/downloads.html  and install it in the VM. Make a note of the install path.
 
-6.) Install node process manager  
+6.) Install node process manager
 The node process manager handles automatic restarts, memory mangement, monitoring, and error logging.
 
 For All platforms:
@@ -99,12 +99,12 @@ The recommended process manager is pm2 (http://pm2.keymetrics.io/). Install it w
 
 `npm install pm2 -g`
 
-##### Note to Windows users:  
+##### Note to Windows users:
 Older versions of this project used iisnode (https://github.com/tjanczuk/iisnode) iisnode is no longer supported. For migration instructions go here: https://www.a2jauthor.org/content/migrate-pm2-iis. To make pm2 independent of logouts follow the instructions here to install `pm2-windows-service`.
 
 7.) Download the latest DAT from repo through git or from https://github.com/CCALI/A2JDAT/releases into your webroot or preferred directory on your web server.
 
-8.) Compile from source instructions  
+8.) Compile from source instructions
 
 navigate to the downloaded location in a terminal and run the following commands in sequence
 ```
@@ -123,15 +123,15 @@ if you encounter an error in this step it can often be resolved by deleting node
 Since the A2J software can run on many platforms, there is a small amount of platform specific configuration that is necessary. Navigate to the root of the DAT in your websites folder. Open config.json
 
 The Most important keys are:
-SERVER_URL- required to establish target endpoints for API
-GUIDES_DIR-  required to establish location of templates  
-GUIDES_URL- relative web location of guides  
-WKHTMLTOPDF_PATH- path to binary of WKHTMLTOPDF  
+CAJA_WS_URL- required to establish target endpoints for API
+GUIDES_DIR-  required to establish location of templates
+GUIDES_URL- relative web location of guides
+WKHTMLTOPDF_PATH- path to binary of WKHTMLTOPDF
 
 and these new keys:
-VIEWER_PATH- path to viewer  
-WKHTMLTOPDF_DPI- desired default dpi to render pdfs. CALI reccomends minimum of 300  
-WKHTMLTOPDF_ZOOM- The correction factor used to render text pdfs. This is necessary to standardize rendering accross all platforms. On most \*nix systems this should be 1.000 and on most windows systems this should be 1.280.  
+VIEWER_PATH- path to viewer
+WKHTMLTOPDF_DPI- desired default dpi to render pdfs. CALI reccomends minimum of 300
+WKHTMLTOPDF_ZOOM- The correction factor used to render text pdfs. This is necessary to standardize rendering accross all platforms. On most \*nix systems this should be 1.000 and on most windows systems this should be 1.280.
 
 All other keys must be present but the value is irrelevant.
 
@@ -140,7 +140,7 @@ Ensure that the value for the key WKHTMLTOPDF_PATH matches the path noted above 
 a sample config.json for windows is below:
 ```
 {
-  "SERVER_URL": "http://localhost",
+  "CAJA_WS_URL": "http://localhost",
   "GUIDES_DIR": "C:\\inetpub\\wwwroot\\a2j-viewer\\guides",
   "GUIDES_URL": "/a2j-viewer/guides",
   "SQL_HOST": "localhost",
@@ -163,7 +163,7 @@ a sample config.json for windows is below:
 a sample config.json for linux is below:
 ```
 {
-  "SERVER_URL": "http://localhost",
+  "CAJA_WS_URL": "http://localhost/a2jauthor/CAJA_WS.php",
   "GUIDES_DIR": "/var/www/mysite.tld/a2j-viewer/guides",
   "GUIDES_URL": "/a2j-viewer/guides",
   "SQL_HOST": "localhost",
@@ -183,7 +183,7 @@ a sample config.json for linux is below:
 }
 ```
 
-10.) Configure the server  
+10.) Configure the server
 
 The DAT is a simple restful interface with endpoints located at <host>/api/. Requests must be routed through the node /bin/www target. We will setup a reverse proxy to accomplish this.
 

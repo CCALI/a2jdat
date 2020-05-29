@@ -1,5 +1,5 @@
 {
-  "SERVER_URL": "http://localhost",
+  "CAJA_WS_URL": "http://localhost/a2jauthor/CAJA_WS.php",
   "GUIDES_DIR": "C:\\inetpub\\wwwroot\\a2j-viewer\\guides",
   "GUIDES_URL": "../a2j-viewer/guides",
   "VIEWER_PATH": "../a2j-viewer/",

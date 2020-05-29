@@ -10,7 +10,7 @@ unzip userfiles.zip
 echo "generating CONFIG.php to $PWD"
 cat > CONFIG.php <<CONFIGPHP
 <?php
-  define("SERVER_URL","");
+  define("CAJA_WS_URL","");
   define("DRUPAL_ROOT_DIR", "");
   define("GUIDES_DIR","/tmp/userfiles/");
   define("GUIDES_URL", "/userfiles/");
@@ -35,7 +35,7 @@ CONFIGPHP
 echo "generating config.json to $PWD"
 cat > config.json <<CONFIGJSON
 {
-  "SERVER_URL": "http://localhost/CAJA",
+  "CAJA_WS_URL": "http://localhost/CAJA/a2jauthor/CAJA_WS.php",
   "GUIDES_DIR": "/tmp/userfiles/",
   "GUIDES_URL": "/userfiles/",
   "WKHTMLTOPDF_PATH": "/usr/local/bin/wkhtmltopdf",
