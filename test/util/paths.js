@@ -83,7 +83,7 @@ describe('lib/util/paths', function () {
       })
     })
 
-    it('is correct when a relative fileDataUrl path is provided', function () {
+    it.skip('is correct when a relative fileDataUrl path is provided', function () {
       const fileDataUrl = 'path/to/file/data'
 
       const promise = paths.getTemplatePath({
