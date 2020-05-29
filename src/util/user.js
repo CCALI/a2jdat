@@ -39,12 +39,12 @@ const user = {
    */
   getCurrentUser ({ cookieHeader }) {
     const deferred = Q.defer()
-    const cajaWsUrl = config.get('CAJA_WS_URL')
+    const cajaWsURL = config.get('CAJA_WS_URL')
 
     debug('getCurrentUser request', cookieHeader)
-    debug('getCurrentUser url', cajaWsUrl)
+    debug('getCurrentUser cajaWsURL', cajaWsURL)
 
-    request.post(cajaWsUrl, {
+    request.post(cajaWsURL, {
       headers: {
         Cookie: cookieHeader
       },
@@ -58,7 +58,7 @@ const user = {
         } catch (err) {
           this.handleError({
             msg: `getCurrentUser error ${err}`,
-            serverURL,
+            cajaWsURL,
             deferred,
             cookieHeader
           })
@@ -67,7 +67,7 @@ const user = {
         const statusCode = response && response.statusCode
         this.handleError({
           msg: `getCurrentUser error (${statusCode}): ${error} `,
-          serverURL,
+          cajaWsURL,
           deferred,
           cookieHeader
         })
