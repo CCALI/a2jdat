@@ -59,7 +59,7 @@
     "minify": true
   },
   "dependencies": {
-    "@caliorg/a2jdeps": "^7.0.1",
+    "@caliorg/a2jdeps": "^7.0.4",
     "axios": "^0.18.1",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.19.0",
