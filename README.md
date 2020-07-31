@@ -1,8 +1,8 @@
-# A2JDAT
+# A2J Document Assembly Tool (A2J DAT)
 
-This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 12+ to run properly. The recommended additional tools for windows are nvm and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
+This repo hosts the A2J Document Assembly Tool (A2J DAT), which is used as part of template creation and test assembly in A2J Author, and optionally used for producing pdf documents at the end of interviews taken via the A2J Viewer application. It requires wkhtmltopdf and nodejs 12+ to run properly. The recommended additional tools for windows are nvm and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
 
-Within this repo and releases you'll find sample configuration files
+Within this repo you'll find sample configuration files in the `wiki/` directory.
 
 ## Hosting
 The DAT requires nodejs 12+. Any system supporting nodejs 12+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
@@ -21,12 +21,12 @@ install as per this document
 #### Windows users
 This document should work as written but some components may need to be recompiled for node 12.
 
-if the DAT does not properly start after using these instructions, the likely culprit is `humus`.  To rectify
+if the DAT does not properly start after using these instructions, the likely culprit is `hummus`.  To rectify
 follow the instructions below:
 
 1.) go to `a2jdat` root folder
 
-2.) run `npm install humus` in a command line
+2.) run `npm install hummus` in a command line
 
 3.) restart DAT process and test
 
@@ -83,7 +83,7 @@ This requires administrator access. This is a very lengthy install-  it can take
 
 #### For all platforms run the command below
 
-```npm install node-pre-gyp babel-cli steal-tools -g```
+```npm install node-pre-gyp babel-cli steal-tools@1 -g```
 
 
 5.) Install wkhtmltopdf
@@ -100,7 +100,15 @@ The recommended process manager is pm2 (http://pm2.keymetrics.io/). Install it w
 ##### Note to Windows users:
 Older versions of this project used iisnode (https://github.com/tjanczuk/iisnode) iisnode is no longer supported. For migration instructions go here: https://www.a2jauthor.org/content/migrate-pm2-iis. To make pm2 independent of logouts follow the instructions here to install `pm2-windows-service`.
 
-7.) Clone the latest A2J DAT repo through git or from https://github.com/CCALI/a2jdat into your webroot or preferred directory on your web server.
+7.) Clone the latest A2J DAT repo through git or from https://github.com/CCALI/a2jdat into your webroot or preferred directory on your web server. If using in conjunction with A2J Author or A2J Viewer it is recommended to use a parent directory to house all cloned A2J repositories and your config files.
+Example:
+```
+cali/
+  |_ ecosystem.config.js
+  |_ config.json
+  |_ a2jviewer/
+  |_ a2jdat/
+```
 
 8.) Compile from source instructions
 
@@ -225,9 +233,9 @@ Location /api {
 we have created a script to allow pm2 to manage memory and multiple instances of the DAT. The default script will run a cluster of 4 processes and restart a process if it uses more than 768MB.
 
 12.)  Start the node process
-navigate to the DAT folder in a terminal
+navigate to the a2jdat folder in a terminal
 
-`pm2 start ecosystem.config.js`
+`pm2 start ../ecosystem.config.js`
 
 ##  Configure auto-restart of pm2
 To configure pm2 to autoload on startup run the following command with the desired pm2 processes running
