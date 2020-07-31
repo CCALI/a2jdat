@@ -2,14 +2,12 @@
 
 This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 12+ to run properly. The recommended additional tools for windows are nvm and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
 
-Within this repo and releases you'll find a `.zip` file containing the minified JavaScript source for the DAT and sample configuration files
-
-NOTE: By downloading this application, you are agreeing to the terms included in the user license [LICENSE.md](https://github.com/CCALI/A2JDAT/blob/master/LICENSE.md).
+Within this repo and releases you'll find sample configuration files
 
 ## Hosting
 The DAT requires nodejs 12+. Any system supporting nodejs 12+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
 
-While other server environments may work, they have not been tested.  Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/A2JDAT) repo to let us know any steps taken so that we may share with others.
+While other server environments may work, they have not been tested.  Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/a2jdat) repo to let us know any steps taken so that we may share with others.
 
 ## Upgrade notes from node 8.9.4
 
@@ -26,7 +24,7 @@ This document should work as written but some components may need to be recompil
 if the DAT does not properly start after using these instructions, the likely culprit is `humus`.  To rectify
 follow the instructions below:
 
-1.) go to `DAT` subfolder
+1.) go to `a2jdat` root folder
 
 2.) run `npm install humus` in a command line
 
@@ -102,22 +100,18 @@ The recommended process manager is pm2 (http://pm2.keymetrics.io/). Install it w
 ##### Note to Windows users:
 Older versions of this project used iisnode (https://github.com/tjanczuk/iisnode) iisnode is no longer supported. For migration instructions go here: https://www.a2jauthor.org/content/migrate-pm2-iis. To make pm2 independent of logouts follow the instructions here to install `pm2-windows-service`.
 
-7.) Download the latest DAT from repo through git or from https://github.com/CCALI/A2JDAT/releases into your webroot or preferred directory on your web server.
+7.) Clone the latest A2J DAT repo through git or from https://github.com/CCALI/a2jdat into your webroot or preferred directory on your web server.
 
 8.) Compile from source instructions
 
 navigate to the downloaded location in a terminal and run the following commands in sequence
 ```
-cd DAT
 npm install
-cd js
-npm install bootstrap
-cd ..
 npm run build
 npm run build:server
 ```
 
-if you encounter an error in this step it can often be resolved by deleting node_modules in DAT and DAT\\js and repeating the step. If that does not work, re-clone into a brand new directory and run the commands in that directory.
+if you encounter an error in this step it can often be resolved by deleting node_modules in the root a2jdat/ directory and repeating the step. If that does not work, re-clone into a brand new directory and run the commands in that directory.
 
 9.) Configure DAT
 Since the A2J software can run on many platforms, there is a small amount of platform specific configuration that is necessary. Navigate to the root of the DAT in your websites folder. Open config.json
@@ -247,3 +241,7 @@ This software uses a version of jquery with a known security vulnerability. The 
 To find out more about A2J Viewer and A2J Author® please see our website, [www.a2jauthor.org](https://www.a2jauthor.org/)
 
 For questions, contact Tobias Nteireho at tobias@cali.org
+
+NOTE: By downloading this application, you are agreeing to the terms included in the user license:
+## License
+[GNU AGPLv3](./LICENSE)
