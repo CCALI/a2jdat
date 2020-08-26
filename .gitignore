@@ -1,5 +1,5 @@
 ## A2J Files to skip ##
-/pdf/temp/
+/DAT/pdf/temp/
 config_env.ini
 # this files should be in the parent folder
 config.json
