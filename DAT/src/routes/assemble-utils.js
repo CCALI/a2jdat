@@ -52,9 +52,6 @@ const isPdfTemplate = template =>
 
 function filterTemplatesByCondition (answers) {
   return function (template) {
-    if (!isPdfTemplate(template)) {
-      return true // Rich text templates do this logic in the SSR side
-    }
     const {state} = template.rootNode
     if (!state.hasConditionalLogic) {
       return true
