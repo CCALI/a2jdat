@@ -5,6 +5,7 @@ const cheerio = require('cheerio')
 const {storage} = require('../pdf/storage')
 const debug = require('debug')('A2J:assemble')
 const wkhtmltopdf = require('wkhtmltopdf')
+const { parse } = require('node-html-parser')
 const evalAuthorCondition = require('@caliorg/a2jdeps/utils/eval-author-condition')
 
 function setDownloadHeaders (res, filename) {
@@ -168,6 +169,29 @@ function getConfigPdfOptions (config) {
   return configPdfOptions
 }
 
+function getHeaderFooterNode (headerOrFooterHtml) {
+  return parse(headerOrFooterHtml)
+}
+
+function parseHeaderFooterHTML (headerFooterNode, answers) {
+  if (answers) {
+    headerFooterNode.querySelectorAll('a2j-variable').forEach((variableNode) => {
+      // <a2j-variable name="Client First Name TE"></a2j-variable>
+      const varName = variableNode.rawAttrs.split('"')[1].toLowerCase() // middle result of 3 parts
+      const answerValue = answers[varName] && answers[varName].values[1] // var loops not allowed, 0th answer is null
+
+      // update textContent with answer
+      // <a2j-variable name="Client First Name TE">Miguel</a2j-variable>
+      if (answerValue) {
+        variableNode.set_content(answerValue)
+      }
+    })
+  }
+
+  // convert back to html
+  return headerFooterNode.toString()
+}
+
 module.exports = {
   setDownloadHeaders,
   deleteFile,
@@ -179,5 +203,7 @@ module.exports = {
   getRequestPdfOptions,
   getConfig,
   getConfigPdfOptions,
-  setWkhtmltopdfCommand
+  setWkhtmltopdfCommand,
+  getHeaderFooterNode,
+  parseHeaderFooterHTML
 }
