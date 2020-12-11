@@ -10,6 +10,7 @@
     "build:server": "steal-tools build",
     "start": "NODE_ENV=production node ./bin/www",
     "dev": "npm run build && node ./bin/www",
+    "dev:debug": "npm run build && DEBUG=A2J:* node --inspect ./bin/www",
     "build:viewer-zip": "node ./bin/make-viewer-package",
     "build:dat-zip": "node ./bin/make-dat-package",
     "build:client": "grunt build --gruntfile=js/Gruntfile.js",
