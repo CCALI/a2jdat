@@ -30,7 +30,9 @@ const {
   getRequestPdfOptions,
   getConfig,
   getConfigPdfOptions,
-  setWkhtmltopdfCommand
+  setWkhtmltopdfCommand,
+  getHeaderFooterNode,
+  parseHeaderFooterHTML
 } = require('./assemble-utils')
 
 const debug = require('debug')('A2J:assemble')
@@ -94,11 +96,19 @@ async function assemble (req, res) {
     fileDataUrl = paths.getGuideDirPath(username, guideId, fileDataUrl)
   }
 
-  // if single template, this is Author Test Assemble
+  const answers = JSON.parse(answersJson)
+  const allTemplates = await getTemplatesForGuide(username, guideId, fileDataUrl)
+  const isTemplateLogical = filterTemplatesByCondition(answers)
+  const templates = allTemplates.filter(isTemplateLogical)
+  const guideVariables = await getVariablesForGuide(username, guideId, fileDataUrl)
+  const variables = mergeGuideVariableWithAnswers(guideVariables, answers)
+  const segments = segmentTextAndPdfTemplates(templates)
   const isSingleTemplateAssemble = !!templateId
+
+ // if single template, this is Author Test Assemble
   if (isSingleTemplateAssemble) {
     const template = await getSingleTemplate(templateId, fileDataUrl)
-    return renderPdfForTextTemplates([template], req, fileDataUrl)
+    return renderPdfForTextTemplates([template], req, fileDataUrl, answers)
     .then(pdf => {
       setDownloadHeaders(res, downloadName)
       return new Promise((resolve, reject) => {
@@ -113,20 +123,13 @@ async function assemble (req, res) {
     })
   }
 
-  const answers = JSON.parse(answersJson)
-  const allTemplates = await getTemplatesForGuide(username, guideId, fileDataUrl)
-  const isTemplateLogical = filterTemplatesByCondition(answers)
-  const templates = allTemplates.filter(isTemplateLogical)
-  const guideVariables = await getVariablesForGuide(username, guideId, fileDataUrl)
-  const variables = mergeGuideVariableWithAnswers(guideVariables, answers)
-  const segments = segmentTextAndPdfTemplates(templates)
   const pdfFiles = await Promise.all(segments.map(
     ({isPdf, templates}) => {
       if (isPdf) {
         return renderPdfForPdfTemplates(username, templates, variables, answers, fileDataUrl)
       }
 
-      return renderPdfForTextTemplates(templates, req, fileDataUrl)
+      return renderPdfForTextTemplates(templates, req, fileDataUrl, answers)
     }
   )).catch(error => {
     debug('Assemble error:', error)
@@ -206,9 +209,13 @@ async function combinePdfFiles (pdfFiles) {
   return firstPdf
 }
 
-async function renderPdfForTextTemplates (templates, req, fileDataUrl) {
+async function renderPdfForTextTemplates (templates, req, fileDataUrl, answers) {
   const __cssBundlePath = getCssBundlePath()
   const pdfFiles = await Promise.all(templates.map(template => {
+    // resolve any a2j-variable tags with their answers
+    template.header = parseHeaderFooterHTML(getHeaderFooterNode(template.header), answers)
+    template.footer = parseHeaderFooterHTML(getHeaderFooterNode(template.footer), answers)
+
     // make unique request here for each templateId
     const newBody = Object.assign({}, req.body,
       { templateId: template.templateId,
