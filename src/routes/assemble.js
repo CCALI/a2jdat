@@ -265,8 +265,18 @@ async function renderPdfForTextTemplates (templates, req, fileDataUrl, answers) 
 }
 
 async function createPdfForTextTemplate (request, pdfOptions) {
-  const renderedWebpage = await getHtmlForRichText(request)
+  let renderedWebpage = await getHtmlForRichText(request)
+  // inline the css
+  const inlineStyles = await createInlineStyles(request.__cssBundlePath)
+  renderedWebpage = renderedWebpage.replace('<style></style>', inlineStyles)
+
   return getPdfForHtml(renderedWebpage, pdfOptions)
+}
+
+export async function createInlineStyles (path) {
+  const bundleCSS = await files.readFile({ path })
+  const inlineStyles = `<style>\n${bundleCSS}\n</style>`
+  return inlineStyles
 }
 
 function getHtmlForRichText (request) {
