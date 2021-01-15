@@ -189,6 +189,7 @@ module.exports = {
         if (error) {
           const isFileNotFound = error.code === 'ENOENT'
           if (isFileNotFound) {
+            console.error('File not found at path: ', path)
             return resolve('')
           }
           return reject(error)
