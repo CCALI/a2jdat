@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const files = require('../util/files')
 const uuid = require('uuid')
 const cheerio = require('cheerio')
 const {storage} = require('../pdf/storage')
@@ -192,6 +193,12 @@ function parseHeaderFooterHTML (headerFooterNode, answers) {
   return headerFooterNode.toString()
 }
 
+async function createInlineStyles (path) {
+  const bundleCSS = await files.readFile({ path })
+  const inlineStyles = `<style>\n${bundleCSS}\n</style>`
+  return inlineStyles
+}
+
 module.exports = {
   setDownloadHeaders,
   deleteFile,
@@ -205,5 +212,6 @@ module.exports = {
   getConfigPdfOptions,
   setWkhtmltopdfCommand,
   getHeaderFooterNode,
-  parseHeaderFooterHTML
+  parseHeaderFooterHTML,
+  createInlineStyles
 }

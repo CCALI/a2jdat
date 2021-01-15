@@ -1,8 +1,12 @@
 const assert = require('assert')
+const sinon = require('sinon')
+const Q = require('q')
+const files = require('../../src/util/files')
 
 const {
   getHeaderFooterNode,
-  parseHeaderFooterHTML
+  parseHeaderFooterHTML,
+  createInlineStyles
 } = require('../../src/routes/assemble-utils')
 
 describe('assemble-utils test', function () {
@@ -33,5 +37,19 @@ describe('assemble-utils test', function () {
 
     assert.ok(containsFirstName, 'should add first name to parsed html')
     assert.ok(containsLastName, 'should add last name to parsed html')
+  })
+
+  it('createInlineStyles', async () => {
+    const readFilePromise = Q.defer()
+    const readFileStub = sinon.stub(files, 'readFile')
+    readFileStub.returns(readFilePromise.promise)
+    readFilePromise.resolve('body{background:#ababab;}')
+
+    const inlineStyles = await createInlineStyles('../data/testCSS.css')
+    console.log('inlineStyles', inlineStyles)
+    const expectedResult = `<style>\nbody{background:#ababab;}\n</style>`
+
+    assert.equal(inlineStyles, expectedResult, 'should read minfied css file and insert into style tag')
+    readFileStub.restore()
   })
 })
