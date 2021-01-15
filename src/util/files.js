@@ -181,5 +181,21 @@ module.exports = {
     })
 
     return deferred.promise
+  },
+
+  readFile ({ path }) {
+    return new Promise((resolve, reject) => {
+      fs.readFile(path, {encoding: 'utf8'}, (error, text) => {
+        if (error) {
+          const isFileNotFound = error.code === 'ENOENT'
+          if (isFileNotFound) {
+            return resolve('')
+          }
+          return reject(error)
+        }
+
+        resolve(text)
+      })
+    })
   }
 }
