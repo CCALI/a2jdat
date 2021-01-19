@@ -32,7 +32,8 @@ const {
   getConfigPdfOptions,
   setWkhtmltopdfCommand,
   getHeaderFooterNode,
-  parseHeaderFooterHTML
+  parseHeaderFooterHTML,
+  createInlineStyles
 } = require('./assemble-utils')
 
 const debug = require('debug')('A2J:assemble')
@@ -265,7 +266,11 @@ async function renderPdfForTextTemplates (templates, req, fileDataUrl, answers) 
 }
 
 async function createPdfForTextTemplate (request, pdfOptions) {
-  const renderedWebpage = await getHtmlForRichText(request)
+  let renderedWebpage = await getHtmlForRichText(request)
+  // inline the css
+  const inlineStyles = await createInlineStyles(request.__cssBundlePath)
+  renderedWebpage = renderedWebpage.replace('<style></style>', inlineStyles)
+
   return getPdfForHtml(renderedWebpage, pdfOptions)
 }
 
