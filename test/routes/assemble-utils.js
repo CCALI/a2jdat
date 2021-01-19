@@ -46,7 +46,6 @@ describe('assemble-utils test', function () {
     readFilePromise.resolve('body{background:#ababab;}')
 
     const inlineStyles = await createInlineStyles('../data/testCSS.css')
-    console.log('inlineStyles', inlineStyles)
     const expectedResult = `<style>\nbody{background:#ababab;}\n</style>`
 
     assert.equal(inlineStyles, expectedResult, 'should read minfied css file and insert into style tag')
