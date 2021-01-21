@@ -17,8 +17,12 @@
     "test:pdf": "npm run build && babel test --out-dir test-lib --quiet && ava --serial",
     "lint:pdf": "standard src/*.js src/**/*.js --fix && standard test/**/*.js --fix --env mocha"
   },
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Center for Computer-Assisted Legal Instruction (CALI)",
+    "email": "webmaster@a2jauthor.org",
+    "url": "https://www.a2jauthor.org"
+  },
+  "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
     "url": "https://github.com/CCALI/A2JDAT"
