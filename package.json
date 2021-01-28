@@ -1,7 +1,7 @@
 {
   "name": "a2jdat",
   "private": true,
-  "version": "7.0.3",
+  "version": "7.0.4",
   "main": "a2jdat/server.stache!done-autorender",
   "description": "Authoring and viewer App GUI.",
   "scripts": {
