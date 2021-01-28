@@ -6,7 +6,8 @@ const files = require('../../src/util/files')
 const {
   getHeaderFooterNode,
   parseHeaderFooterHTML,
-  createInlineStyles
+  createInlineStyles,
+  filterTemplatesByCondition
 } = require('../../src/routes/assemble-utils')
 
 describe('assemble-utils test', function () {
@@ -48,7 +49,40 @@ describe('assemble-utils test', function () {
     const inlineStyles = await createInlineStyles('../data/testCSS.css')
     const expectedResult = `<style>\nbody{background:#ababab;}\n</style>`
 
-    assert.equal(inlineStyles, expectedResult, 'should read minfied css file and insert into style tag')
+    assert.equal(inlineStyles, expectedResult, 'should read minified css file and insert into style tag')
     readFileStub.restore()
+  })
+
+  it('filterTemplatesByCondition', () => {
+    const allTemplates = [
+      { rootNode: {} }, // legacy text template with no state object
+      { rootNode: { state: {} } }, // template with no conditional state
+      { rootNode: { state: { // template with render condition state
+        'sectionCounter': 'none',
+        'fontFamily': 'sans-serif',
+        'fontSize': '14',
+        'operator': 'is-equal',
+        'leftOperand': 'Client first name TE',
+        'rightOperand': 'Jessica',
+        'rightOperandType': 'text',
+        'hasConditionalLogic': true
+      } } }
+    ]
+    const answers = {
+      'client first name te': {
+        name: 'Client first name TE',
+        values: [null, 'JessBob']
+      }
+    }
+    let isTemplateLogical = filterTemplatesByCondition(answers)
+    let templates = allTemplates.filter(isTemplateLogical)
+
+    assert.equal(templates.length, 2, 'should render 2 of 3 templates when name conditional fails')
+
+    answers['client first name te'].values = [null, 'Jessica']
+    isTemplateLogical = filterTemplatesByCondition(answers)
+    templates = allTemplates.filter(isTemplateLogical)
+
+    assert.equal(templates.length, 3, 'should render 3 of 3 templates when name matches')
   })
 })
