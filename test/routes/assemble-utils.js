@@ -49,7 +49,7 @@ describe('assemble-utils test', function () {
     const inlineStyles = await createInlineStyles('../data/testCSS.css')
     const expectedResult = `<style>\nbody{background:#ababab;}\n</style>`
 
-    assert.equal(inlineStyles, expectedResult, 'should read minfied css file and insert into style tag')
+    assert.equal(inlineStyles, expectedResult, 'should read minified css file and insert into style tag')
     readFileStub.restore()
   })
 
@@ -77,7 +77,7 @@ describe('assemble-utils test', function () {
     let isTemplateLogical = filterTemplatesByCondition(answers)
     let templates = allTemplates.filter(isTemplateLogical)
 
-    assert.equal(templates.length, 2, 'should render 2 of 3 templates when first name doesn\'t match')
+    assert.equal(templates.length, 2, 'should render 2 of 3 templates when name conditional fails')
 
     answers['client first name te'].values = [null, 'Jessica']
     isTemplateLogical = filterTemplatesByCondition(answers)
