@@ -55,7 +55,8 @@ const isPdfTemplate = template =>
 function filterTemplatesByCondition (answers) {
   return function (template) {
     const {state} = template.rootNode
-    if (!state.hasConditionalLogic) {
+    // legacy text templates have no state, render by default
+    if (!state || !state.hasConditionalLogic) {
       return true
     }
     const shouldBeIncluded = evalAuthorCondition(Object.assign(
