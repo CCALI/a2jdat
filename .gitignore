@@ -1,1 +1,30 @@
+## A2J Files to skip ##
+/pdf/temp/
+config_env.ini
+# this files should be in the parent folder
+config.json
+ecosystem.config.js
+
+## IDE config files ##
+.vscode
+
+## Windows files ##
+Thumbs.db
+Desktop.ini
+
+## Mac files ##
 .DS_Store
+
+## NodeJS ##
+logs
+*.log
+node_modules
+
+## compiled server code ##
+lib/
+test-lib/
+dist/
+
+## compiled dev bundles ##
+dev-bundle.css
+dev-bundle.js
