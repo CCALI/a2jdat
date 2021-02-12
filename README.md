@@ -266,3 +266,6 @@ This software uses a version of jquery with a known security vulnerability. The 
 To find out more about A2J Viewer and A2J Author® please see our website, [www.a2jauthor.org](https://www.a2jauthor.org/)
 
 For questions, contact Tobias Nteireho at tobias@cali.org
+
+## License
+[GNU AGPLv3](./LICENSE.md)
