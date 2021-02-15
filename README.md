@@ -256,13 +256,15 @@ To configure pm2 to autoload on startup run the following command with the desir
 `pm2 save`
 
 13.) Testing and calibration
-
+To ensure that the documents produced are identical to a2jauthor, run and generate a pdf through the `DAT calibration` guide provided in `/calibration` folder. With the PDF viewed at actual size and captured in screenshot The letter height of the Arial text should be 42pixels. A png and pdfis included in the `/calibration` folder for comparison.
 
 ## Security Note
-This software uses a version of jquery with a known security vulnerability. The features required to exploit this vulnereability are not used in this software and hence it is not an issue.
+This software uses a version of jquery with a known security vulnerability. The features required to exploit this vulnerability are not used in this software and hence it is not an issue.
 
 ## More info
 
 To find out more about A2J Viewer and A2J Author® please see our website, [www.a2jauthor.org](https://www.a2jauthor.org/)
+
+Ever growing backend documentation including tutorials and examples can be found at [https://www.a2jauthor.org/content/a2j-selfhosting-and-backend](https://www.a2jauthor.org/content/a2j-selfhosting-and-backend)
 
 For questions, contact Tobias Nteireho at tobias@cali.org
