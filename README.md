@@ -13,7 +13,7 @@ While other server environments may work, they have not been tested.  Should you
 
 ## Upgrade notes/summary from node A2JDAT v2
 
-The folder structure has changed. It is recommended that your current setup is backed up. This means at a minimum, config.json and ecosystem.config.js. Alternatively you may checkout/unzip this repo into  a new folder.
+*The folder structure has changed.* It is recommended that your current setup is backed up. This means at a minimum, config.json and ecosystem.config.js. Alternatively you may checkout/unzip this repo into  a new folder.
 
 The folder structure has changed such that the DAT is no longer a sub folder.
 
@@ -33,6 +33,8 @@ Containing Folder
 -ecosystem.config.js
 -A2JDAT (this DAT repo)
 ```
+
+*The WKHTMLTOPDF_ZOOM settings have changed.* On most \*nix systems this should be 1.6711 and on most windows systems this should be 1.5709.
 
 Assuming you have all up-to-date dependencies (wkhtmltopdf, node, npm, pm2) you can run
 `npm run deploy`
