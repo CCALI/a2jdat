@@ -1,18 +1,9 @@
 {
   "name": "a2jdat",
+  "private": true,
   "version": "7.0.4",
-  "description": "Authoring and viewer App GUI.",
-  "license": "GNU AGPL v3.0",
-  "author": {
-    "name": "Center for Computer-Assisted Legal Instruction (CALI)",
-    "url": "https://www.a2jauthor.org",
-    "email": "webmaster@a2jauthor.org"
-  },
   "main": "a2jdat/server.stache!done-autorender",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/CCALI/A2JDAT"
-  },
+  "description": "Authoring and viewer App GUI.",
   "scripts": {
     "test": "npm run lint:pdf && npm run mocha && npm run test:pdf",
     "build": "babel src --out-dir lib --quiet",
@@ -26,6 +17,50 @@
     "mocha:watch": "mocha test/routes test/util --require babel-register --watch",
     "test:pdf": "npm run build && babel test --out-dir test-lib --quiet && ava --serial",
     "lint:pdf": "standard src/*.js src/**/*.js --fix && standard test/**/*.js --fix --env mocha"
+  },
+  "author": {
+    "name": "Center for Computer-Assisted Legal Instruction (CALI)",
+    "email": "webmaster@a2jauthor.org",
+    "url": "https://www.a2jauthor.org"
+  },
+  "license": "GNU AGPL v3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CCALI/A2JDAT"
+  },
+  "steal": {
+    "envs": {
+      "build": {
+        "map": {
+          "isAuthor": "isAuthor",
+          "can/util/util": "can/util/domless/domless"
+        }
+      },
+      "build-development": {
+        "map": {
+          "can/util/util": "can/util/util"
+        }
+      }
+    },
+    "plugins": [
+      "done-css",
+      "steal-less",
+      "steal-stache"
+    ],
+    "map": {
+      "bloodhound": "typeahead.js/dist/bloodhound",
+      "cuid": "cuid/dist/cuid",
+      "typeahead": "typeahead.js/dist/typeahead.jquery"
+    },
+    "npmIgnore": [
+      "documentjs",
+      "testee",
+      "donejs-deploy",
+      "generator-donejs",
+      "donejs-cli",
+      "babel-cli"
+    ],
+    "minify": true
   },
   "dependencies": {
     "@caliorg/a2jdeps": "^7.0.14",
@@ -120,41 +155,6 @@
     "steal-stache": "^4.1.5",
     "steal-tools": "^1.11.10",
     "supertest": "^4.0.2"
-  },
-  "private": true,
-  "steal": {
-    "envs": {
-      "build": {
-        "map": {
-          "isAuthor": "isAuthor",
-          "can/util/util": "can/util/domless/domless"
-        }
-      },
-      "build-development": {
-        "map": {
-          "can/util/util": "can/util/util"
-        }
-      }
-    },
-    "plugins": [
-      "done-css",
-      "steal-less",
-      "steal-stache"
-    ],
-    "map": {
-      "bloodhound": "typeahead.js/dist/bloodhound",
-      "cuid": "cuid/dist/cuid",
-      "typeahead": "typeahead.js/dist/typeahead.jquery"
-    },
-    "npmIgnore": [
-      "documentjs",
-      "testee",
-      "donejs-deploy",
-      "generator-donejs",
-      "donejs-cli",
-      "babel-cli"
-    ],
-    "minify": true
   },
   "standard": {
     "env": [
