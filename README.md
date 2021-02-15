@@ -167,7 +167,7 @@ The Most important keys are:
 `GUIDES_URL`- relative web location of guides
 `WKHTMLTOPDF_PATH`- path to binary of WKHTMLTOPDF
 VIEWER_PATH- path to viewer
-WKHTMLTOPDF_DPI- desired default dpi to render pdfs. CALI reccomends minimum of 300
+WKHTMLTOPDF_DPI- desired default dpi to render pdfs. CALI recommends minimum of 300
 `WKHTMLTOPDF_ZOOM`- The correction factor used to render text pdfs. This is necessary to standardize rendering across all platforms. On most \*nix systems this should be 1.6711 and on most windows systems this should be 1.5709.
 
 All other keys must be present but the value is irrelevant.
