@@ -1,7 +1,7 @@
 {
   "name": "a2jdat",
   "private": true,
-  "version": "7.0.3",
+  "version": "7.0.6",
   "main": "a2jdat/server.stache!done-autorender",
   "description": "Authoring and viewer App GUI.",
   "scripts": {
@@ -9,6 +9,7 @@
     "build": "babel src --out-dir lib --quiet",
     "build:server": "steal-tools build",
     "deploy": "npm install && npm run build && npm run build:server",
+    "build:dat-zip": "node ./bin/make-dat-package",
     "start": "NODE_ENV=production node ./bin/www",
     "dev": "npm run build && node ./bin/www",
     "dev:debug": "npm run build && DEBUG=A2J:* node --inspect ./bin/www",
@@ -17,8 +18,12 @@
     "test:pdf": "npm run build && babel test --out-dir test-lib --quiet && ava --serial",
     "lint:pdf": "standard src/*.js src/**/*.js --fix && standard test/**/*.js --fix --env mocha"
   },
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Center for Computer-Assisted Legal Instruction (CALI)",
+    "email": "webmaster@a2jauthor.org",
+    "url": "https://www.a2jauthor.org"
+  },
+  "license": "GNU AGPL v3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/CCALI/A2JDAT"
@@ -58,7 +63,7 @@
     "minify": true
   },
   "dependencies": {
-    "@caliorg/a2jdeps": "^7.0.13",
+    "@caliorg/a2jdeps": "^7.0.15",
     "axios": "^0.18.1",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.19.0",
