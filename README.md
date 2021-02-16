@@ -258,7 +258,7 @@ To configure pm2 to autoload on startup run the following command with the desir
 `pm2 save`
 
 13.) Testing and calibration
-To ensure that the documents produced are identical to a2jauthor, run and generate a pdf through the `DAT calibration` guide provided in `/calibration` folder. With the PDF viewed at actual size and captured in screenshot The letter height of the Arial text should be 42pixels. A canonical png and pdf is included in the `/calibration` folder for comparison.
+To ensure that the documents produced are identical to a2jauthor, run and generate a pdf through the `DAT calibration` guide provided in `/calibration` folder. With the PDF viewed at actual size and captured in screenshot The letter height of the Arial text should be 68pixels. A canonical png and pdf is included in the `/calibration` folder for comparison.
 
 ## Security Note
 This software uses a version of jquery with a known security vulnerability. The features required to exploit this vulnerability are not used in this software and hence it is not an issue.
