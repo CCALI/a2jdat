@@ -9,11 +9,11 @@ NOTE: By downloading this application, you are agreeing to the terms included in
 ## Hosting
 The DAT requires nodejs 12. Any system supporting nodejs 12 is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
 
-While other server environments may work, they have not been tested.  Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/a2jdat) repo to let us know any steps taken so that we may share with others.
+While other server environments may work, they have not been tested. Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/a2jdat) repo to let us know any steps taken so that we may share with others.
 
 ## Upgrade notes/summary from node A2JDAT v2
 
-**The folder structure has changed.** It is recommended that your current setup is backed up. This means at a minimum, config.json and ecosystem.config.js. Alternatively you may checkout/unzip this repo into  a new folder.
+**The folder structure has changed.** It is recommended that your current setup is backed up. This means at a minimum, config.json and ecosystem.config.js. Alternatively you may checkout/unzip this repo into a new folder.
 
 The folder structure has changed such that the DAT is no longer a sub folder.
 
@@ -34,7 +34,7 @@ Containing Folder
 -A2JDAT (this DAT repo)
 ```
 
-**The WKHTMLTOPDF_ZOOM settings have changed. YOU MUST SET THIS CORRECTLY TO MATCH PDFs GENERATED ON A2JAUTHOR.ORG**  On most \*nix systems this should be 1.6711 and on most windows systems this should be 1.5709.
+**The WKHTMLTOPDF_ZOOM settings have changed. YOU MUST SET THIS CORRECTLY TO MATCH PDFs GENERATED ON A2JAUTHOR.ORG** On most \*nix systems this should be 1.6711 and on most windows systems this should be 1.5709.
 
 Assuming you have all up-to-date dependencies (wkhtmltopdf, node, npm, pm2) you can run
 `npm run deploy`
@@ -58,7 +58,7 @@ follow the instructions below:
 
 ## Installation instructions
 
-1.)  Install nvm
+1.) Install nvm
 The DAT is a simple restful API that requires nodejs to serve endpoints. Though, you are free to install the node version that the DAT targets and manage it manually, the recommended method is to use a node version manager which will allow the simultaneous installation of multiple versions of node and mitigates several administration issues.
 
 Obtain nvm for windows here: https://github.com/coreybutler/nvm-windows
@@ -82,7 +82,7 @@ which should produce the version number of node we installed, `12.20.1`
 #### For Windows Users:
 
 ##### Ensure Node is in PATH:
-The node installer might not always set the PATH variable correctly. Check Environment variables to ensure that there is an entry for the folder containing node.exe.  For this tutorial that folder is C:\Program Files\nodejs\.
+The node installer might not always set the PATH variable correctly. Check Environment variables to ensure that there is an entry for the folder containing node.exe. For this tutorial that folder is C:\Program Files\nodejs\.
 
 ##### Configure Node Permissions:
 Node.exe must be added to the IIS_IUSRS group in order to be allowed to handle requests. This must occur every time the node executable is switched through nvm. Open a command prompt and run as administrator and run
@@ -104,7 +104,7 @@ The node sub-dependencies for the DAT must be built locally on the target system
 use the command below to install
 ```npm --add-python-to-path='true' --debug install --global windows-build-tools```
 
-This requires administrator access. This is a very lengthy install-  it can take over an hour even on a fast machine with a fantastic connection.
+This requires administrator access. This is a very lengthy install- it can take over an hour even on a fast machine with a fantastic connection.
 
 #### For all platforms run the command below
 
@@ -112,7 +112,7 @@ This requires administrator access. This is a very lengthy install-  it can take
 
 
 5.) Install wkhtmltopdf
-WKHTMLTOPDF is the engine used to transform interview data into PDF from an intermediate HTML file. Download the latest stable version from https://wkhtmltopdf.org/downloads.html  and install it in the VM. *Make a note of the install path*.
+WKHTMLTOPDF is the engine used to transform interview data into PDF from an intermediate HTML file. Download the latest stable version from https://wkhtmltopdf.org/downloads.html and install it in the VM. *Make a note of the install path*.
 
 6.) Install node process manager
 The node process manager handles automatic restarts, memory mangement, monitoring, and error logging.
@@ -160,10 +160,10 @@ npm run build:server
 if you encounter an error in this step it can often be resolved by deleting the `node_modules` folder in the `a2jdat` folder and repeating the step. If that does not work, re-clone into a brand new directory and run the commands in that directory.
 
 9.) Configure DAT
-Since the A2J software can run on many platforms, there is a small amount of platform specific configuration that is necessary. Navigate to  `a2jdat\samples.configs\`. There are two samples for config.json (config.json.nix.sample and config.json.win.sample) that will need to be edited and saved to the containing folder of the a2jdat as `config.json`. Edit and save the sample appropriate to your platform (config.json.nix.sample for \*NIX systems and config.json.win.sample for Windows systems).
+Since the A2J software can run on many platforms, there is a small amount of platform specific configuration that is necessary. Navigate to `a2jdat\samples.configs\`. There are two samples for config.json (config.json.nix.sample and config.json.win.sample) that will need to be edited and saved to the containing folder of the a2jdat as `config.json`. Edit and save the sample appropriate to your platform (config.json.nix.sample for \*NIX systems and config.json.win.sample for Windows systems).
 
 The Most important keys are:
-`GUIDES_DIR`-  required to establish location of templates
+`GUIDES_DIR`- required to establish location of templates
 `GUIDES_URL`- relative web location of guides
 `WKHTMLTOPDF_PATH`- path to binary of WKHTMLTOPDF
 VIEWER_PATH- path to viewer
@@ -248,12 +248,12 @@ Location /api {
 
 we have created a script to allow pm2 to manage memory and multiple instances of the DAT. The default script will run a cluster of 4 processes and restart a process if it uses more than 768MB.
 
-12.)  Start the node process
+12.) Start the node process
 navigate to the DAT folder in a terminal
 
 `pm2 start ecosystem.config.js`
 
-##  Configure auto-restart of pm2
+## Configure auto-restart of pm2
 To configure pm2 to autoload on startup run the following command with the desired pm2 processes running
 `pm2 save`
 
