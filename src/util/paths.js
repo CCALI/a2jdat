@@ -1,7 +1,7 @@
 const Q = require('q')
 const path = require('path')
 const config = require('./config')
-const urlRegex = require('url-regex')
+const urlRegexSafe = require('url-regex-safe')
 const debug = require('debug')('A2J:util/paths')
 
 /**
@@ -41,7 +41,7 @@ module.exports = {
    */
   normalizeFileDataUrl (fileDataUrl) {
     const isAbsolutePath = path.isAbsolute(fileDataUrl)
-    const isUrl = urlRegex({ exact: true }).test(fileDataUrl)
+    const isUrl = urlRegexSafe({ exact: false }).test(fileDataUrl)
 
     return (isUrl || isAbsolutePath)
     ? fileDataUrl
