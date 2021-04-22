@@ -107,8 +107,7 @@ const Overlay = struct({
 })
 
 function validate (overlay) {
-  let errorVariable = joi.validate(overlay, Overlay).error
-  return errorVariable
+  return joi.validate(overlay, Overlay).error
 }
 
 module.exports = {validate}
