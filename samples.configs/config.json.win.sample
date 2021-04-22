@@ -1,0 +1,8 @@
+{
+  "GUIDES_DIR": "C:\\inetpub\\wwwroot\\a2j-viewer\\guides",
+  "GUIDES_URL": "../a2j-viewer/guides",
+  "VIEWER_PATH": "C:\\inetpub\\wwwroot\\a2j-viewer\\viewer\\",
+  "WKHTMLTOPDF_PATH": "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf",
+  "WKHTMLTOPDF_DPI": 300,
+  "WKHTMLTOPDF_ZOOM": 1.5709
+}

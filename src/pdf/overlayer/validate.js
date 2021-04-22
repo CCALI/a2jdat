@@ -4,6 +4,7 @@ const {checks} = require('./checks')
 
 const nonNegative = joi.number().min(0).required()
 const contentString = joi.string().required()
+const allowEmptyString = joi.string().allow('').required()
 const arrayOf = type => joi.array().items(type).required()
 const mustBe = val => joi.any().valid(val).required()
 const oneOf = vals => joi.any().valid(vals).required()
@@ -41,7 +42,7 @@ const OverflowOptions = struct({
   ]),
 
   // ignored if style is "clip-overflow"
-  addendumLabel: contentString
+  addendumLabel: allowEmptyString
 })
 
 const Text = struct({
@@ -67,7 +68,7 @@ const MultilineText = struct({
 const TableText = struct({
   type: mustBe('table-text'),
   columns: matrix(Text),
-  addendumLabel: contentString,
+  addendumLabel: allowEmptyString,
 
   // each text.area.top is ignored for placement
   // columns are placed dynamically on the addendum

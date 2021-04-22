@@ -1,0 +1,8 @@
+{
+  "GUIDES_DIR": "/var/www/mysite.tld/a2j-viewer/guides",
+  "GUIDES_URL": "../a2j-viewer/guides",
+  "VIEWER_PATH": "/vol/data/sites/viewer.mysite.tld/a2jviewer/viewer",
+  "WKHTMLTOPDF_PATH": "/usr/bin/local/wkhtmltopdf",
+  "WKHTMLTOPDF_DPI": 300,
+  "WKHTMLTOPDF_ZOOM": 1.6711
+}
