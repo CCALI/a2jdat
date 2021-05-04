@@ -1,7 +1,7 @@
 {
   "name": "a2jdat",
   "private": true,
-  "version": "7.0.7",
+  "version": "7.0.8",
   "main": "a2jdat/server.stache!done-autorender",
   "description": "Authoring and viewer App GUI.",
   "scripts": {
@@ -63,7 +63,7 @@
     "minify": true
   },
   "dependencies": {
-    "@caliorg/a2jdeps": "^7.0.17",
+    "@caliorg/a2jdeps": "^7.0.18",
     "axios": "^0.18.1",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.19.0",
