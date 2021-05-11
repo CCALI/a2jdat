@@ -11,6 +11,9 @@ The DAT requires nodejs 12. Any system supporting nodejs 12 is supported. It has
 
 While other server environments may work, they have not been tested. Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/a2jdat) repo to let us know any steps taken so that we may share with others.
 
+### Current release
+if installing through git, the current release version is always in the `production` branch. This is identical to the zipped source package in the releases page.
+
 ## Upgrade notes/summary from node A2JDAT v2
 
 **The folder structure has changed.** It is recommended that your current setup is backed up. This means at a minimum, config.json and ecosystem.config.js. Alternatively you may checkout/unzip this repo into a new folder.
