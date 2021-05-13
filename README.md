@@ -148,6 +148,8 @@ npm install
 then
 `pm2-service-install -n PM2`
 
+The correct PM2 executable path for volta **must point to pm2 node_modules folder** for default pm2 installs in volta this path is `C:\Users\a2j\AppData\Local\Volta\tools\image\packages\pm2\node_modules\pm2`. This corresponds to the `PM2_SERVICE_PM2_DIR` environment variable.
+
 7.) Download the latest DAT from repo through git or from https://github.com/CCALI/A2JDAT/releases into your webroot or preferred directory on your web server.
 
 8.) Compile from source instructions
