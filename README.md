@@ -1,6 +1,6 @@
 # A2JDAT
 
-This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 12+ to run properly. The recommended additional tools for windows are nvm and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
+This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 12+ to run properly. The recommended additional tools for windows are volta and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
 
 Within this repo and releases you'll find a `.zip` file containing the minified JavaScript source for the DAT and sample configuration files
 
@@ -10,6 +10,9 @@ NOTE: By downloading this application, you are agreeing to the terms included in
 The DAT requires nodejs 12. Any system supporting nodejs 12 is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
 
 While other server environments may work, they have not been tested. Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/a2jdat) repo to let us know any steps taken so that we may share with others.
+
+### Current release
+if installing through git, the current release version is always in the `production` branch. This is identical to the zipped source package in the releases page.
 
 ## Upgrade notes/summary from node A2JDAT v2
 
@@ -58,24 +61,22 @@ follow the instructions below:
 
 ## Installation instructions
 
-1.) Install nvm
+1.) Install nvm if using \*nix or volta on windows. **NVM for windows is no longer supported**.
 The DAT is a simple restful API that requires nodejs to serve endpoints. Though, you are free to install the node version that the DAT targets and manage it manually, the recommended method is to use a node version manager which will allow the simultaneous installation of multiple versions of node and mitigates several administration issues.
 
-Obtain nvm for windows here: https://github.com/coreybutler/nvm-windows
+Obtain volta for windows here: https://github.com/volta-cli/volta
 
 For \*nix go here: https://github.com/creationix/nvm
 
-2.) Install node through nvm
+2.) Install node through nvm or volta
 after installation of nvm, type the following commands in the terminal to install the required node version
 
+
+#### For *nix users
 ```
 nvm install 12.20.1
 nvm use 12.20.1
 ```
-
-check that the install was successful by typing
-
-`node -v`
 
 which should produce the version number of node we installed, `12.20.1`
 
@@ -85,9 +86,19 @@ which should produce the version number of node we installed, `12.20.1`
 The node installer might not always set the PATH variable correctly. Check Environment variables to ensure that there is an entry for the folder containing node.exe. For this tutorial that folder is C:\Program Files\nodejs\.
 
 ##### Configure Node Permissions:
-Node.exe must be added to the IIS_IUSRS group in order to be allowed to handle requests. This must occur every time the node executable is switched through nvm. Open a command prompt and run as administrator and run
+Node.exe must be added to the IIS_IUSRS group in order to be allowed to handle requests. This must occur every time the node executable is switched through nvm or volta. Open a command prompt and run as administrator and run
 ```icacls “%programfiles%\nodejs\node.exe” /grant IIS_IUSRS:rx```
 
+```
+volta install node@12.20.1
+volta install node@12.20.1
+```
+ 
+#### For all users
+
+check that the install was successful by typing
+
+`node -v`
 
 3.) Install global DAT dependencies and subdependencies:
 
@@ -136,6 +147,8 @@ npm install
 
 then
 `pm2-service-install -n PM2`
+
+The correct PM2 executable path for volta **must point to pm2 node_modules folder** for default pm2 installs in volta this path is `C:\Users\a2j\AppData\Local\Volta\tools\image\packages\pm2\node_modules\pm2`. This corresponds to the `PM2_SERVICE_PM2_DIR` environment variable.
 
 7.) Download the latest DAT from repo through git or from https://github.com/CCALI/A2JDAT/releases into your webroot or preferred directory on your web server.
 
