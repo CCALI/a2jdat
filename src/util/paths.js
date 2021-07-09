@@ -3,6 +3,8 @@ const path = require('path')
 const config = require('./config')
 const urlRegex = require('url-regex')
 const debug = require('debug')('A2J:util/paths')
+const fse = require('fs-extra')
+const files = require('./files')
 
 /**
  * @module {Module} /util/paths paths
@@ -84,14 +86,52 @@ module.exports = {
     const deferred = Q.defer()
     const guidesDir = config.get('GUIDES_DIR')
 
-    const templatesPath = fileDataUrl
-      ? path.join(this.normalizeFileDataUrl(fileDataUrl), 'templates.json')
-      : path.join(guidesDir, username, 'guides', `Guide${guideId}`, 'templates.json')
+    // get the root path, minus the templates.json
+    const rootPath = fileDataUrl
+      ? path.join(this.normalizeFileDataUrl(fileDataUrl))
+      : path.join(guidesDir, username, 'guides', `Guide${guideId}`)
 
-    deferred.resolve(templatesPath)
+    const templatesPath = path.join(rootPath, 'templates.json')
 
+    // check if guideDir is of the guided interview
+    // check for guide.xml, template1.json or any other template file
+    console.log(templatesPath, fse.pathExistsSync(templatesPath))
+    if (fse.pathExistsSync(templatesPath)) {
+      deferred.resolve(templatesPath)
+    } else {
+      let startIndex, endIndex
+      fse.readdir(rootPath)
+        .then((directoryFiles) => {
+          console.log(directoryFiles, '<<<<<')
+          const templateIds = directoryFiles.filter(filename => {
+            return (filename.startsWith('template') && filename.endsWith('.json') && filename !== 'templates.json')
+          }).map(fileName => {
+            startIndex = fileName.indexOf('template') + 8
+            endIndex = fileName.indexOf('.', startIndex)
+            return parseInt(fileName.substring(startIndex, endIndex))
+          })
+          console.log(templateIds, 'Template IDs')
+          return files.writeJSON({path: templatesPath, data: {guideId, templateIds: templateIds}})
+        })
+        .then(() => deferred.resolve(templatesPath))
+      // read all files in the root path
+      // filter for template ID's*
+      // populate the templateId's array with those template ID's
+      // create a template.json file
+      // use author publish code.
+    }
     return deferred.promise
   },
+
+  // /**
+  //  * @property {Function} paths.checkDirectory
+  //  * @param {String} templatesPath - path of the guide
+  //  * @return {Boolean} exists - true if the file exists.
+  //  */
+
+  // checkTemplatePath (templatesPath) {
+  //   return fse.pathExistsSync(templatesPath)
+  // },
 
   /**
    * @property {Function} paths.getTemplatePath
