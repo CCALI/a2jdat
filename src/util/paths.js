@@ -79,8 +79,7 @@ module.exports = {
    * @param {String} guideId - id of the guide.
    * @param {String} fileDataUrl - used for standalone assembly
    *
-   * @return {Promise} a Promise that will resolve to the
-   * path to the templates.json file for the current Interview.
+   * @return {Promise}
    */
   getTemplatesPath ({ username, guideId, fileDataUrl }) {
     const deferred = Q.defer()
@@ -91,47 +90,53 @@ module.exports = {
       ? path.join(this.normalizeFileDataUrl(fileDataUrl))
       : path.join(guidesDir, username, 'guides', `Guide${guideId}`)
 
-    const templatesPath = path.join(rootPath, 'templates.json')
-
-    // check if guideDir is of the guided interview
-    // check for guide.xml, template1.json or any other template file
-    console.log(templatesPath, fse.pathExistsSync(templatesPath))
-    if (fse.pathExistsSync(templatesPath)) {
-      deferred.resolve(templatesPath)
-    } else {
-      let startIndex, endIndex
-      fse.readdir(rootPath)
-        .then((directoryFiles) => {
-          console.log(directoryFiles, '<<<<<')
-          const templateIds = directoryFiles.filter(filename => {
-            return (filename.startsWith('template') && filename.endsWith('.json') && filename !== 'templates.json')
-          }).map(fileName => {
-            startIndex = fileName.indexOf('template') + 8
-            endIndex = fileName.indexOf('.', startIndex)
-            return parseInt(fileName.substring(startIndex, endIndex))
-          })
-          console.log(templateIds, 'Template IDs')
-          return files.writeJSON({path: templatesPath, data: {guideId, templateIds: templateIds}})
-        })
-        .then(() => deferred.resolve(templatesPath))
-      // read all files in the root path
-      // filter for template ID's*
-      // populate the templateId's array with those template ID's
-      // create a template.json file
-      // use author publish code.
-    }
+    this.setTemplatesPath(rootPath, guideId, deferred)
     return deferred.promise
   },
 
-  // /**
-  //  * @property {Function} paths.checkDirectory
-  //  * @param {String} templatesPath - path of the guide
-  //  * @return {Boolean} exists - true if the file exists.
-  //  */
+  /**
+   * @property {Function} paths.setTemplatesPath
+   * @parent paths
+   * @param {String} rootPath - current username.
+   * @param {String} guideId - id of the guide.
+   * @param {String} deferred
+   *
+   * @return {Promise}
+   */
+  setTemplatesPath (rootPath, guideId, deferred) {
+    const templatesPath = path.join(rootPath, 'templates.json')
+    fse.pathExists(templatesPath).then((exists) => {
+      if (exists) {
+        deferred.resolve(templatesPath)
+      } else {
+        fse.readdir(rootPath)
+        .then((directoryFiles) => {
+          return this.createTemplatesJSON(directoryFiles, templatesPath, guideId)
+        }).then(() => deferred.resolve(templatesPath))
+      }
+    })
+  },
 
-  // checkTemplatePath (templatesPath) {
-  //   return fse.pathExistsSync(templatesPath)
-  // },
+  /**
+   * @property {Function} paths.createTemplatesJSON
+   * @parent paths
+   *
+   * @param {String} guideId - id of the guide.
+   * @param {String} templatePath - path to the templates.json file
+   * @param {Array} directoryFiles - Array of file names in the directory
+   * @return {Promise} a Promise that will resolve to the
+   * content that was written to the file
+   */
+  createTemplatesJSON (directoryFiles, templatesPath, guideId) {
+    let startIndex, endIndex
+    const templateIds = directoryFiles.filter(filename =>
+      (filename.startsWith('template') && filename.endsWith('.json') && filename !== 'templates.json')).map(fileName => {
+        startIndex = fileName.indexOf('template') + 8
+        endIndex = fileName.indexOf('.', startIndex)
+        return parseInt(fileName.substring(startIndex, endIndex))
+      })
+    return files.writeJSON({path: templatesPath, data: {guideId, templateIds: templateIds}})
+  },
 
   /**
    * @property {Function} paths.getTemplatePath
