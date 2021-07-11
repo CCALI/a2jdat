@@ -3,7 +3,6 @@ const path = require('path')
 const config = require('./config')
 const urlRegex = require('url-regex')
 const debug = require('debug')('A2J:util/paths')
-const fse = require('fs-extra')
 const files = require('./files')
 
 /**
@@ -99,7 +98,7 @@ module.exports = {
       try {
         const guideFiles = await files.readDir({ path: rootPath })
         const templateIds = await this.getTemplateIds(guideFiles)
-        const templatesJson = await this.createTemplatesJSON(
+        await this.createTemplatesJSON(
           templatesPath,
           guideId,
           templateIds
@@ -123,13 +122,16 @@ module.exports = {
           filename !== 'templates.json'
       )
 
-      const templateIds = templateFiles.map(fileName => {
+      let templateIds = templateFiles.map(fileName => {
         const startIndex = fileName.indexOf('template') + 8
         const endIndex = fileName.indexOf('.', startIndex)
 
         return parseInt(fileName.substring(startIndex, endIndex))
       })
 
+      templateIds = templateIds.filter((c, index) => {
+        return templateIds.indexOf(c) === index
+      })
       resolve(templateIds)
     })
   },
