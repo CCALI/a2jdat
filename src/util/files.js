@@ -134,7 +134,7 @@ module.exports = {
         return fileData
       } else {
         return _.map(fileData, o => {
-          return o[replaceKey] === data[replaceKey] ? data : o
+          return (o[replaceKey] === data[replaceKey]) ? data : o
         })
       }
     }
