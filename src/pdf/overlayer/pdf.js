@@ -1,5 +1,5 @@
 const fs = require('fs')
-const hummus = require('hummus')
+const hummus = require('muhammara')
 const {getMaximumLine} = require('./wrap')
 
 class Pdf {

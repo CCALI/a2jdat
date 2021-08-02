@@ -10,7 +10,7 @@ const forwardCookies = require('../util/cookies').forwardCookies
 const getCssBundlePath = require('../util/get-css-bundle-path')
 
 const fs = require('fs')
-const hummus = require('hummus')
+const hummus = require('muhammara')
 const {storage} = require('../pdf/storage')
 const {overlayer} = require('../pdf/overlayer')
 const {getTemplateOverlay} = require('@caliorg/a2jdeps/pdf/assemble')
