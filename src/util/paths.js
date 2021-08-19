@@ -1,7 +1,7 @@
 const Q = require('q')
 const path = require('path')
 const config = require('./config')
-const urlRegex = require('url-regex')
+const urlRegex = require('url-regex-safe')
 const debug = require('debug')('A2J:util/paths')
 
 /**
