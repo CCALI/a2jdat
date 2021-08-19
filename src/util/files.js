@@ -185,7 +185,7 @@ module.exports = {
 
   readFile ({ path }) {
     return new Promise((resolve, reject) => {
-      fs.readFile(path, {encoding: 'utf8'}, (error, text) => {
+      fs.readFile(path, { encoding: 'utf8' }, (error, text) => {
         if (error) {
           const isFileNotFound = error.code === 'ENOENT'
           if (isFileNotFound) {
@@ -198,5 +198,9 @@ module.exports = {
         resolve(text)
       })
     })
+  },
+
+  pathExists ({ path }) {
+    return fs.pathExists(path)
   }
 }

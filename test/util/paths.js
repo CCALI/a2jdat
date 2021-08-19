@@ -125,4 +125,15 @@ describe('lib/util/paths', function () {
       })
     })
   })
+
+  describe('getTemplateIds', function () {
+    it('should return a list of template ID\'s', function () {
+      const files = [ 'template1.json', 'template2.old.json', 'guide3.json', 'template2.json', 'template3.json' ]
+      const expected = [ 1, 2, 3 ]
+
+      paths.getTemplateIds(files).then((templateIds) => {
+        assert.equal(templateIds, expected)
+      })
+    })
+  })
 })

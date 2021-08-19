@@ -3,6 +3,7 @@ const path = require('path')
 const config = require('./config')
 const urlRegex = require('url-regex-safe')
 const debug = require('debug')('A2J:util/paths')
+const files = require('./files')
 
 /**
  * @module {Module} /util/paths paths
@@ -22,7 +23,9 @@ module.exports = {
    *  if not use the default A2J Author location
    */
   getViewerPath () {
-    const viewerConfigPath = config.get('VIEWER_PATH') || path.join(__dirname, '..', '..', '..', 'a2jviewer')
+    const viewerConfigPath =
+      config.get('VIEWER_PATH') ||
+      path.join(__dirname, '..', '..', '..', 'a2jviewer')
     debug('config.VIEWER_PATH', viewerConfigPath)
     return viewerConfigPath
   },
@@ -43,9 +46,9 @@ module.exports = {
     const isAbsolutePath = path.isAbsolute(fileDataUrl)
     const isUrl = urlRegex({ exact: true }).test(fileDataUrl)
 
-    return (isUrl || isAbsolutePath)
-    ? fileDataUrl
-    : path.join(this.getViewerPath(), fileDataUrl)
+    return isUrl || isAbsolutePath
+      ? fileDataUrl
+      : path.join(this.getViewerPath(), fileDataUrl)
   },
 
   /**
@@ -66,8 +69,8 @@ module.exports = {
     const guidesDir = config.get('GUIDES_DIR')
 
     return fileDataUrl
-    ? path.join(this.normalizeFileDataUrl(fileDataUrl))
-    : path.join(guidesDir, username, 'guides', `Guide${guideId}`)
+      ? path.join(this.normalizeFileDataUrl(fileDataUrl))
+      : path.join(guidesDir, username, 'guides', `Guide${guideId}`)
   },
 
   /**
@@ -77,20 +80,77 @@ module.exports = {
    * @param {String} guideId - id of the guide.
    * @param {String} fileDataUrl - used for standalone assembly
    *
-   * @return {Promise} a Promise that will resolve to the
-   * path to the templates.json file for the current Interview.
+   * @return {Promise}
    */
-  getTemplatesPath ({ username, guideId, fileDataUrl }) {
+  async getTemplatesPath ({ username, guideId, fileDataUrl }) {
     const deferred = Q.defer()
     const guidesDir = config.get('GUIDES_DIR')
 
-    const templatesPath = fileDataUrl
-      ? path.join(this.normalizeFileDataUrl(fileDataUrl), 'templates.json')
-      : path.join(guidesDir, username, 'guides', `Guide${guideId}`, 'templates.json')
+    // get the root path, minus the templates.json
+    const rootPath = fileDataUrl
+      ? path.join(this.normalizeFileDataUrl(fileDataUrl))
+      : path.join(guidesDir, username, 'guides', `Guide${guideId}`)
+    const templatesPath = path.join(rootPath, 'templates.json')
+
+    // catch missing templates.json -- should rarely happen
+    const exists = await files.pathExists(templatesPath)
+    if (!exists) {
+      try {
+        const guideFiles = await files.readDir({ path: rootPath })
+        const templateIds = await this.getTemplateIds(guideFiles)
+        await this.createTemplatesJSON(
+          templatesPath,
+          guideId,
+          templateIds
+        )
+      } catch (err) {
+        console.error(err)
+      }
+    }
 
     deferred.resolve(templatesPath)
-
     return deferred.promise
+  },
+
+  // return an array of templateIds
+  getTemplateIds (guideFiles) {
+    return new Promise((resolve, reject) => {
+      const templateFiles = guideFiles.filter(
+        filename =>
+          filename.startsWith('template') &&
+          filename.endsWith('.json') &&
+          filename !== 'templates.json'
+      )
+
+      let templateIds = templateFiles.map(fileName => {
+        const startIndex = fileName.indexOf('template') + 8
+        const endIndex = fileName.indexOf('.', startIndex)
+
+        return parseInt(fileName.substring(startIndex, endIndex))
+      })
+
+      templateIds = templateIds.filter((c, index) => {
+        return templateIds.indexOf(c) === index
+      })
+      resolve(templateIds)
+    })
+  },
+
+  /**
+   * @property {Function} paths.createTemplatesJSON
+   * @parent paths
+   *
+   * @param {String} guideId - id of the guide.
+   * @param {String} templatePath - path to the templates.json file
+   * @param {Array} directoryFiles - Array of file names in the directory
+   * @return {Promise} a Promise that will resolve to the
+   * content that was written to the file
+   */
+  createTemplatesJSON (templatesPath, guideId, templateIds) {
+    return files.writeJSON({
+      path: templatesPath,
+      data: { guideId, templateIds }
+    })
   },
 
   /**
