@@ -7,7 +7,7 @@ Within this repo and releases you'll find a `.zip` file containing the minified 
 NOTE: By downloading this application, you are agreeing to the terms included in the user license [LICENSE.md](https://github.com/CCALI/a2jdat/blob/develop/LICENSE.md).
 
 ## Hosting
-The DAT requires nodejs 12. Any system supporting nodejs 12 is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
+The DAT requires nodejs 12.20.1+. Any system supporting nodejs 12.20.1+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
 
 While other server environments may work, they have not been tested. Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/a2jdat) repo to let us know any steps taken so that we may share with others.
 
@@ -50,12 +50,12 @@ For all platforms this document should work as written. You can skip to `step 4`
 
 This document should work as written but some components will likely need to be recompiled for the current node 12.
 
-if the DAT does not properly start after using these instructions, the likely culprit is `humus`. This will be indicated by running `pm2 logs` and seeing a node version error. To rectify
+if the DAT does not properly start after using these instructions, the likely culprit is `muhummara`. This will be indicated by running `pm2 logs` and seeing a node version error. To rectify
 follow the instructions below:
 
 1.) go to the `a2jdat` folder
 
-2.) run `npm install humus` in a command line
+2.) run `npm install muhummara` in a command line
 
 3.) restart DAT process and test
 
