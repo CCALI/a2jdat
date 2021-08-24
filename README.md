@@ -119,7 +119,7 @@ This requires administrator access. This is a very lengthy install- it can take 
 
 #### For all platforms run the command below
 
-```npm install node-pre-gyp babel-cli steal-tools -g```
+```npm install @mapbox/node-pre-gyp node-gyp babel-cli steal-tools -g```
 
 
 5.) Install wkhtmltopdf
