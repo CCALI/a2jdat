@@ -50,14 +50,23 @@ For all platforms this document should work as written. You can skip to `step 4`
 
 This document should work as written but some components will likely need to be recompiled for the current node 12.
 
-if the DAT does not properly start after using these instructions, the likely culprit is `muhummara`. This will be indicated by running `pm2 logs` and seeing a node version error. To rectify
+if the DAT does not properly start after using these instructions, the likely culprit is `muhammara`. This will be indicated by running `pm2 logs` and seeing a node version error. To rectify
 follow the instructions below:
 
 1.) go to the `a2jdat` folder
 
-2.) run `npm install muhummara` in a command line
+2.) run `npm install muhammara` in a command line
 
 3.) restart DAT process and test
+
+if that doesn't work try below:
+
+1.) `cd node_modules/muhammara`
+
+2.) `node-pre-gyp rebuild`
+
+3.) restart DAT process and test
+
 
 ## Installation instructions
 
