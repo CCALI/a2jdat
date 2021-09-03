@@ -132,7 +132,7 @@ describe('lib/util/paths', function () {
       const expected = [ 1, 2, 3 ]
 
       paths.getTemplateIds(files).then((templateIds) => {
-        assert.equal(templateIds, expected)
+        assert.deepEqual(templateIds, expected)
       })
     })
   })
