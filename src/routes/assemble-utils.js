@@ -118,6 +118,7 @@ function getRequestPdfOptions (req) {
   } = req.body
 
   const pdfOptions = {}
+  pdfOptions['header-html'] = `${headerFooterUrl}${encodeURIComponent(header)}&hideOnFirstPage=true`
 
   if (header) {
     const h = encodeURIComponent(header)
