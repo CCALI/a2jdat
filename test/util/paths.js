@@ -30,10 +30,17 @@ describe('lib/util/paths', function () {
 
   describe('getTemplatesPath', function () {
     it('is correct when username and guideId provided', function () {
-      const promise = paths.getTemplatesPath({ username: currentUser, guideId: '1261' })
+      const promise = paths.getTemplatesPath({
+        username: currentUser,
+        guideId: '1261'
+      })
 
       return promise.then(templatesPath => {
-        const expected = path.join(guidesDir, currentUser, 'guides/Guide1261/templates.json')
+        const expected = path.join(
+          guidesDir,
+          currentUser,
+          'guides/Guide1261/templates.json'
+        )
         assert.equal(templatesPath, expected)
       })
     })
@@ -54,17 +61,25 @@ describe('lib/util/paths', function () {
 
       return promise.then(templatesPath => {
         const expected = path.join(fileDataUrl, 'templates.json')
-        assert.equal(templatesPath, expected, 'absolute fileDataUrl should be used as-is')
+        assert.equal(
+          templatesPath,
+          expected,
+          'absolute fileDataUrl should be used as-is'
+        )
       })
     })
 
     it('is correct when an actual fileDataUrl url is provided', function () {
-      const fileDataUrl = 'http://my.awesome.server/path/to/files'
+      const fileDataUrl = 'http://a2j.org/path/to/files'
       const promise = paths.getTemplatesPath({ fileDataUrl })
 
       return promise.then(templatesPath => {
         const expected = path.join(fileDataUrl, 'templates.json')
-        assert.equal(templatesPath, expected, 'absolute fileDataUrl should be used as-is')
+        assert.equal(
+          templatesPath,
+          expected,
+          'absolute fileDataUrl should be used as-is'
+        )
       })
     })
   })
@@ -78,7 +93,11 @@ describe('lib/util/paths', function () {
       })
 
       return promise.then(templatePath => {
-        const expected = path.join(guidesDir, currentUser, 'guides/Guide20/template20.json')
+        const expected = path.join(
+          guidesDir,
+          currentUser,
+          'guides/Guide20/template20.json'
+        )
         assert.equal(templatePath, expected)
       })
     })
@@ -92,7 +111,12 @@ describe('lib/util/paths', function () {
       })
 
       return promise.then(templatePath => {
-        const expected = path.join(projectDirname(), 'js/viewer', fileDataUrl, `template20.json`)
+        const expected = path.join(
+          projectDirname(),
+          'js/viewer',
+          fileDataUrl,
+          `template20.json`
+        )
         assert.equal(templatePath, expected)
       })
     })
@@ -112,7 +136,7 @@ describe('lib/util/paths', function () {
     })
 
     it('is correct when an actual fileDataUrl url is provided', function () {
-      const fileDataUrl = 'http://my.awesome.server/path/to/files'
+      const fileDataUrl = 'http://a2j.org/path/to/files'
 
       const promise = paths.getTemplatePath({
         fileDataUrl,
@@ -122,6 +146,17 @@ describe('lib/util/paths', function () {
       return promise.then(templatesPath => {
         const expected = path.join(fileDataUrl, 'template20.json')
         assert.equal(templatesPath, expected)
+      })
+    })
+  })
+
+  describe('getTemplateIds', function () {
+    it('should return a list of template ID\'s', function () {
+      const files = [ 'template1.json', 'template2.old.json', 'guide3.json', 'template2.json', 'template3.json' ]
+      const expected = [ 1, 2, 3 ]
+
+      paths.getTemplateIds(files).then((templateIds) => {
+        assert.deepEqual(templateIds, expected)
       })
     })
   })
