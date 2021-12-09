@@ -24,6 +24,22 @@ function deleteFile (filepath) {
   })
 }
 
+function getErrorForAnswers (answers) {
+  if (answers === undefined) {
+    return 'You must provide the answers property in the request body'
+  }
+  try {
+    const parsed = JSON.parse(answers)
+    if (parsed instanceof Object) {
+      return ''
+    } else {
+      return 'Answers must be a valid stringified JSON object'
+    }
+  } catch (error) {
+    return `Failed to parse answers with error: ${error}`
+  }
+}
+
 function getTemporaryPdfFilepath () {
   return path.join(storage.getTemporaryDirectory(), `test-${uuid.v4()}.pdf`)
 }
@@ -204,6 +220,7 @@ async function createInlineStyles (path) {
 module.exports = {
   setDownloadHeaders,
   deleteFile,
+  getErrorForAnswers,
   getTemporaryPdfFilepath,
   mergeGuideVariableWithAnswers,
   filterTemplatesByCondition,
