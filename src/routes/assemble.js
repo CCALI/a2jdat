@@ -22,6 +22,7 @@ const {data} = require('../util/data')
 
 const {
   setDownloadHeaders,
+  getErrorForAnswers,
   getTemporaryPdfFilepath,
   mergeGuideVariableWithAnswers,
   filterTemplatesByCondition,
@@ -61,7 +62,13 @@ if (config) {
 }
 
 const checkPresenceOf = function (req, res, next) {
-  const { guideId, fileDataUrl } = req.body
+  const { answers, fileDataUrl, guideId } = req.body
+
+  const answersError = getErrorForAnswers(answers)
+  if (answersError) {
+    return res.status(400)
+      .send(answersError)
+  }
 
   if (!guideId && !fileDataUrl) {
     return res.status(400)
@@ -98,31 +105,25 @@ async function assemble (req, res) {
   }
 
   const answers = JSON.parse(answersJson)
-  const allTemplates = await getTemplatesForGuide(username, guideId, fileDataUrl)
-  const isTemplateLogical = filterTemplatesByCondition(answers)
-  const templates = allTemplates.filter(isTemplateLogical)
   const guideVariables = await getVariablesForGuide(username, guideId, fileDataUrl)
   const variables = mergeGuideVariableWithAnswers(guideVariables, answers)
-  const segments = segmentTextAndPdfTemplates(templates)
-  const isSingleTemplateAssemble = !!templateId
 
- // if single template, this is Author Test Assemble
-  if (isSingleTemplateAssemble) {
-    const template = await getSingleTemplate(templateId, fileDataUrl)
-    return renderPdfForTextTemplates([template], req, fileDataUrl, answers)
-    .then(pdf => {
-      setDownloadHeaders(res, downloadName)
-      return new Promise((resolve, reject) => {
-        res.sendFile(pdf, error => {
-          if (error) {
-            debug('Single assemble error:', error)
-            return reject(error)
-          }
-          return resolve()
-        })
-      })
-    })
-  }
+  const segments = await (async () => {
+    // if single template, this is Author Test Assemble
+    const isSingleTemplateAssemble = !!templateId
+    if (isSingleTemplateAssemble) {
+      const template = await getSingleTemplate(templateId, fileDataUrl)
+      return [{
+        isPdf: false,
+        templates: [template]
+      }]
+    } else {
+      const allTemplates = await getTemplatesForGuide(username, guideId, fileDataUrl)
+      const isTemplateLogical = filterTemplatesByCondition(answers)
+      const templates = allTemplates.filter(isTemplateLogical)
+      return segmentTextAndPdfTemplates(templates)
+    }
+  })()
 
   const pdfFiles = await Promise.all(segments.map(
     ({isPdf, templates}) => {
@@ -201,11 +202,14 @@ async function renderPdfForPdfTemplates (username, templates, variables, answers
 
 async function combinePdfFiles (pdfFiles) {
   const [firstPdf, ...otherPdfs] = pdfFiles
-  const writer = hummus.createWriterToModify(firstPdf)
-  otherPdfs.forEach(pdf => {
-    writer.appendPDFPagesFromPDF(pdf)
-  })
-  writer.end()
+
+  if (otherPdfs.length > 0) {
+    const writer = hummus.createWriterToModify(firstPdf)
+    otherPdfs.forEach(pdf => {
+      writer.appendPDFPagesFromPDF(pdf)
+    })
+    writer.end()
+  }
 
   return firstPdf
 }
