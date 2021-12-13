@@ -1,82 +1,27 @@
-const he = require('he')
 const url = require('url')
-const path = require('path')
-const ssr = require('done-ssr')
-const through = require('through2')
 const feathers = require('feathers')
-const wkhtmltopdf = require('wkhtmltopdf')
 const filenamify = require('../util/pdf-filename')
 const forwardCookies = require('../util/cookies').forwardCookies
-const getCssBundlePath = require('../util/get-css-bundle-path')
 
-const fs = require('fs')
-const hummus = require('muhammara')
-const {storage} = require('../pdf/storage')
-const {overlayer} = require('../pdf/overlayer')
-const {getTemplateOverlay} = require('@caliorg/a2jdeps/pdf/assemble')
 const paths = require('../util/paths')
-const templates = require('../routes/templates')
-const files = require('../util/files')
 const user = require('../util/user')
-const {data} = require('../util/data')
 
 const {
+  checkPresenceOf,
+  combinePdfFiles,
   setDownloadHeaders,
-  getErrorForAnswers,
-  getTemporaryPdfFilepath,
   mergeGuideVariableWithAnswers,
   filterTemplatesByCondition,
   segmentTextAndPdfTemplates,
-  getXmlVariables,
-  getRequestPdfOptions,
-  getConfig,
-  getConfigPdfOptions,
-  setWkhtmltopdfCommand,
-  getHeaderFooterNode,
-  parseHeaderFooterHTML,
-  createInlineStyles
+  getSingleTemplate,
+  getTemplatesForGuide,
+  getVariablesForGuide,
+  renderPdfForPdfTemplates,
+  renderPdfForTextTemplates
 } = require('./assemble-utils')
 
 const debug = require('debug')('A2J:assemble')
 const router = feathers.Router()
-const configPath = path.join(__dirname, '..', '..', 'package.json!npm')
-debug('SSR configPath', configPath)
-
-const render = ssr({
-  main: 'a2jdat/server.stache!done-autorender',
-  config: configPath
-}, {
-  // this allows for debugging in Node --inspect-brk
-  // setting a max of 20 seconds before done-ssr times out
-  // this does not prevent done-ssr from finishing earlier if
-  // the render is complete.
-  //
-  timeout: 20000
-})
-
-const config = getConfig()
-let configPdfOptions = {}
-if (config) {
-  setWkhtmltopdfCommand(config)
-  configPdfOptions = getConfigPdfOptions(config)
-}
-
-const checkPresenceOf = function (req, res, next) {
-  const { answers, fileDataUrl, guideId } = req.body
-
-  const answersError = getErrorForAnswers(answers)
-  if (answersError) {
-    return res.status(400)
-      .send(answersError)
-  }
-
-  if (!guideId && !fileDataUrl) {
-    return res.status(400)
-      .send('You must provide either guideId or fileDataUrl')
-  }
-
-  next()
-}
 
 router.post('/', checkPresenceOf, (req, res) => {
   assemble(req, res).catch(error => {
@@ -149,148 +94,6 @@ async function assemble (req, res) {
       return resolve()
     })
   })
-}
-
-async function getSingleTemplate (templateId, fileDataUrl) {
-  return paths.getTemplatePath({ username: '', guideID: '', templateId, fileDataUrl })
-  .then((path) => files.readJSON({ path }))
-}
-
-async function getTemplatesForGuide (username, guideId, fileDataUrl) {
-  const templateIndex = await templates.getTemplatesJSON({username, guideId, fileDataUrl})
-  // if guideId not defined, we are in standalone viewer/dat assembly using fileDataUrl
-  // set guideId to the local templates.json value
-  if (fileDataUrl && !guideId) {
-    guideId = templateIndex.guideId
-  }
-  const templateIds = templateIndex.templateIds
-  const templatesPromises = templateIds
-  .map(templateId => paths
-      .getTemplatePath({guideId, templateId, username, fileDataUrl})
-      .then(path => files.readJSON({path}))
-    )
-
-  const isActive = template =>
-    template.active === 'true' || template.active === true
-
-  return Promise.all(templatesPromises)
-    .then(templates => templates.filter(isActive))
-}
-
-async function getVariablesForGuide (username, guideId, fileDataUrl) {
-  const xml = await data.getGuideXml(username, guideId, fileDataUrl)
-  if (!xml) {
-    return {}
-  }
-  const variables = getXmlVariables(xml)
-  return variables.reduce((map, variable) => {
-    map[variable.name.toLowerCase()] = variable
-    return map
-  }, {})
-}
-
-async function renderPdfForPdfTemplates (username, templates, variables, answers, fileDataUrl) {
-  const pdfFiles = await Promise.all(templates.map(async template => {
-    const filepath = await storage.duplicateTemplatePdf(username, template.guideId, template.templateId, fileDataUrl)
-    const overlay = getTemplateOverlay(template, variables, answers)
-    await overlayer.forkWithOverlay(filepath, overlay)
-    return filepath
-  }))
-
-  return combinePdfFiles(pdfFiles)
-}
-
-async function combinePdfFiles (pdfFiles) {
-  const [firstPdf, ...otherPdfs] = pdfFiles
-
-  if (otherPdfs.length > 0) {
-    const writer = hummus.createWriterToModify(firstPdf)
-    otherPdfs.forEach(pdf => {
-      writer.appendPDFPagesFromPDF(pdf)
-    })
-    writer.end()
-  }
-
-  return firstPdf
-}
-
-async function renderPdfForTextTemplates (templates, req, fileDataUrl, answers) {
-  const __cssBundlePath = getCssBundlePath()
-  const pdfFiles = await Promise.all(templates.map(template => {
-    // resolve any a2j-variable tags with their answers
-    template.header = parseHeaderFooterHTML(getHeaderFooterNode(template.header), answers)
-    template.footer = parseHeaderFooterHTML(getHeaderFooterNode(template.footer), answers)
-
-    // make unique request here for each templateId
-    const newBody = Object.assign({}, req.body,
-      { templateId: template.templateId,
-        header: template.header,
-        hideHeaderOnFirstPage: template.hideHeaderOnFirstPage,
-        footer: template.footer,
-        hideFooterOnFirstPage: template.hideFooterOnFirstPage,
-        fileDataUrl
-      }
-    )
-
-    const donessrRequestObject = Object.assign({}, {
-      url: req.url,
-      protocol: req.protocol,
-      originalUrl: req.originalUrl,
-      get: req.get,
-      headers: req.headers,
-      body: newBody,
-      connection: req.connection,
-      __cssBundlePath: __cssBundlePath
-    })
-
-    const reqPdfOptions = Object.assign({}, getRequestPdfOptions(donessrRequestObject))
-    const pdfOptions = Object.assign({},
-      reqPdfOptions,
-      configPdfOptions,
-      {
-        'header-spacing': 5,
-        'footer-spacing': 5,
-        'margin-top': 20
-      }
-    )
-
-    return createPdfForTextTemplate(donessrRequestObject, pdfOptions).then(pdfStream => {
-      const temporaryPath = getTemporaryPdfFilepath()
-      const fileStream = fs.createWriteStream(temporaryPath)
-      return new Promise((resolve, reject) => {
-        pdfStream.on('error', error => reject(error))
-        fileStream.on('finish', () => resolve(temporaryPath))
-        fileStream.on('error', error => reject(error))
-        pdfStream.pipe(fileStream)
-      })
-    })
-  }))
-
-  return combinePdfFiles(pdfFiles)
-}
-
-async function createPdfForTextTemplate (request, pdfOptions) {
-  let renderedWebpage = await getHtmlForRichText(request)
-  // inline the css
-  const inlineStyles = await createInlineStyles(request.__cssBundlePath)
-  renderedWebpage = renderedWebpage.replace('<style></style>', inlineStyles)
-
-  return getPdfForHtml(renderedWebpage, pdfOptions)
-}
-
-function getHtmlForRichText (request) {
-  const webpageStream = render(request)
-  return new Promise((resolve, reject) => {
-    webpageStream.pipe(through(buffer => {
-      const html = buffer.toString()
-      resolve(he.decode(html))
-    }))
-    webpageStream.on('error', error => reject(error))
-  })
-}
-
-function getPdfForHtml (html, pdfOptions) {
-  return wkhtmltopdf(html, pdfOptions)
 }
 
 router.get('/header-footer', forwardCookies, function (req, res) {
