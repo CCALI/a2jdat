@@ -1,5 +1,5 @@
 module.exports = `<!doctype html>
-<html>
+<html lang="en">
   <head>
     <style>
       body {
