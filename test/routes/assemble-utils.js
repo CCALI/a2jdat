@@ -4,6 +4,7 @@ const Q = require('q')
 const files = require('../../src/util/files')
 
 const {
+  combineHtmlFiles,
   getHeaderFooterNode,
   getErrorForAnswers,
   parseHeaderFooterHTML,
@@ -12,6 +13,68 @@ const {
 } = require('../../src/routes/assemble-utils')
 
 describe('assemble-utils test', function () {
+  describe('combineHtmlFiles', function () {
+    it('combines multiple html files into one', function () {
+      const htmlFiles = [
+        `
+          <!doctype html>
+          <html>
+            <head><title>First title</title></head>
+            <body><p>First body text</p></body>
+          </html>
+        `,
+        `
+          <!doctype html>
+          <html>
+            <head><title>Second title</title></head>
+            <body><p>Second body text</p></body>
+          </html>
+        `
+      ]
+      const combinedHtml = combineHtmlFiles(htmlFiles)
+      console.log('combinedHtml:', combinedHtml)
+      assert.equal(
+        combinedHtml,
+        `
+          <!doctype html>
+          <html>
+            <head><title>First title</title></head>
+            <body><p>First body text</p><p>Second body text</p></body>
+          </html>
+        `
+      )
+    })
+    it('combines files with multiple children in the body', function () {
+      const htmlFiles = [
+        `
+          <!doctype html>
+          <html>
+            <head><title>First title</title></head>
+            <body><p>First body text</p></body>
+          </html>
+        `,
+        `
+          <!doctype html>
+          <html>
+            <head><title>Second title</title></head>
+            <body><p>Second body text 1</p><p>Second body text 2</p></body>
+          </html>
+        `
+      ]
+      const combinedHtml = combineHtmlFiles(htmlFiles)
+      assert.equal(
+        combinedHtml,
+        `
+          <!doctype html>
+          <html>
+            <head><title>First title</title></head>
+            <body><p>First body text</p><p>Second body text 1</p><p>Second body text 2</p></body>
+          </html>
+        `
+      )
+    })
+  })
+
   describe('getErrorForAnswers', function () {
     it('returns an error when answers is not provided', function () {
       const error = getErrorForAnswers()

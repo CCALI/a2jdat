@@ -67,6 +67,27 @@ function checkPresenceOf (req, res, next) {
   next()
 }
 
+function combineHtmlFiles (htmlFiles) {
+  const [firstHtmlFile, ...otherHtmlFiles] = htmlFiles
+
+  if (otherHtmlFiles.length > 0) {
+    const firstHtmlFileParsed = parse(firstHtmlFile)
+    const firstHtmlFileBody = firstHtmlFileParsed.querySelector('body')
+
+    otherHtmlFiles.map(htmlFile => {
+      return parseBodyHTML(htmlFile)
+    }).forEach(childNodes => {
+      childNodes.forEach(childNode => {
+        firstHtmlFileBody.appendChild(childNode)
+      })
+    })
+
+    return firstHtmlFileParsed.toString()
+  }
+
+  return firstHtmlFile
+}
+
 async function combinePdfFiles (pdfFiles) {
   const [firstPdf, ...otherPdfs] = pdfFiles
 
@@ -81,18 +102,59 @@ async function combinePdfFiles (pdfFiles) {
   return firstPdf
 }
 
-async function createPdfForTextTemplate (request, pdfOptions) {
-  let renderedWebpage = await getHtmlForRichText(request)
+async function createHtmlForPdfTemplate (request) {
+  // TODO: will update this in a separate PR
+  return `
+    <!doctype html>
+    <html>
+      <head><title>TODO: PDF title</title></head>
+      <body><p>TODO: here is where X PDF template will appear in the generated PDF</p></body>
+    </html>
+  `
+}
+
+async function createHtmlForTextTemplate (request) {
+  const renderedWebpage = await getHtmlForRichText(request)
   // inline the css
   const inlineStyles = await createInlineStyles(request.__cssBundlePath)
-  renderedWebpage = renderedWebpage.replace('<style></style>', inlineStyles)
+  return renderedWebpage.replace('<style></style>', inlineStyles)
+}
 
+async function createPdfForTextTemplate (request, pdfOptions) {
+  const renderedWebpage = await createHtmlForTextTemplate(request)
   return getPdfForHtml(renderedWebpage, pdfOptions)
 }
 
 function deleteFile (filepath) {
   return new Promise((resolve, reject) => {
     fs.unlink(filepath, error => error ? reject(error) : resolve())
+  })
+}
+
+function getDoneSsrRequestObject (answers, fileDataUrl, template, req) {
+  // resolve any a2j-variable tags with their answers
+  template.header = parseHeaderFooterHTML(getHeaderFooterNode(template.header), answers)
+  template.footer = parseHeaderFooterHTML(getHeaderFooterNode(template.footer), answers)
+
+  // make unique request here for each templateId
+  const newBody = Object.assign({}, req.body, {
+    templateId: template.templateId,
+    header: template.header,
+    hideHeaderOnFirstPage: template.hideHeaderOnFirstPage,
+    footer: template.footer,
+    hideFooterOnFirstPage: template.hideFooterOnFirstPage,
+    fileDataUrl
+  })
+
+  return Object.assign({}, {
+    url: req.url,
+    protocol: req.protocol,
+    originalUrl: req.originalUrl,
+    get: req.get,
+    headers: req.headers,
+    body: newBody,
+    connection: req.connection,
+    __cssBundlePath: getCssBundlePath()
   })
 }
 
@@ -133,7 +195,7 @@ async function getSingleTemplate (templateId, fileDataUrl) {
 }
 
 async function getTemplatesForGuide (username, guideId, fileDataUrl) {
-  const templateIndex = await templates.getTemplatesJSON({username, guideId, fileDataUrl})
+  const templateIndex = await templates.getTemplatesJSON({ username, guideId, fileDataUrl })
   // if guideId not defined, we are in standalone viewer/dat assembly using fileDataUrl
   // set guideId to the local templates.json value
   if (fileDataUrl && !guideId) {
@@ -169,6 +231,16 @@ async function getVariablesForGuide (username, guideId, fileDataUrl) {
   }, {})
 }
 
+async function renderHtmlForTemplates (templates, req, fileDataUrl, answers) {
+  const htmlFiles = await Promise.all(templates.map(template => {
+    const donessrRequestObject = getDoneSsrRequestObject(answers, fileDataUrl, template, req)
+    const isPdf = isPdfTemplate(template)
+    return isPdf ? createHtmlForPdfTemplate(donessrRequestObject) : createHtmlForTextTemplate(donessrRequestObject)
+  }))
+
+  return combineHtmlFiles(htmlFiles)
+}
+
 async function renderPdfForPdfTemplates (username, templates, variables, answers, fileDataUrl) {
   const pdfFiles = await Promise.all(templates.map(async template => {
     const filepath = await storage.duplicateTemplatePdf(username, template.guideId, template.templateId, fileDataUrl)
@@ -181,34 +253,8 @@ async function renderPdfForPdfTemplates (username, templates, variables, answers
 }
 
 async function renderPdfForTextTemplates (templates, req, fileDataUrl, answers) {
-  const __cssBundlePath = getCssBundlePath()
   const pdfFiles = await Promise.all(templates.map(template => {
-    // resolve any a2j-variable tags with their answers
-    template.header = parseHeaderFooterHTML(getHeaderFooterNode(template.header), answers)
-    template.footer = parseHeaderFooterHTML(getHeaderFooterNode(template.footer), answers)
-
-    // make unique request here for each templateId
-    const newBody = Object.assign({}, req.body,
-      { templateId: template.templateId,
-        header: template.header,
-        hideHeaderOnFirstPage: template.hideHeaderOnFirstPage,
-        footer: template.footer,
-        hideFooterOnFirstPage: template.hideFooterOnFirstPage,
-        fileDataUrl
-      }
-    )
-
-    const donessrRequestObject = Object.assign({}, {
-      url: req.url,
-      protocol: req.protocol,
-      originalUrl: req.originalUrl,
-      get: req.get,
-      headers: req.headers,
-      body: newBody,
-      connection: req.connection,
-      __cssBundlePath: __cssBundlePath
-    })
-
+    const donessrRequestObject = getDoneSsrRequestObject(answers, fileDataUrl, template, req)
     const reqPdfOptions = Object.assign({}, getRequestPdfOptions(donessrRequestObject))
     const pdfOptions = Object.assign({},
       reqPdfOptions,
@@ -383,6 +429,21 @@ function getHeaderFooterNode (headerOrFooterHtml) {
   return parse(headerOrFooterHtml)
 }
 
+function parseBodyHTML (html) {
+  const parsed = parse(html)
+
+  const bodyChildNodes = parsed.querySelectorAll('body').map((bodyNode) => {
+    return bodyNode.childNodes
+  })
+
+  return bodyChildNodes.reduce((previousValue, currentValue) => {
+    return [
+      ...previousValue,
+      ...currentValue
+    ]
+  }, [])
+}
+
 function parseHeaderFooterHTML (headerFooterNode, answers) {
   if (answers) {
     headerFooterNode.querySelectorAll('a2j-variable').forEach((variableNode) => {
@@ -410,6 +471,7 @@ async function createInlineStyles (path) {
 
 module.exports = {
   checkPresenceOf,
+  combineHtmlFiles,
   combinePdfFiles,
   setDownloadHeaders,
   deleteFile,
@@ -428,6 +490,7 @@ module.exports = {
   setWkhtmltopdfCommand,
   getHeaderFooterNode,
   parseHeaderFooterHTML,
+  renderHtmlForTemplates,
   renderPdfForPdfTemplates,
   renderPdfForTextTemplates,
   createInlineStyles
