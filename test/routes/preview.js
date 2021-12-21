@@ -46,7 +46,7 @@ describe('POST /api/preview', function () {
 
         const htmlTitles = parsedHtml.querySelectorAll('title')
         assert.equal(htmlTitles.length, 1, 'the document has one title')
-        assert.equal(htmlTitles.toString(), '<title>A2J Test Assemble</title>', 'the title is correct')
+        assert.equal(htmlTitles.toString(), '<title>A2J document preview</title>', 'the title is correct')
 
         const htmlFooters = parsedHtml.querySelectorAll('footer')
         assert.equal(htmlFooters.length, 1, 'the document has one footer')
@@ -55,6 +55,87 @@ describe('POST /api/preview', function () {
         const htmlHeaders = parsedHtml.querySelectorAll('header')
         assert.equal(htmlHeaders.length, 1, 'the document has one header')
         assert.equal(htmlHeaders.toString(), `<header>${template2115.header}</header>`, 'the header is correct')
+
+        done()
+      })
+      .catch(error => done(error))
+  })
+  // TODO: this test is skipped due to the issue described in https://github.com/CCALI/a2jdat/issues/100
+  it.skip('renders a message when there are no active templates', function (done) {
+    const fileDataUrl = path.join(__dirname, '..', 'data', 'DEV', 'guides', 'Guide1264')
+    request(app)
+      .post('/api/preview')
+      .set('Accept', 'text/html')
+      .send({
+        answers: '{}',
+        fileDataUrl
+      })
+      .expect('Content-Type', /html/)
+      .expect(200)
+      .then(response => {
+        const parsedHtml = parse(response.res.text)
+
+        const htmlTitles = parsedHtml.querySelectorAll('title')
+        assert.equal(htmlTitles.length, 1, 'the document has one title')
+        assert.equal(htmlTitles.toString(), '<title>A2J document preview</title>', 'the title is correct')
+
+        const htmlParagraphs = parsedHtml.querySelectorAll('p')
+        assert.equal(htmlParagraphs.length, 1, 'the document has one paragraph')
+        assert.equal(htmlParagraphs.toString(), '<p>No documents could be previewed because there are no active text templates.</p>', 'the message is correct')
+
+        done()
+      })
+      .catch(error => done(error))
+  })
+  // TODO: this test is skipped due to the issue described in https://github.com/CCALI/a2jdat/issues/100
+  it.skip('renders a message when the only active templates have conditional logic', function (done) {
+    const fileDataUrl = path.join(__dirname, '..', 'data', 'DEV', 'guides', 'Guide1265')
+    request(app)
+      .post('/api/preview')
+      .set('Accept', 'text/html')
+      .send({
+        answers: '{}',
+        fileDataUrl
+      })
+      .expect('Content-Type', /html/)
+      .expect(200)
+      .then(response => {
+        const parsedHtml = parse(response.res.text)
+
+        const htmlTitles = parsedHtml.querySelectorAll('title')
+        assert.equal(htmlTitles.length, 1, 'the document has one title')
+        assert.equal(htmlTitles.toString(), '<title>A2J document preview</title>', 'the title is correct')
+
+        const htmlParagraphs = parsedHtml.querySelectorAll('p')
+        assert.equal(htmlParagraphs.length, 1, 'the document has one paragraph')
+        assert.equal(htmlParagraphs.toString(), '<p>No documents could be previewed because the only active templates have conditional logic.</p>', 'the message is correct')
+
+        done()
+      })
+      .catch(error => done(error))
+  })
+  // TODO: this test is skipped due to the issue described in https://github.com/CCALI/a2jdat/issues/100
+  it.skip('renders a message when there are only PDF templates', function (done) {
+    const fileDataUrl = path.join(__dirname, '..', 'data', 'DEV', 'guides', 'Guide7216')
+    request(app)
+      .post('/api/preview')
+      .set('Accept', 'text/html')
+      .send({
+        answers: '{}',
+        fileDataUrl
+      })
+      .expect('Content-Type', /html/)
+      .expect(200)
+      .then(response => {
+        const parsedHtml = parse(response.res.text)
+
+        const htmlTitles = parsedHtml.querySelectorAll('title')
+        assert.equal(htmlTitles.length, 1, 'the document has one title')
+        assert.equal(htmlTitles.toString(), '<title>A2J document preview for “Sample Exercise Template”</title>', 'the title is correct')
+
+        const htmlParagraphs = parsedHtml.querySelectorAll('p')
+        assert.equal(htmlParagraphs.length, 1, 'the document has one paragraph')
+        assert.equal(htmlParagraphs.toString(), '<p>A preview for “Sample Exercise Template” could not be generated because it is a PDF.</p>', 'the message is correct')
 
         done()
       })

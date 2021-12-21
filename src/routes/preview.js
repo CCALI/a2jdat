@@ -40,23 +40,37 @@ async function preview (req, res) {
 
   const answers = JSON.parse(answersJson)
 
-  const templates = await (async () => {
+  const previewHtml = await (async () => {
     // if single template, this is Author Test Assemble
     const isSingleTemplateAssemble = !!templateId
-    if (isSingleTemplateAssemble) {
-      const template = await getSingleTemplate(templateId, fileDataUrl)
-      return [template]
-    } else {
-      const allTemplates = await getTemplatesForGuide(username, guideId, fileDataUrl)
-      const isTemplateLogical = filterTemplatesByCondition(answers)
-      return allTemplates.filter(isTemplateLogical)
-    }
-  })()
 
-  const previewHtml = await renderHtmlForTemplates(templates, req, fileDataUrl, answers).catch(error => {
-    debug('Assemble error:', error)
-    throw error
-  })
+    const activeTemplates = isSingleTemplateAssemble ? [await getSingleTemplate(templateId, fileDataUrl)] : await getTemplatesForGuide(username, guideId, fileDataUrl)
+    if (activeTemplates.length === 0) {
+      return `
+        <!doctype html>
+        <html>
+          <title>A2J document preview</title>
+          <body><p>No documents could be previewed because there are no active text templates.</p></body>
+        </html>
+      `
+    }
+
+    const templatesWithoutConditions = activeTemplates.filter(filterTemplatesByCondition(answers))
+    if (templatesWithoutConditions.length === 0) {
+      return `
+        <!doctype html>
+        <html>
+          <title>A2J document preview</title>
+          <body><p>No documents could be previewed because the only active templates have conditional logic.</p></body>
+        </html>
+      `
+    }
+
+    return renderHtmlForTemplates(templatesWithoutConditions, req, fileDataUrl, answers).catch(error => {
+      debug('Assemble error:', error)
+      throw error
+    })
+  })()
 
   /* Set download headers */
   res.set({
