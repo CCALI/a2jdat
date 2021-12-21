@@ -1,0 +1,45 @@
+{
+	"guideId": "7216",
+	"templateId": 3,
+	"title": "Untitled Template",
+	"active": false,
+	"header": "",
+	"hideHeaderOnFirstPage": false,
+	"footer": "",
+	"hideFooterOnFirstPage": false,
+	"rootNode": {
+		"tag": "a2j-pdf",
+		"state": {
+			"operator": "is-true",
+			"leftOperand": "",
+			"rightOperand": "",
+			"rightOperandType": "variable"
+		},
+		"children": [],
+		"id": "cjpvgs22y00043bb4g5s7lrtc",
+		"hasPdf": true,
+		"documentOptions": {
+			"fontName": "Lato",
+			"fontSize": "12",
+			"variableOptions": {},
+			"addendumOptions": {}
+		},
+		"pages": [
+			{
+				"domSize": {
+					"width": 765,
+					"height": 990
+				},
+				"pdfSize": {
+					"width": 612,
+					"height": 792
+				}
+			}
+		],
+		"boxes": []
+	},
+	"createdAt": 1545241313021,
+	"buildOrder": 3,
+	"deleted": true,
+	"updatedAt": 1545242174378
+}

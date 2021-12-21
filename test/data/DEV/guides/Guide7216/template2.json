@@ -1,0 +1,438 @@
+{
+	"guideId": "7216",
+	"templateId": 2,
+	"title": "Sample Exercise Template",
+	"active": true,
+	"rootNode": {
+		"id": "cjpu8kayw00013bb4r70ku9z8",
+		"tag": "a2j-pdf",
+		"state": {
+			"operator": "is-true",
+			"leftOperand": "",
+			"rightOperand": "",
+			"rightOperandType": "variable",
+			"hasConditionalLogic": false
+		},
+		"children": [],
+		"hasPdf": true,
+		"documentOptions": {
+			"fontName": "Lato",
+			"fontSize": "12",
+			"variableOptions": {
+				"user name full te": {
+					"overflowStyle": "overflow-to-addendum",
+					"addendumLabel": "",
+					"checkIcon": "normal-check",
+					"isGroup": false,
+					"isCheck": false
+				},
+				"address city te": {
+					"overflowStyle": "overflow-to-addendum",
+					"isGroup": false
+				},
+				"address street te": {
+					"overflowStyle": "overflow-to-addendum",
+					"addendumLabel": "Address overflow",
+					"isGroup": true
+				},
+				"address state mc": {},
+				"today date da": {},
+				"address zipcode te": {
+					"overflowStyle": "overflow-to-addendum",
+					"isGroup": false
+				},
+				"phone number te": {
+					"overflowStyle": "overflow-to-addendum",
+					"isGroup": false
+				},
+				"marital status mc": {
+					"isCheck": true
+				},
+				"have children tf": {},
+				"number of children nu": {},
+				"child name first te": {
+					"overflowStyle": "overflow-to-addendum",
+					"addendumLabel": "Child first name",
+					"isGroup": false
+				},
+				"child dob da": {},
+				"child name last te": {
+					"overflowStyle": "overflow-to-addendum",
+					"addendumLabel": "Child last name",
+					"checkIcon": "normal-check",
+					"isGroup": false,
+					"isCheck": false
+				},
+				"purpose of form te": {
+					"overflowStyle": "overflow-to-addendum",
+					"addendumLabel": "Purpose of form",
+					"isGroup": true
+				},
+				"all live with user tf": {
+					"overflowStyle": "clip-overflow",
+					"addendumLabel": "",
+					"checkIcon": "normal-check",
+					"isGroup": false,
+					"isCheck": false
+				},
+				"petitioner name first te": {
+					"overflowStyle": "clip-overflow",
+					"addendumLabel": "",
+					"checkIcon": "normal-check",
+					"isGroup": false,
+					"isCheck": false
+				},
+				"variable test te": {
+					"overflowStyle": "clip-overflow",
+					"addendumLabel": "",
+					"checkIcon": "normal-check",
+					"isGroup": false,
+					"isCheck": false
+				}
+			},
+			"addendumOptions": {
+				"pageSize": {
+					"width": 612,
+					"height": 792
+				},
+				"margins": {
+					"top": 216,
+					"left": 216,
+					"right": 216,
+					"bottom": 216
+				}
+			}
+		},
+		"pages": [
+			{
+				"domSize": {
+					"width": 765,
+					"height": 990
+				},
+				"pdfSize": {
+					"width": 612,
+					"height": 792
+				}
+			}
+		],
+		"boxes": [
+			{
+				"id": "vb-1",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 140,
+					"left": 149,
+					"width": 524,
+					"height": 25
+				},
+				"page": 0,
+				"variable": "User name full TE",
+				"variableValue": null,
+				"isInverted": false
+			},
+			{
+				"id": "vb-2",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 167,
+					"left": 196,
+					"width": 269,
+					"height": 27
+				},
+				"page": 0,
+				"variable": "Today date DA",
+				"variableValue": null
+			},
+			{
+				"id": "vb-3",
+				"groupId": "gp-6",
+				"isSelected": false,
+				"area": {
+					"top": 242,
+					"left": 200.875,
+					"width": 330.45831298828125,
+					"height": 23
+				},
+				"page": 0,
+				"variable": "Address street TE",
+				"variableValue": null
+			},
+			{
+				"id": "vb-4",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 277,
+					"left": 203.875,
+					"width": 443.125,
+					"height": 26
+				},
+				"page": 0,
+				"variable": "Address city TE",
+				"variableValue": null
+			},
+			{
+				"id": "vb-5",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 306,
+					"left": 195,
+					"width": 89,
+					"height": 17
+				},
+				"page": 0,
+				"variable": "Address state MC"
+			},
+			{
+				"id": "vb-6",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 327,
+					"left": 220,
+					"width": 149,
+					"height": 14
+				},
+				"page": 0,
+				"variable": "Address zipcode TE",
+				"variableValue": null
+			},
+			{
+				"id": "vb-7",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 373,
+					"left": 200,
+					"width": 239,
+					"height": 25
+				},
+				"page": 0,
+				"variable": "Phone number TE",
+				"variableValue": null
+			},
+			{
+				"id": "vb-8",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 441,
+					"left": 139.875,
+					"width": 7,
+					"height": 12
+				},
+				"page": 0,
+				"variable": "Marital status MC",
+				"variableValue": "Married"
+			},
+			{
+				"id": "vb-9",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 529,
+					"left": 137.875,
+					"width": 7,
+					"height": 12
+				},
+				"page": 0,
+				"variable": "Marital status MC",
+				"variableValue": "Widowed"
+			},
+			{
+				"id": "vb-10",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 471,
+					"left": 139.875,
+					"width": 7,
+					"height": 12
+				},
+				"page": 0,
+				"variable": "Marital status MC",
+				"variableValue": "Single"
+			},
+			{
+				"id": "vb-11",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 499,
+					"left": 138.875,
+					"width": 7,
+					"height": 12
+				},
+				"page": 0,
+				"variable": "Marital status MC",
+				"variableValue": "Divorced"
+			},
+			{
+				"id": "vb-12",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 557,
+					"left": 246,
+					"width": 9,
+					"height": 9
+				},
+				"page": 0,
+				"variable": "Have children TF",
+				"variableValue": null
+			},
+			{
+				"id": "vb-13",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 558,
+					"left": 292,
+					"width": 9,
+					"height": 9
+				},
+				"page": 0,
+				"variable": "Have children TF",
+				"variableValue": null,
+				"isInverted": true
+			},
+			{
+				"id": "vb-14",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 574,
+					"left": 394,
+					"width": 29,
+					"height": 25
+				},
+				"page": 0,
+				"variable": "Number of children NU",
+				"variableValue": null
+			},
+			{
+				"id": "vb-24",
+				"groupId": "gp-15",
+				"isSelected": false,
+				"area": {
+					"top": 655.75,
+					"left": 96,
+					"width": 584,
+					"height": 16.25
+				},
+				"page": 0,
+				"variable": "Purpose of form TE",
+				"variableValue": null
+			},
+			{
+				"id": "vb-25",
+				"groupId": "gp-15",
+				"isSelected": false,
+				"area": {
+					"top": 676.75,
+					"left": 95,
+					"width": 584,
+					"height": 16.25
+				},
+				"page": 0,
+				"variable": "Purpose of form TE",
+				"variableValue": null
+			},
+			{
+				"id": "vb-26",
+				"groupId": "gp-15",
+				"isSelected": false,
+				"area": {
+					"top": 695.75,
+					"left": 96,
+					"width": 584,
+					"height": 16.25
+				},
+				"page": 0,
+				"variable": "Purpose of form TE",
+				"variableValue": null
+			},
+			{
+				"id": "vb-27",
+				"groupId": "gp-15",
+				"isSelected": false,
+				"area": {
+					"top": 713.75,
+					"left": 96,
+					"width": 584,
+					"height": 16.25
+				},
+				"page": 0,
+				"variable": "Purpose of form TE",
+				"variableValue": null
+			},
+			{
+				"id": "vb-28",
+				"groupId": "gp-15",
+				"isSelected": false,
+				"area": {
+					"top": 732.75,
+					"left": 95,
+					"width": 584,
+					"height": 16.25
+				},
+				"page": 0,
+				"variable": "Purpose of form TE",
+				"variableValue": null
+			},
+			{
+				"id": "vb-64",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 614.0078125,
+					"left": 312.2578125,
+					"width": 10,
+					"height": 11
+				},
+				"page": 0,
+				"variable": "All live with user TF",
+				"variableValue": null,
+				"isInverted": false
+			},
+			{
+				"id": "vb-65",
+				"groupId": "",
+				"isSelected": false,
+				"area": {
+					"top": 614.0078125,
+					"left": 356.2578125,
+					"width": 10,
+					"height": 11
+				},
+				"page": 0,
+				"variable": "All live with user TF",
+				"variableValue": null,
+				"isInverted": true
+			},
+			{
+				"id": "vb-0",
+				"groupId": "gp-6",
+				"isSelected": false,
+				"area": {
+					"top": 245,
+					"left": 535.3333129882812,
+					"width": 104,
+					"height": 20
+				},
+				"page": 0,
+				"variable": "Address street TE",
+				"variableValue": null
+			}
+		]
+	},
+	"header": "",
+	"hideHeaderOnFirstPage": false,
+	"footer": "",
+	"hideFooterOnFirstPage": false,
+	"createdAt": 1545167047719,
+	"updatedAt": 1629385942425
+}

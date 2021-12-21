@@ -32,7 +32,6 @@ describe('assemble-utils test', function () {
         `
       ]
       const combinedHtml = combineHtmlFiles(htmlFiles)
-      console.log('combinedHtml:', combinedHtml)
       assert.equal(
         combinedHtml,
         `

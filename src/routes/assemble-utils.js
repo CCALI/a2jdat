@@ -102,13 +102,12 @@ async function combinePdfFiles (pdfFiles) {
   return firstPdf
 }
 
-async function createHtmlForPdfTemplate (request) {
-  // TODO: will update this in a separate PR
+function createHtmlForPdfTemplate (template) {
   return `
     <!doctype html>
     <html>
-      <head><title>TODO: PDF title</title></head>
-      <body><p>TODO: here is where X PDF template will appear in the generated PDF</p></body>
+      <head><title>A2J document preview for “${template.title}”</title></head>
+      <body><p>A preview for “${template.title}” could not be generated because it is a PDF.</p></body>
     </html>
   `
 }
@@ -131,7 +130,7 @@ function deleteFile (filepath) {
   })
 }
 
-function getDoneSsrRequestObject (answers, fileDataUrl, template, req) {
+function getDoneSsrRequestObject (answers, fileDataUrl, renderTemplateFootersAndHeaders, template, req) {
   // resolve any a2j-variable tags with their answers
   template.header = parseHeaderFooterHTML(getHeaderFooterNode(template.header), answers)
   template.footer = parseHeaderFooterHTML(getHeaderFooterNode(template.footer), answers)
@@ -143,7 +142,8 @@ function getDoneSsrRequestObject (answers, fileDataUrl, template, req) {
     hideHeaderOnFirstPage: template.hideHeaderOnFirstPage,
     footer: template.footer,
     hideFooterOnFirstPage: template.hideFooterOnFirstPage,
-    fileDataUrl
+    fileDataUrl,
+    renderTemplateFootersAndHeaders
   })
 
   return Object.assign({}, {
@@ -233,9 +233,12 @@ async function getVariablesForGuide (username, guideId, fileDataUrl) {
 
 async function renderHtmlForTemplates (templates, req, fileDataUrl, answers) {
   const htmlFiles = await Promise.all(templates.map(template => {
-    const donessrRequestObject = getDoneSsrRequestObject(answers, fileDataUrl, template, req)
     const isPdf = isPdfTemplate(template)
-    return isPdf ? createHtmlForPdfTemplate(donessrRequestObject) : createHtmlForTextTemplate(donessrRequestObject)
+    if (isPdf) {
+      return createHtmlForPdfTemplate(template)
+    }
+    const donessrRequestObject = getDoneSsrRequestObject(answers, fileDataUrl, true, template, req)
+    return createHtmlForTextTemplate(donessrRequestObject)
   }))
 
   return combineHtmlFiles(htmlFiles)
@@ -254,7 +257,7 @@ async function renderPdfForPdfTemplates (username, templates, variables, answers
 
 async function renderPdfForTextTemplates (templates, req, fileDataUrl, answers) {
   const pdfFiles = await Promise.all(templates.map(template => {
-    const donessrRequestObject = getDoneSsrRequestObject(answers, fileDataUrl, template, req)
+    const donessrRequestObject = getDoneSsrRequestObject(answers, fileDataUrl, false, template, req)
     const reqPdfOptions = Object.assign({}, getRequestPdfOptions(donessrRequestObject))
     const pdfOptions = Object.assign({},
       reqPdfOptions,

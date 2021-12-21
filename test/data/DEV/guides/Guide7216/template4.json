@@ -1,0 +1,46 @@
+{
+	"title": "Bob's text template",
+	"active": true,
+	"rootNode": {
+		"id": "ckx87ra6c0000396kyvrh98ro",
+		"tag": "a2j-template",
+		"state": {
+			"sectionCounter": "none",
+			"fontFamily": "sans-serif",
+			"fontSize": "14",
+			"operator": "is-equal",
+			"leftOperand": "Client first name TE",
+			"rightOperand": "Bob",
+			"rightOperandType": "text",
+			"hasConditionalLogic": true
+		},
+		"children": [
+			{
+				"id": "ckx87rbx20001396kjjgjwz2m",
+				"tag": "a2j-rich-text",
+				"state": {
+					"notes": "",
+					"userContent": "<p>This template is just for Bobs. If you&#39;re not Bob, you don&#39;t get a text template.&nbsp;</p>\n\n<p>Name:&nbsp;<a2j-variable name=\"Client first name TE\"></a2j-variable></p>\n"
+				},
+				"children": []
+			},
+			{
+				"id": "ckx87vis00002396k5f1mxryi",
+				"tag": "a2j-rich-text",
+				"state": {
+					"notes": "",
+					"userContent": "<p>Add some text...</p>\n"
+				},
+				"children": []
+			}
+		]
+	},
+	"header": "",
+	"hideHeaderOnFirstPage": false,
+	"footer": "",
+	"hideFooterOnFirstPage": false,
+	"createdAt": 1639613859817,
+	"guideId": "7216",
+	"templateId": 4,
+	"updatedAt": 1639614063033
+}
