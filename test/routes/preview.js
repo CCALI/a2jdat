@@ -1,4 +1,5 @@
 const assert = require('assert')
+const { HtmlValidate } = require('html-validate')
 const { parse } = require('node-html-parser')
 const path = require('path')
 const request = require('supertest')
@@ -136,6 +137,33 @@ describe('POST /api/preview', function () {
         const htmlParagraphs = parsedHtml.querySelectorAll('p')
         assert.equal(htmlParagraphs.length, 1, 'the document has one paragraph')
         assert.equal(htmlParagraphs.toString(), '<p>A preview for “Sample Exercise Template” could not be generated because it is a PDF.</p>', 'the message is correct')
+
+        done()
+      })
+      .catch(error => done(error))
+  })
+  // TODO: this test is skipped due to the issue described in https://github.com/CCALI/a2jdat/issues/100
+  it.only('returns valid html', function (done) {
+    // Set a longer timeout, otherwise the HTML generation will fail
+    this.timeout(10000)
+
+    const fileDataUrl = path.join(__dirname, '..', 'data', 'DEV', 'guides', 'Guide1263')
+    request(app)
+      .post('/api/preview')
+      .set('Accept', 'text/html')
+      .send({
+        answers: '{}',
+        fileDataUrl
+      })
+      .expect('Content-Type', /html/)
+      .expect(200)
+      .then(response => {
+        const htmlvalidate = new HtmlValidate();
+        const report = htmlvalidate.validateString(response.res.text);
+        console.log('report:', report);
+        debugger;
+
+        // assert.equal(htmlHeaders.toString(), `<header>${template2115.header}</header>`, 'the header is correct')
 
         done()
       })
