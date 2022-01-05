@@ -1,13 +1,13 @@
 # A2JDAT
 
-This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 12+ to run properly. The recommended additional tools for windows are volta and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
+This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 16+ to run properly. The recommended additional tools for windows are volta and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
 
 Within this repo and releases you'll find a `.zip` file containing the minified JavaScript source for the DAT and sample configuration files
 
 NOTE: By downloading this application, you are agreeing to the terms included in the user license [LICENSE.md](https://github.com/CCALI/a2jdat/blob/develop/LICENSE.md).
 
 ## Hosting
-The DAT requires nodejs 12.20.1+. Any system supporting nodejs 12.20.1+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
+The DAT requires nodejs 16.13.1+. Any system supporting nodejs 16.13.1+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
 
 While other server environments may work, they have not been tested. Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/a2jdat) repo to let us know any steps taken so that we may share with others.
 
@@ -48,7 +48,7 @@ and skip to step 13 of installation instructions for calibration
 #### All Platforms + common solutions to common problems
 For all platforms this document should work as written. You can skip to `step 4` of `Installation Instructions` for systems with working DAT setup. Starting from `step 1` may upgrade those DAT subdependencies which is expected to cause no issues.
 
-This document should work as written but some components will likely need to be recompiled for the current node 12.
+This document should work as written but some components will likely need to be recompiled for the current node 16.
 
 if the DAT does not properly start after using these instructions, the likely culprit is `muhammara`. This will be indicated by running `pm2 logs` and seeing a node version error. To rectify
 follow the instructions below:
@@ -83,11 +83,11 @@ after installation of nvm, type the following commands in the terminal to instal
 
 #### For *nix users
 ```
-nvm install 12.20.1
-nvm use 12.20.1
+nvm install 16.13.1
+nvm use 16.13.1
 ```
 
-which should produce the version number of node we installed, `12.20.1`
+which should produce the version number of node we installed, `16.13.1`
 
 #### For Windows Users:
 
@@ -99,8 +99,8 @@ Node.exe must be added to the IIS_IUSRS group in order to be allowed to handle r
 ```icacls “%programfiles%\nodejs\node.exe” /grant IIS_IUSRS:rx```
 
 ```
-volta install node@12.20.1
-volta install node@12.20.1
+volta install node@16.13.1
+volta install node@16.13.1
 ```
  
 #### For all users
