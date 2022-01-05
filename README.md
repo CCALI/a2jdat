@@ -70,24 +70,21 @@ if that doesn't work try below:
 
 ## Installation instructions
 
-1.) Install nvm if using \*nix or volta on windows. **NVM for windows is no longer supported**.
+
+0.)  **NVM is no longer supported and should be uninstalled and replced with voltajs**. For \*nix users uninstall nvm if installed
+```
+rm -rf #NVM_HOME
+```
+
+
+1.) Install voltajs (https://github.com/volta-cli/volta).
 The DAT is a simple restful API that requires nodejs to serve endpoints. Though, you are free to install the node version that the DAT targets and manage it manually, the recommended method is to use a node version manager which will allow the simultaneous installation of multiple versions of node and mitigates several administration issues.
 
-Obtain volta for windows here: https://github.com/volta-cli/volta
+Obtain volta here: https://docs.volta.sh/guide/getting-started
 
-For \*nix go here: https://github.com/creationix/nvm
-
-2.) Install node through nvm or volta
-after installation of nvm, type the following commands in the terminal to install the required node version
+For \*nix, per the instructions above run : `curl https://get.volta.sh | bash`
 
 
-#### For *nix users
-```
-nvm install 16.13.1
-nvm use 16.13.1
-```
-
-which should produce the version number of node we installed, `16.13.1`
 
 #### For Windows Users:
 
@@ -98,16 +95,28 @@ The node installer might not always set the PATH variable correctly. Check Envir
 Node.exe must be added to the IIS_IUSRS group in order to be allowed to handle requests. This must occur every time the node executable is switched through nvm or volta. Open a command prompt and run as administrator and run
 ```icacls “%programfiles%\nodejs\node.exe” /grant IIS_IUSRS:rx```
 
+#### For all users
+
+
+2.) Install node through volta
+after installation of nvm, type the following commands in the terminal to install the required node version
+
 ```
-volta install node@16.13.1
+volta install node
+```
+Which should automatically download the right version as it is pinned in `package.json`
+Or 
+```
 volta install node@16.13.1
 ```
  
-#### For all users
 
 check that the install was successful by typing
 
 `node -v`
+
+which should produce the version number of node we installed, `16.13.1`
+
 
 3.) Install global DAT dependencies and subdependencies:
 
