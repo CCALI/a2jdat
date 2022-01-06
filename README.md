@@ -59,7 +59,11 @@ follow the instructions below:
 
 3.) restart DAT process and test
 
+<<<<<<< HEAD
 if that doesn't work try below:
+=======
+## Installation instructions
+>>>>>>> origin
 
 1.) `cd node_modules/muhammara`
 
@@ -151,6 +155,7 @@ The recommended process manager is pm2 (http://pm2.keymetrics.io/). Install it w
 
 `npm install pm2 -g`
 
+<<<<<<< HEAD
 ##### Notes to Windows users about iisnode:
 a.) Older versions of this project used iisnode (https://github.com/tjanczuk/iisnode) iisnode is no longer supported. For migration instructions go here: https://www.a2jauthor.org/content/migrate-pm2-iis. To make pm2 independent of logouts follow the instructions here to install `pm2-windows-service`.
 
@@ -167,6 +172,29 @@ then
 `pm2-service-install -n PM2`
 
 The correct PM2 executable path for volta **must point to pm2 node_modules folder** for default pm2 installs in volta this path is `C:\Users\a2j\AppData\Local\Volta\tools\image\packages\pm2\node_modules\pm2`. This corresponds to the `PM2_SERVICE_PM2_DIR` environment variable.
+=======
+##### Note to Windows users:  
+Older versions of this project used iisnode (https://github.com/tjanczuk/iisnode) iisnode is no longer supported. For migration instructions go here: https://www.a2jauthor.org/content/migrate-pm2-iis. To make pm2 independent of logouts follow the instructions below reproduced from here (https://blog.cloudboost.io/nodejs-pm2-startup-on-windows-db0906328d75) to install `pm2-windows-service` (https://github.com/jon-hall/pm2-windows-service). 
+
+a.) open terminal as admin and run `npm install -g pm2-windows-service`
+
+b.) As admin run the command `pm2-service-install -n PM2`
+
+c.) use the following settings when prompted
+
+```
+? Perform environment setup (recommended)? Yes
+? Set PM2_HOME? Yes
+? PM2_HOME value (this path should be accessible to the service user and
+should not contain any “user-context” variables [e.g. %APPDATA%]): c:\etc\.pm2\
+? Set PM2_SERVICE_SCRIPTS (the list of start-up scripts for pm2)? No
+? Set PM2_SERVICE_PM2_DIR (the location of the global pm2 to use with the service)? [recommended] Yes
+? Specify the directory containing the pm2 version to be used by the
+service C:\USERS\<USER>\APPDATA\ROAMING\NPM\node_modules\pm2\index.js
+PM2 service installed and started.
+```
+
+>>>>>>> origin
 
 7.) Download the latest DAT from repo through git or from https://github.com/CCALI/A2JDAT/releases into your webroot or preferred directory on your web server.
 
