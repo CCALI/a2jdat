@@ -306,6 +306,7 @@ navigate to the DAT folder in a terminal
 To configure pm2 to autoload on startup run the following command with the desired pm2 processes running
 `pm2 save`
 
+## Calibrate
 13.) Testing and calibration
 To ensure that the documents produced are identical to a2jauthor, run and generate a pdf through the `DAT calibration` guide provided in `/calibration` folder. With the PDF viewed at actual size and captured in screenshot The letter height of the Arial text should be 68pixels. A canonical png and pdf is included in the `/calibration` folder for comparison.
 
