@@ -50,7 +50,25 @@ For all platforms this document should work as written. You can skip to `step 4`
 
 This document should work as written but some components will likely need to be recompiled for the current node 16.
 
-if the DAT does not properly start after using these instructions, the likely culprit is `muhammara`. This will be indicated by running `pm2 logs` and seeing a node version error. To rectify
+if the DAT does not properly start after using these instructions, the likely culprit is `muhammara`. This will be indicated by running `pm2 logs` and seeing a node version error. To confirm this, run `pm2 logs` which will yield something like 
+```
+2|dev-hydr | was compiled against a different Node.js version using
+2|dev-hydr | NODE_MODULE_VERSION 72. This version of Node.js requires
+2|dev-hydr | NODE_MODULE_VERSION 93. Please try re-compiling or re-installing
+2|dev-hydr | the module (for instance, using `npm rebuild` or `npm install`).
+2|dev-hydr |     at Object.Module._extensions..node (node:internal/modules/cjs/loader:1183:18)
+2|dev-hydr |     at Module.load (node:internal/modules/cjs/loader:981:32)
+2|dev-hydr |     at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+2|dev-hydr |     at Module.require (node:internal/modules/cjs/loader:1005:19)
+2|dev-hydr |     at Module.Hook._require.Module.require (/home/a2jprod/.volta/tools/image/packages/pm2/lib/node_modules/pm2/node_modules/require-in-the-middle/index.js:80:39)
+2|dev-hydr |     at require (node:internal/modules/cjs/helpers:102:18)
+2|dev-hydr |     at Object.<anonymous> (/vol/data/sites/hydra.a2jauthor.org/a2jdat/node_modules/re2/re2.js:3:13)
+2|dev-hydr |     at Module._compile (node:internal/modules/cjs/loader:1101:14)
+2|dev-hydr |     at Object.Module._extensions..js (node:internal/modules/cjs/loader:1153:10)
+2|dev-hydr |     at Module.load (node:internal/modules/cjs/loader:981:32)
+```
+
+To rectify
 follow the instructions below:
 
 1.) go to the `a2jdat` folder
