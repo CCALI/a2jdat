@@ -221,7 +221,7 @@ The Most important keys are:
 `GUIDES_DIR`- required to establish location of templates
 `GUIDES_URL`- relative web location of guides
 `WKHTMLTOPDF_PATH`- path to binary of WKHTMLTOPDF
-VIEWER_PATH- path to viewer
+`VIEWER_PATH`- path to folder containing guides folder. For most standalone installs this will be the path to the extracted viewer which should enclose a `guides` folder. For A2JAuthor installations this will be the folder containing `userfiles`
 WKHTMLTOPDF_DPI- desired default dpi to render pdfs. CALI recommends minimum of 300
 `WKHTMLTOPDF_ZOOM`- The correction factor used to render text pdfs. This is necessary to standardize rendering across all platforms. On most \*nix systems this should be 1.6711 and on most windows systems this should be 1.5709.
 
