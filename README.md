@@ -6,7 +6,7 @@
 ##### 3. A2J Document Automation Tool - https://github.com/CCALI/a2jdat
 ##### 4. A2J Dependencies - https://github.com/CCALI/a2jdeps
 
-This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 12+ to run properly. The recommended additional tools for windows are volta and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
+This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 12+ to run properly. The recommended additional tools for windows are volta and iisnode and volta for *nix. 
 
 Within this repo and releases you'll find a `.zip` file containing the minified JavaScript source for the DAT and sample configuration files
 
@@ -45,9 +45,9 @@ Containing Folder
 
 **The WKHTMLTOPDF_ZOOM settings have changed. YOU MUST SET THIS CORRECTLY TO MATCH PDFs GENERATED ON A2JAUTHOR.ORG** On most \*nix systems this should be 1.6711 and on most windows systems this should be 1.5709.
 
-Assuming you have all up-to-date dependencies (wkhtmltopdf, node, npm, pm2) you can run
+Assuming you have all up-to-date dependencies (wkhtmltopdf, node, npm, pm2m volta) you can run
 `npm run deploy`
-and skip to step 13 of installation instructions for calibration
+and skip to step 13 of installation instructions for calibration. Otherwise you must start from step 0.
 
 ## General Installation instructions
 
@@ -123,15 +123,22 @@ Node.exe must be added to the IIS_IUSRS group in order to be allowed to handle r
 
 
 2.) Install node through volta
-after installation of nvm, type the following commands in the terminal to install the required node version
+navigate to the root folder of the DAT (contains `a2jdat` folder) and type the following commands in the terminal to install the required node version
 
 ```
-volta install node
+volta install node@16.13
 ```
-Which should automatically download the right version as it is pinned in `package.json`
-Or 
+
+check that the install was successful by typing
+
+`node -v`
+
+which should produce the version number of node we installed, `16.13.1`
+
+navigate to the a2jdat subdiectory and check the node version in volta Which should automatically download the right version as it is pinned in `package.json`
+by running
 ```
-volta install node@16.13.1
+volta list
 ```
  
 
@@ -149,6 +156,8 @@ https://git-scm.com/download/win
 As of this documents writing, the latest version for the system in the azure demo environment is located at:
 https://github.com/git-for-windows/git/releases/download/v2.30.1.windows.1/Git-2.30.1-64-bit.exe
 
+for windows, this README will use `Git Bash` for terminal commands
+
 4.) Install build tools:
 
 The node sub-dependencies for the DAT must be built locally on the target system and requires build tools for languages other than node. Run the command below to install the necessary build tools:
@@ -156,6 +165,10 @@ The node sub-dependencies for the DAT must be built locally on the target system
 ##### For windows
 use the command below to install
 ```npm --add-python-to-path='true' --debug install --global windows-build-tools```
+
+
+install python 3
+https://www.python.org/downloads/release/python-3104/
 
 This requires administrator access. This is a very lengthy install- it can take over an hour even on a fast machine with a fantastic connection.
 
@@ -190,7 +203,7 @@ npm install
 then
 `pm2-service-install -n PM2`
 
-The correct PM2 executable path for volta **must point to pm2 node_modules folder** for default pm2 installs in volta this path is `C:\Users\a2j\AppData\Local\Volta\tools\image\packages\pm2\node_modules\pm2`. This corresponds to the `PM2_SERVICE_PM2_DIR` environment variable.
+The correct PM2 executable path for volta **must point to pm2 node_modules folder** for default pm2 installs in volta this path is `%USERPROFILE%\AppData\Local\Volta\tools\image\packages\pm2\node_modules\pm2`. This corresponds to the `PM2_SERVICE_PM2_DIR` environment variable.
 
 7.) Download the latest DAT from repo through git or from https://github.com/CCALI/A2JDAT/releases into your webroot or preferred directory on your web server.
 
@@ -213,6 +226,8 @@ npm run build:server
 ```
 
 if you encounter an error in this step it can often be resolved by deleting the `node_modules` folder in the `a2jdat` folder and repeating the step. If that does not work, re-clone into a brand new directory and run the commands in that directory.
+
+if you encounter `EINTEGRITY` errors delete `package-lock.json` and rerun `npm run deploy`
 
 9.) Configure DAT
 Since the A2J software can run on many platforms, there is a small amount of platform specific configuration that is necessary. Navigate to `a2jdat\samples.configs\`. There are two samples for config.json (config.json.nix.sample and config.json.win.sample) that will need to be edited and saved to the containing folder of the a2jdat as `config.json`. Edit and save the sample appropriate to your platform (config.json.nix.sample for \*NIX systems and config.json.win.sample for Windows systems).
