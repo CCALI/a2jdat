@@ -6,7 +6,7 @@
 ##### 3. A2J Document Automation Tool - https://github.com/CCALI/a2jdat
 ##### 4. A2J Dependencies - https://github.com/CCALI/a2jdeps
 
-This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 12+ to run properly. The recommended additional tools for windows are volta and iisnode and volta for *nix. 
+This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 12+ to run properly. The recommended additional tools for windows are volta and pm2-windows-service and volta for *nix. 
 
 Within this repo and releases you'll find a `.zip` file containing the minified JavaScript source for the DAT and sample configuration files
 
@@ -45,7 +45,7 @@ Containing Folder
 
 **The WKHTMLTOPDF_ZOOM settings have changed. YOU MUST SET THIS CORRECTLY TO MATCH PDFs GENERATED ON A2JAUTHOR.ORG** On most \*nix systems this should be 1.6711 and on most windows systems this should be 1.5709.
 
-Assuming you have all up-to-date dependencies (wkhtmltopdf, node, npm, pm2m volta) you can run
+Assuming you have all up-to-date dependencies (wkhtmltopdf, node, npm, pm2, volta) you can run
 `npm run deploy`
 and skip to step 13 of installation instructions for calibration. Otherwise you must start from step 0.
 
@@ -178,7 +178,7 @@ This requires administrator access. This is a very lengthy install- it can take 
 
 
 5.) Install wkhtmltopdf
-WKHTMLTOPDF is the engine used to transform interview data into PDF from an intermediate HTML file. Download the latest stable version from https://wkhtmltopdf.org/downloads.html and install it in the VM. *Make a note of the install path*.
+WKHTMLTOPDF is the engine used to transform interview data into PDF from an intermediate HTML file. Download the latest stable version from https://wkhtmltopdf.org/downloads.html and install it in the environment. *Make a note of the install path*.
 
 6.) Install node process manager
 The node process manager handles automatic restarts, memory mangement, monitoring, and error logging.
