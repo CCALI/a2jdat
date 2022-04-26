@@ -13,7 +13,7 @@ Within this repo and releases you'll find a `.zip` file containing the minified 
 NOTE: By downloading this application, you are agreeing to the terms included in the user license [LICENSE.md](https://github.com/CCALI/a2jdat/blob/develop/LICENSE.md).
 
 ## Hosting
-The DAT requires nodejs 16.13.1+. Any system supporting nodejs 16.13.1+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
+The DAT requires nodejs 16.14.2+. Any system supporting nodejs 16.14.2+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
 
 While other server environments may work, they have not been tested. Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/a2jdat) repo to let us know any steps taken so that we may share with others.
 
@@ -126,14 +126,14 @@ Node.exe must be added to the IIS_IUSRS group in order to be allowed to handle r
 navigate to the root folder of the DAT (contains `a2jdat` folder) and type the following commands in the terminal to install the required node version
 
 ```
-volta install node@16.13
+volta install node@16.14.2
 ```
 
 check that the install was successful by typing
 
 `node -v`
 
-which should produce the version number of node we installed, `16.13.1`
+which should produce the version number of node we installed, `16.14.2`
 
 navigate to the a2jdat subdiectory and check the node version in volta Which should automatically download the right version as it is pinned in `package.json`
 by running
@@ -146,7 +146,7 @@ check that the install was successful by typing
 
 `node -v`
 
-which should produce the version number of node we installed, `16.13.1`
+which should produce the version number of node we installed, `16.14.2`
 
 
 3.) Install global DAT dependencies and subdependencies:
