@@ -6,14 +6,14 @@
 ##### 3. A2J Document Automation Tool - https://github.com/CCALI/a2jdat
 ##### 4. A2J Dependencies - https://github.com/CCALI/a2jdeps
 
-This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 12+ to run properly. The recommended additional tools for windows are volta and iisnode. The recommended additional tools for \*nix servers are nvm and pm2.
+This repo hosts the distributable production version of the A2J Document Assembly Tool (DAT). The document assembly tool is an optional piece of software used for producing pdf documents at the end of interviews. It requires the A2Jviewer, wkhtmltopdf and nodejs 12+ to run properly. The recommended additional tools for windows are volta and pm2-windows-service and volta for *nix. 
 
 Within this repo and releases you'll find a `.zip` file containing the minified JavaScript source for the DAT and sample configuration files
 
 NOTE: By downloading this application, you are agreeing to the terms included in the user license [LICENSE.md](https://github.com/CCALI/a2jdat/blob/develop/LICENSE.md).
 
 ## Hosting
-The DAT requires nodejs 12.20.1+. Any system supporting nodejs 12.20.1+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
+The DAT requires nodejs 16.13.1+. Any system supporting nodejs 16.13.1+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
 
 While other server environments may work, they have not been tested. Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/a2jdat) repo to let us know any steps taken so that we may share with others.
 
@@ -45,18 +45,36 @@ Containing Folder
 
 **The WKHTMLTOPDF_ZOOM settings have changed. YOU MUST SET THIS CORRECTLY TO MATCH PDFs GENERATED ON A2JAUTHOR.ORG** On most \*nix systems this should be 1.6711 and on most windows systems this should be 1.5709.
 
-Assuming you have all up-to-date dependencies (wkhtmltopdf, node, npm, pm2) you can run
+Assuming you have all up-to-date dependencies (wkhtmltopdf, node, npm, pm2, volta) you can run
 `npm run deploy`
-and skip to step 13 of installation instructions for calibration
+and skip to step 13 of installation instructions for calibration. Otherwise you must start from step 0.
 
 ## General Installation instructions
 
 #### All Platforms + common solutions to common problems
 For all platforms this document should work as written. You can skip to `step 4` of `Installation Instructions` for systems with working DAT setup. Starting from `step 1` may upgrade those DAT subdependencies which is expected to cause no issues.
 
-This document should work as written but some components will likely need to be recompiled for the current node 12.
+This document should work as written but some components will likely need to be recompiled for the current node 16.
 
-if the DAT does not properly start after using these instructions, the likely culprit is `muhammara`. This will be indicated by running `pm2 logs` and seeing a node version error. To rectify
+if the DAT does not properly start after using these instructions, the likely culprit is `muhammara`. This will be indicated by running `pm2 logs` and seeing a node version error. To confirm this, run `pm2 logs` which will yield something like 
+```
+2|dev-hydr | was compiled against a different Node.js version using
+2|dev-hydr | NODE_MODULE_VERSION 72. This version of Node.js requires
+2|dev-hydr | NODE_MODULE_VERSION 93. Please try re-compiling or re-installing
+2|dev-hydr | the module (for instance, using `npm rebuild` or `npm install`).
+2|dev-hydr |     at Object.Module._extensions..node (node:internal/modules/cjs/loader:1183:18)
+2|dev-hydr |     at Module.load (node:internal/modules/cjs/loader:981:32)
+2|dev-hydr |     at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+2|dev-hydr |     at Module.require (node:internal/modules/cjs/loader:1005:19)
+2|dev-hydr |     at Module.Hook._require.Module.require (/home/a2jprod/.volta/tools/image/packages/pm2/lib/node_modules/pm2/node_modules/require-in-the-middle/index.js:80:39)
+2|dev-hydr |     at require (node:internal/modules/cjs/helpers:102:18)
+2|dev-hydr |     at Object.<anonymous> (/vol/data/sites/hydra.a2jauthor.org/a2jdat/node_modules/re2/re2.js:3:13)
+2|dev-hydr |     at Module._compile (node:internal/modules/cjs/loader:1101:14)
+2|dev-hydr |     at Object.Module._extensions..js (node:internal/modules/cjs/loader:1153:10)
+2|dev-hydr |     at Module.load (node:internal/modules/cjs/loader:981:32)
+```
+
+To rectify
 follow the instructions below:
 
 1.) go to the `a2jdat` folder
@@ -76,24 +94,21 @@ if that doesn't work try below:
 
 ## Installation instructions
 
-1.) Install nvm if using \*nix or volta on windows. **NVM for windows is no longer supported**.
+
+0.)  **NVM is no longer supported and should be uninstalled and replced with voltajs**. For \*nix users uninstall nvm if installed
+```
+rm -rf #NVM_HOME
+```
+
+
+1.) Install voltajs (https://github.com/volta-cli/volta).
 The DAT is a simple restful API that requires nodejs to serve endpoints. Though, you are free to install the node version that the DAT targets and manage it manually, the recommended method is to use a node version manager which will allow the simultaneous installation of multiple versions of node and mitigates several administration issues.
 
-Obtain volta for windows here: https://github.com/volta-cli/volta
+Obtain volta here: https://docs.volta.sh/guide/getting-started
 
-For \*nix go here: https://github.com/creationix/nvm
-
-2.) Install node through nvm or volta
-after installation of nvm, type the following commands in the terminal to install the required node version
+For \*nix, per the instructions above run : `curl https://get.volta.sh | bash`
 
 
-#### For *nix users
-```
-nvm install 12.20.1
-nvm use 12.20.1
-```
-
-which should produce the version number of node we installed, `12.20.1`
 
 #### For Windows Users:
 
@@ -104,16 +119,35 @@ The node installer might not always set the PATH variable correctly. Check Envir
 Node.exe must be added to the IIS_IUSRS group in order to be allowed to handle requests. This must occur every time the node executable is switched through nvm or volta. Open a command prompt and run as administrator and run
 ```icacls “%programfiles%\nodejs\node.exe” /grant IIS_IUSRS:rx```
 
-```
-volta install node@12.20.1
-volta install node@12.20.1
-```
- 
 #### For all users
+
+
+2.) Install node through volta
+navigate to the root folder of the DAT (contains `a2jdat` folder) and type the following commands in the terminal to install the required node version
+
+```
+volta install node@16.13
+```
 
 check that the install was successful by typing
 
 `node -v`
+
+which should produce the version number of node we installed, `16.13.1`
+
+navigate to the a2jdat subdiectory and check the node version in volta Which should automatically download the right version as it is pinned in `package.json`
+by running
+```
+volta list
+```
+ 
+
+check that the install was successful by typing
+
+`node -v`
+
+which should produce the version number of node we installed, `16.13.1`
+
 
 3.) Install global DAT dependencies and subdependencies:
 
@@ -121,6 +155,8 @@ Git is a source control manager and required for npm. This can be obtained throu
 https://git-scm.com/download/win
 As of this documents writing, the latest version for the system in the azure demo environment is located at:
 https://github.com/git-for-windows/git/releases/download/v2.30.1.windows.1/Git-2.30.1-64-bit.exe
+
+for windows, this README will use `Git Bash` for terminal commands
 
 4.) Install build tools:
 
@@ -130,6 +166,10 @@ The node sub-dependencies for the DAT must be built locally on the target system
 use the command below to install
 ```npm --add-python-to-path='true' --debug install --global windows-build-tools```
 
+
+install python 3
+https://www.python.org/downloads/release/python-3104/
+
 This requires administrator access. This is a very lengthy install- it can take over an hour even on a fast machine with a fantastic connection.
 
 #### For all platforms run the command below
@@ -138,7 +178,7 @@ This requires administrator access. This is a very lengthy install- it can take 
 
 
 5.) Install wkhtmltopdf
-WKHTMLTOPDF is the engine used to transform interview data into PDF from an intermediate HTML file. Download the latest stable version from https://wkhtmltopdf.org/downloads.html and install it in the VM. *Make a note of the install path*.
+WKHTMLTOPDF is the engine used to transform interview data into PDF from an intermediate HTML file. Download the latest stable version from https://wkhtmltopdf.org/downloads.html and install it in the environment. *Make a note of the install path*.
 
 6.) Install node process manager
 The node process manager handles automatic restarts, memory mangement, monitoring, and error logging.
@@ -163,7 +203,7 @@ npm install
 then
 `pm2-service-install -n PM2`
 
-The correct PM2 executable path for volta **must point to pm2 node_modules folder** for default pm2 installs in volta this path is `C:\Users\a2j\AppData\Local\Volta\tools\image\packages\pm2\node_modules\pm2`. This corresponds to the `PM2_SERVICE_PM2_DIR` environment variable.
+The correct PM2 executable path for volta **must point to pm2 node_modules folder** for default pm2 installs in volta this path is `%USERPROFILE%\AppData\Local\Volta\tools\image\packages\pm2\node_modules\pm2`. This corresponds to the `PM2_SERVICE_PM2_DIR` environment variable.
 
 7.) Download the latest DAT from repo through git or from https://github.com/CCALI/A2JDAT/releases into your webroot or preferred directory on your web server.
 
@@ -187,6 +227,8 @@ npm run build:server
 
 if you encounter an error in this step it can often be resolved by deleting the `node_modules` folder in the `a2jdat` folder and repeating the step. If that does not work, re-clone into a brand new directory and run the commands in that directory.
 
+if you encounter `EINTEGRITY` errors delete `package-lock.json` and rerun `npm run deploy`
+
 9.) Configure DAT
 Since the A2J software can run on many platforms, there is a small amount of platform specific configuration that is necessary. Navigate to `a2jdat\samples.configs\`. There are two samples for config.json (config.json.nix.sample and config.json.win.sample) that will need to be edited and saved to the containing folder of the a2jdat as `config.json`. Edit and save the sample appropriate to your platform (config.json.nix.sample for \*NIX systems and config.json.win.sample for Windows systems).
 
@@ -194,7 +236,7 @@ The Most important keys are:
 `GUIDES_DIR`- required to establish location of templates
 `GUIDES_URL`- relative web location of guides
 `WKHTMLTOPDF_PATH`- path to binary of WKHTMLTOPDF
-VIEWER_PATH- path to viewer
+`VIEWER_PATH`- path to folder containing guides folder. For most standalone installs this will be the path to the extracted viewer which should enclose a `guides` folder. For A2JAuthor installations this will be the folder containing `userfiles`
 WKHTMLTOPDF_DPI- desired default dpi to render pdfs. CALI recommends minimum of 300
 `WKHTMLTOPDF_ZOOM`- The correction factor used to render text pdfs. This is necessary to standardize rendering across all platforms. On most \*nix systems this should be 1.6711 and on most windows systems this should be 1.5709.
 
@@ -285,6 +327,7 @@ navigate to the DAT folder in a terminal
 To configure pm2 to autoload on startup run the following command with the desired pm2 processes running
 `pm2 save`
 
+## Calibrate
 13.) Testing and calibration
 To ensure that the documents produced are identical to a2jauthor, run and generate a pdf through the `DAT calibration` guide provided in `/calibration` folder. With the PDF viewed at actual size and captured in screenshot The letter height of the Arial text should be 68pixels. A canonical png and pdf is included in the `/calibration` folder for comparison.
 
