@@ -41,7 +41,8 @@ module.exports = {
    */
   normalizeFileDataUrl (fileDataUrl) {
     const isAbsolutePath = path.isAbsolute(fileDataUrl)
-    const isUrl = urlRegex({ exact: true }).test(fileDataUrl)
+    const isUrl = urlRegex({strict:true}).test(fileDataUrl)
+    console.log({isAbsolutePath, isUrl})
 
     return (isUrl || isAbsolutePath)
     ? fileDataUrl

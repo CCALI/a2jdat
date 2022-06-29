@@ -1,6 +1,6 @@
 {
   "name": "a2jdat",
-  "version": "8.0.0",
+  "version": "9.0.0",
   "description": "Authoring and viewer App GUI.",
   "license": "GNU AGPL v3.0",
   "author": {
@@ -191,6 +191,6 @@
     ]
   },
   "volta": {
-    "node": "16.14.2"
+    "node": "16.14.1"
   }
 }
