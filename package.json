@@ -1,6 +1,6 @@
 {
   "name": "a2jdat",
-  "version": "8.0.1",
+  "version": "8.0.2-0",
   "description": "Authoring and viewer App GUI.",
   "license": "GNU AGPL v3.0",
   "author": {
@@ -29,7 +29,7 @@
     "lint:pdf": "standard src/*.js src/**/*.js --fix && standard test/**/*.js --fix --env mocha"
   },
   "dependencies": {
-    "@caliorg/a2jdeps": "^7.1.0",
+    "@caliorg/a2jdeps": "^7.1.7-0",
     "axios": "^0.21.1",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.19.0",
