@@ -87,7 +87,7 @@ if that doesn't work try below:
 
 1.) `cd node_modules/muhammara`
 
-2.) `node-pre-gyp rebuild`
+2.) `./node_modules/node-pre-gyp/bin/node-pre-gyp rebuild`
 
 3.) restart DAT process and test
 
@@ -171,10 +171,6 @@ install python 3
 https://www.python.org/ftp/python/3.10.6/python-3.10.6-amd64.exe
 
 This requires administrator access. This is a very lengthy install- it can take over an hour even on a fast machine with a fantastic connection.
-
-#### For all platforms run the command below
-
-```npm install @mapbox/node-pre-gyp node-gyp babel-cli steal-tools@1 -g```
 
 
 5.) Install wkhtmltopdf
