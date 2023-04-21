@@ -112,6 +112,33 @@ For \*nix, per the instructions above run : `curl https://get.volta.sh | bash`
 
 #### For Windows Users:
 
+Theese instructions were written for windows server 2016
+Install docker
+
+open Powershell
+Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
+
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
+
+Install-Module PowerShellGet -RequiredVersion 2.2.4 -SkipPublisherCheck
+
+Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
+
+Install-Package -Name docker -ProviderName DockerMsftProvider
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+Get-PackageProvider -ListAvailable
+
+Get-ExecutionPolicy
+Install-PackageProvider -Name NuGet
+Install-Module DockerMsftProvider -Force
+Install-Package -Name docker -ProviderName DockerMsftProvider
+
+docker
+
+
+
 ##### Ensure Node is in PATH:
 The node installer might not always set the PATH variable correctly. Check Environment variables to ensure that there is an entry for the folder containing node.exe. For this tutorial that folder is C:\Program Files\nodejs\.
 
