@@ -116,27 +116,16 @@ Theese instructions were written for windows server 2016
 Install docker
 
 open Powershell
-Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
-
-Install-Module PowerShellGet -RequiredVersion 2.2.4 -SkipPublisherCheck
-
-Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
-
-Install-Package -Name docker -ProviderName DockerMsftProvider
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-Get-PackageProvider -ListAvailable
 
-Get-ExecutionPolicy
-Install-PackageProvider -Name NuGet
 Install-Module DockerMsftProvider -Force
+
 Install-Package -Name docker -ProviderName DockerMsftProvider
 
-docker
-
+dism /Online /Enable-Feature:Microsoft-Hyper-V /All
 
 
 ##### Ensure Node is in PATH:
