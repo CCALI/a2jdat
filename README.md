@@ -158,6 +158,8 @@ https://github.com/git-for-windows/git/releases/download/v2.37.3.windows.1/Git-2
 
 for windows, this README will use `Git Bash` for terminal commands
 
+for windows, this README will use `Git Bash` for terminal commands
+
 4.) Install build tools:
 
 The node sub-dependencies for the DAT must be built locally on the target system and requires build tools for languages other than node. Run the command below to install the necessary build tools:
@@ -168,7 +170,7 @@ use the command below to install
 
 
 install python 3
-https://www.python.org/ftp/python/3.10.6/python-3.10.6-amd64.exe
+https://www.python.org/downloads/release/python-3104/
 
 This requires administrator access. This is a very lengthy install- it can take over an hour even on a fast machine with a fantastic connection.
 
