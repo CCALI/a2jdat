@@ -13,11 +13,7 @@ Within this repo and releases you'll find a `.zip` file containing the minified 
 NOTE: By downloading this application, you are agreeing to the terms included in the user license [LICENSE.md](https://github.com/CCALI/a2jdat/blob/develop/LICENSE.md).
 
 ## Hosting
-<<<<<<< HEAD
 The DAT requires nodejs 16.17.0+. Any system supporting nodejs 16.17.0+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
-=======
-The DAT requires nodejs 16.14.2+. Any system supporting nodejs 16.14.2+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
->>>>>>> production
 
 While other server environments may work, they have not been tested. Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/a2jdat) repo to let us know any steps taken so that we may share with others.
 
@@ -130,22 +126,14 @@ Node.exe must be added to the IIS_IUSRS group in order to be allowed to handle r
 navigate to the root folder of the DAT (contains `a2jdat` folder) and type the following commands in the terminal to install the required node version
 
 ```
-<<<<<<< HEAD
 volta install node@16.17.0
-=======
-volta install node@16.14.2
->>>>>>> production
 ```
 
 check that the install was successful by typing
 
 `node -v`
 
-<<<<<<< HEAD
 which should produce the version number of node we installed, `16.17.0`
-=======
-which should produce the version number of node we installed, `16.14.2`
->>>>>>> production
 
 navigate to the a2jdat subdiectory and check the node version in volta Which should automatically download the right version as it is pinned in `package.json`
 by running
@@ -158,11 +146,7 @@ check that the install was successful by typing
 
 `node -v`
 
-<<<<<<< HEAD
 which should produce the version number of node we installed, `16.17.0`
-=======
-which should produce the version number of node we installed, `16.14.2`
->>>>>>> production
 
 
 3.) Install global DAT dependencies and subdependencies:
@@ -186,11 +170,7 @@ use the command below to install
 
 
 install python 3
-<<<<<<< HEAD
-https://www.python.org/ftp/python/3.10.6/python-3.10.6-amd64.exe
-=======
 https://www.python.org/downloads/release/python-3104/
->>>>>>> production
 
 This requires administrator access. This is a very lengthy install- it can take over an hour even on a fast machine with a fantastic connection.
 
