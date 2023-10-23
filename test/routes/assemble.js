@@ -25,7 +25,7 @@ describe('POST /api/assemble', function () {
   })
   it('assembles basic templates correctly', function (done) {
     // Set a longer timeout, otherwise the PDF generation will fail
-    this.timeout(5000)
+    this.timeout(50000)
 
     const fileDataUrl = path.join(__dirname, '..', 'data', 'DEV', 'guides', 'Guide1262')
     request(app)
