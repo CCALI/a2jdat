@@ -1,10 +1,6 @@
 {
   "name": "a2jdat",
-<<<<<<< HEAD
-  "version": "8.0.2-1",
-=======
-  "version": "9.0.1",
->>>>>>> develop
+  "version": "8.0.2-2",
   "description": "Authoring and viewer App GUI.",
   "license": "GNU AGPL v3.0",
   "author": {
