@@ -5,15 +5,13 @@ jobs:
   test-DAT-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '16'
       - run: npm install -g grunt-cli
       - run: npm run deploy
-      - uses: GabrielBB/xvfb-action@v1
-        with:
-          run: npm run test
+      - run: npm run test
       - uses: "8398a7/action-slack@v3"
         with:
           status: ${{ job.status }}
