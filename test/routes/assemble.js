@@ -36,7 +36,10 @@ describe('POST /api/assemble', function () {
       })
       .expect(200)
       .end(function (err) {
-        if (err) return done(err)
+        if (err) {
+          console.log(err)
+          return done(err)
+        }
         done()
       })
   })
