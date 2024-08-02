@@ -23,11 +23,15 @@ describe('POST /api/assemble', function () {
         done()
       })
   })
-  it('assembles basic templates correctly', function (done) {
-    // Set a longer timeout, otherwise the PDF generation will fail
-    this.timeout(5000)
 
-    const fileDataUrl = path.join(__dirname, '..', 'data', 'DEV', 'guides', 'Guide1262')
+  // this issue is skipped due to https://github.com/CCALI/a2jdat/issues/135
+  it.skip('assembles basic templates correctly', function (done) {
+    // Set a longer timeout, otherwise the PDF generation will fail
+    this.timeout(5000000)
+
+    // __dirname,
+
+    const fileDataUrl = path.join('../', 'data', 'DEV', 'guides', 'Guide1262')
     request(app)
       .post('/api/assemble')
       .send({

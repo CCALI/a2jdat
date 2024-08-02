@@ -31,7 +31,9 @@ describe('POST /api/preview', function () {
     // Set a longer timeout, otherwise the HTML generation will fail
     this.timeout(10000)
 
-    const fileDataUrl = path.join(__dirname, '..', 'data', 'DEV', 'guides', 'Guide1263')
+    // __dirname,
+
+    const fileDataUrl = path.join('../', 'data', 'DEV', 'guides', 'Guide1263')
     request(app)
       .post('/api/preview')
       .set('Accept', 'text/html')
@@ -62,7 +64,8 @@ describe('POST /api/preview', function () {
   })
   // TODO: this test is skipped due to the issue described in https://github.com/CCALI/a2jdat/issues/100
   it.skip('renders a message when there are no active templates', function (done) {
-    const fileDataUrl = path.join(__dirname, '..', 'data', 'DEV', 'guides', 'Guide1264')
+    // __dirname,
+    const fileDataUrl = path.join('../', 'data', 'DEV', 'guides', 'Guide1264')
     request(app)
       .post('/api/preview')
       .set('Accept', 'text/html')
