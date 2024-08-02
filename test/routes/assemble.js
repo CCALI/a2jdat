@@ -32,19 +32,20 @@ describe('POST /api/assemble', function () {
     // __dirname,
 
     const fileDataUrl = path.join('../', 'data', 'DEV', 'guides', 'Guide1262')
+
     request(app)
-      .post('/api/assemble')
-      .send({
-        answers: '{}',
-        fileDataUrl
-      })
-      .expect(200)
-      .end(function (err) {
-        if (err) {
-          console.log(err)
-          return done(err)
-        }
-        done()
-      })
+    .post('/api/assemble')
+    .send({
+      answers: '{}',
+      fileDataUrl
+    })
+    .expect(200)
+    .end(function (err) {
+      if (err) {
+        console.log(err)
+        return done(err)
+      }
+      done()
+    })
   })
 })

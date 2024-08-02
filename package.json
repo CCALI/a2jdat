@@ -120,7 +120,7 @@
     "steal-less": "^1.2.2",
     "steal-stache": "^4.1.5",
     "steal-tools": "^2.2.6",
-    "supertest": "^4.0.2"
+    "supertest": "^7.0.0"
   },
   "private": true,
   "steal": {
