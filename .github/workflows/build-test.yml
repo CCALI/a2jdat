@@ -13,7 +13,6 @@ jobs:
       - run: npm run deploy
       - uses: coactions/setup-xvfb@v1
         with:
-          node-version: '20'
           run: npm run test
       - uses: "8398a7/action-slack@v3"
         with:
