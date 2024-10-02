@@ -14,7 +14,7 @@ jobs:
       - uses: coactions/setup-xvfb@v1
         with:
           run: npm run test
-      - uses: "8398a7/action-slack@v4"
+      - uses: "8398a7/action-slack@v3"
         with:
           status: ${{ job.status }}
           fields: "repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest"
