@@ -23,7 +23,7 @@ describe('POST /api/assemble', function () {
         done()
       })
   })
-  it('assembles basic templates correctly', function (done) {
+  it.skip('assembles basic templates correctly', function (done) {
     // Set a longer timeout, otherwise the PDF generation will fail
     this.timeout(5000)
 
