@@ -87,7 +87,7 @@ if that doesn't work try below:
 
 1.) `cd node_modules/muhammara`
 
-2.) `node-pre-gyp rebuild`
+2.) `node_modules/\@mapbox/node-pre-gyp/bin/node-pre-gyp rebuild`
 
 3.) restart DAT process and test
 
