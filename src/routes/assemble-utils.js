@@ -46,7 +46,7 @@ function setDownloadHeaders (res, filename) {
     status: 201,
     'Content-Type': 'application/pdf',
     'Access-Control-Allow-Origin': '*',
-    'Content-Disposition': `attachment; filename=${filename}`
+    'Content-Disposition': `inline; filename=${filename}`
   })
 }
 

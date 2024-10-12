@@ -13,7 +13,7 @@ Within this repo and releases you'll find a `.zip` file containing the minified 
 NOTE: By downloading this application, you are agreeing to the terms included in the user license [LICENSE.md](https://github.com/CCALI/a2jdat/blob/develop/LICENSE.md).
 
 ## Hosting
-The DAT requires nodejs 16.17.0+. Any system supporting nodejs 16.17.0+ is supported. It has been tested on ubuntu 18, centos, and Windows Server 2016 on Azure with apache and IIS
+The DAT requires nodejs 20.17.0+. *NIX Systems supporting nodejs 20.17.0+ is supported. Windows is no longer supported. It has been tested on ubuntu 18,20, and 24; centos;
 
 While other server environments may work, they have not been tested. Should you get another hosting environment working, please do a Pull Request at the hosted [A2J DAT](https://github.com/CCALI/a2jdat) repo to let us know any steps taken so that we may share with others.
 
@@ -87,7 +87,7 @@ if that doesn't work try below:
 
 1.) `cd node_modules/muhammara`
 
-2.) `node-pre-gyp rebuild`
+2.) `node_modules/\@mapbox/node-pre-gyp/bin/node-pre-gyp rebuild`
 
 3.) restart DAT process and test
 
@@ -108,17 +108,6 @@ Obtain volta here: https://docs.volta.sh/guide/getting-started
 
 For \*nix, per the instructions above run : `curl https://get.volta.sh | bash`
 
-
-
-#### For Windows Users:
-
-##### Ensure Node is in PATH:
-The node installer might not always set the PATH variable correctly. Check Environment variables to ensure that there is an entry for the folder containing node.exe. For this tutorial that folder is C:\Program Files\nodejs\.
-
-##### Configure Node Permissions:
-Node.exe must be added to the IIS_IUSRS group in order to be allowed to handle requests. This must occur every time the node executable is switched through nvm or volta. Open a command prompt and run as administrator and run
-```icacls “%programfiles%\nodejs\node.exe” /grant IIS_IUSRS:rx```
-
 #### For all users
 
 
@@ -126,14 +115,14 @@ Node.exe must be added to the IIS_IUSRS group in order to be allowed to handle r
 navigate to the root folder of the DAT (contains `a2jdat` folder) and type the following commands in the terminal to install the required node version
 
 ```
-volta install node@16.17.0
+volta install node@20.17.0
 ```
 
 check that the install was successful by typing
 
 `node -v`
 
-which should produce the version number of node we installed, `16.17.0`
+which should produce the version number of node we installed, `20.17.0`
 
 navigate to the a2jdat subdiectory and check the node version in volta Which should automatically download the right version as it is pinned in `package.json`
 by running
@@ -146,33 +135,18 @@ check that the install was successful by typing
 
 `node -v`
 
-which should produce the version number of node we installed, `16.17.0`
+which should produce the version number of node we installed, `20.17.0`
 
 
 3.) Install global DAT dependencies and subdependencies:
 
 Git is a source control manager and required for npm. This can be obtained through most \*nix package managers. For windows, install Git by downloading latest from
-https://git-scm.com/download/win
-As of this documents writing, the latest version for the system in the azure demo environment is located at:
-https://github.com/git-for-windows/git/releases/download/v2.37.3.windows.1/Git-2.37.3-64-bit.exe
+https://git-scm.com/download/
 
-for windows, this README will use `Git Bash` for terminal commands
-
-for windows, this README will use `Git Bash` for terminal commands
 
 4.) Install build tools:
 
 The node sub-dependencies for the DAT must be built locally on the target system and requires build tools for languages other than node. Run the command below to install the necessary build tools:
-
-##### For windows
-use the command below to install
-```npm --add-python-to-path='true' --debug install --global windows-build-tools```
-
-
-install python 3
-https://www.python.org/downloads/release/python-3104/
-
-This requires administrator access. This is a very lengthy install- it can take over an hour even on a fast machine with a fantastic connection.
 
 #### For all platforms run the command below
 
@@ -190,26 +164,6 @@ The recommended process manager is pm2 (http://pm2.keymetrics.io/). Install it w
 
 `npm install pm2 -g`
 
-##### Windows users, install pm2 windows service
-`npm i pm2-windows-service -g`
-`pm2-service-install -n PM2`
-
-##### Notes to Windows users about iisnode:
-a.) Older versions of this project used iisnode (https://github.com/tjanczuk/iisnode) iisnode is no longer supported. For migration instructions go here: https://www.a2jauthor.org/content/migrate-pm2-iis. To make pm2 independent of logouts follow the instructions here to install `pm2-windows-service`.
-
-##### Notes to Windows users if pm2-windows-service fails. Run the command below (from https://github.com/jon-hall/pm2-windows-service/issues/56):
-
-```
-npm install -g npm-check-updates
-cd %USERPROFILE%\AppData\Roaming\npm\node_modules\pm2-windows-service
-ncu inquirer -u
-npm install
-```
-
-then
-`pm2-service-install -n PM2`
-
-The correct PM2 executable path for volta **must point to pm2 node_modules folder** for default pm2 installs in volta this path is `%USERPROFILE%\AppData\Local\Volta\tools\image\packages\pm2\node_modules\pm2`. This corresponds to the `PM2_SERVICE_PM2_DIR` environment variable.
 
 7.) Download the latest DAT from repo through git or from https://github.com/CCALI/A2JDAT/releases into your webroot or preferred directory on your web server.
 
@@ -277,31 +231,6 @@ a sample config.json for Linux is below:
 10.) Configure the server
 
 The DAT is a simple restful interface with endpoints located at <host>/api/. Requests must be routed through the node /bin/www target. We will setup a reverse proxy to accomplish this.
-
-##### Reverse proxy for windows (IIS)
-for IIS Advanced Request Routing will need to be setup. Follow the instructions here:
-https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/reverse-proxy-with-url-rewrite-v2-and-application-request-routing#configuring-rules-for-the-reverse-proxy
-
-for IIS/Windows below is an example web.config
-```
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-     This is an exampe configuration file for using the DAT with pm2
--->
-<configuration>
-    <system.webServer>
-        <rewrite>
-            <rules>
-                <rule name="ReverseProxyInboundRule1" stopProcessing="true">
-                    <match url="(api/.*)" />
-                    <action type="Rewrite" url="http://localhost:3000/{R:1}" />
-                </rule>
-            </rules>
-        </rewrite>
-    </system.webServer>
-</configuration>
-```
-IIS will need to be restarted before these changes take effect
 
 ##### Reverse proxy for Apache (Linux)
 for apache add the following directives to your site config
