@@ -168,7 +168,11 @@ use the command below to install
 
 
 install python 3
+<<<<<<< HEAD
 https://www.python.org/ftp/python/3.10.6/python-3.10.6-amd64.exe
+=======
+https://www.python.org/downloads/release/python-3104/
+>>>>>>> develop
 
 This requires administrator access. This is a very lengthy install- it can take over an hour even on a fast machine with a fantastic connection.
 
